@@ -7,10 +7,17 @@ import './ProductCard.css';
 interface ProductCardProps {
   product: ProductListItem;
   priority?: boolean;
+  /** 3 when the cards sit under a section heading, as in "Similar items". */
+  headingLevel?: 2 | 3;
 }
 
-export function ProductCard({ product, priority = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  priority = false,
+  headingLevel = 2,
+}: ProductCardProps) {
   const { id, brand, name, basePrice, imageUrl } = product;
+  const Name = headingLevel === 3 ? 'h3' : 'h2';
 
   return (
     <Link href={`/product/${id}`} className="product-card">
@@ -21,14 +28,13 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           src={imageUrl}
           alt={`${brand} ${name} smartphone`}
           fill
-          sizes="(min-width: 1280px) 20vw, (min-width: 768px) 50vw, 100vw"
           priority={priority}
         />
       </div>
       <div className="product-card__info">
         <div className="product-card__titles">
           <p className="product-card__brand">{brand}</p>
-          <h2 className="product-card__name">{name}</h2>
+          <Name className="product-card__name">{name}</Name>
         </div>
         <p className="product-card__price">{formatPrice(basePrice)}</p>
       </div>
