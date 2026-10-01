@@ -61,4 +61,5 @@
 
 .product-detail__add {
   width: var(--add-to-cart-width);
+  --button-background: var(--color-add-to-cart);
 }

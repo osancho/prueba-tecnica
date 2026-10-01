@@ -10,7 +10,7 @@
   --color-disabled-background: #f3f2f2;
   --color-disabled-text: #c2bfbc;
   --color-delete: #df0000;
-  --color-button-primary: var(--color-black);
+  --color-add-to-cart: var(--color-black);
 
   --font-family-base: Helvetica, Arial, sans-serif;
   --font-weight-light: 300;
@@ -128,6 +128,7 @@
   --swatch-color-size: 20px;
   --color-name-offset: 10px;
   --button-height: 48px;
+  --button-padding-inline: 7px;
   --search-height: 27px;
   --close-button-width: 20px;
   --close-button-height: 19px;
@@ -162,19 +163,26 @@
   --spec-row-gap: var(--space-xs);
   --add-to-cart-width: 100%;
 
+  --cart-content-padding-top: var(--space-md);
+  --cart-content-gap: var(--space-md);
+  --cart-lines-columns: minmax(0, 1fr);
   --cart-image-width: 160px;
-  --cart-image-height: 197.86px;
+  --cart-image-ratio: 160 / 197.86;
   --cart-item-gap: var(--space-md);
   --cart-footer-padding-top: var(--space-sm);
   --cart-footer-padding-bottom: var(--space-md);
-  --cart-total-gap: var(--space-md);
+  --cart-footer-columns: 1fr 1fr;
+  --cart-footer-areas: 'total total' 'continue pay';
+  --cart-footer-column-gap: var(--space-xs);
+  --cart-total-justify: space-between;
   --continue-shopping-width: 100%;
   --pay-width: 100%;
+  --cart-page-bag-display: none;
 }
 
 @media (min-width: 768px) {
   :root {
-    --color-button-primary: var(--color-highlight);
+    --color-add-to-cart: var(--color-highlight);
 
     --page-gutter: var(--space-lg);
     --list-content-spacing: var(--space-xl);
@@ -195,14 +203,21 @@
     --spec-row-gap: var(--space-xl);
     --add-to-cart-width: 260px;
 
+    --cart-content-padding-top: var(--space-xl);
+    --cart-content-gap: var(--space-xl);
     --cart-image-width: 262px;
-    --cart-image-height: 324px;
+    --cart-image-ratio: 262 / 324;
     --cart-item-gap: var(--space-lg);
     --cart-footer-padding-top: var(--space-md);
     --cart-footer-padding-bottom: var(--space-lg);
-    --cart-total-gap: var(--space-2xl);
+    --cart-footer-columns: auto 1fr auto auto;
+    --cart-footer-areas: 'continue . total pay';
+    --cart-footer-column-gap: var(--space-2xl);
+    --cart-total-justify: flex-start;
     --continue-shopping-width: 200px;
     --pay-width: 260px;
+    /* Only the tablet frames show the bag on the cart page, and only with products in it */
+    --cart-page-bag-display: flex;
   }
 }
 
@@ -241,8 +256,13 @@
     --storage-option-height: auto;
     --add-to-cart-width: 100%;
 
+    --cart-content-padding-top: 60px;
+    --cart-content-gap: 60px;
+    /* Figma's desktop cart item is a fixed 548px box (image 262 + gap 40 + info 246) */
+    --cart-lines-columns: repeat(auto-fill, 548px);
     --cart-footer-padding-bottom: var(--space-2xl);
-    --cart-total-gap: var(--space-4xl);
+    --cart-footer-column-gap: var(--space-4xl);
     --continue-shopping-width: 260px;
+    --cart-page-bag-display: none;
   }
 }

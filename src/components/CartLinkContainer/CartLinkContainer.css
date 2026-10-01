@@ -1,0 +1,3 @@
+.cart-link-container--cart-page {
+  display: var(--cart-page-bag-display);
+}
