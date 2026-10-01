@@ -1,0 +1,46 @@
+/* Figma "Loading" → "Smartphones list": the search and the products fade in. */
+.product-search {
+  animation: product-search-reveal var(--duration-spring-reveal)
+    var(--easing-spring-overshoot);
+}
+
+@keyframes product-search-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Fixed under the header in the prototype; its own transition name keeps it above moving cards. */
+.product-search__bar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: var(--header-z-index);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: calc(var(--list-content-spacing) + var(--space-xs))
+    var(--page-gutter) var(--space-xs);
+  background-color: var(--color-white);
+  view-transition-name: search-bar;
+}
+
+.product-search__status {
+  min-height: var(--results-count-row-height);
+}
+
+.product-search__error {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+}
+
+.product-search__results {
+  margin-top: var(--list-content-spacing);
+  padding-bottom: var(--list-end-spacing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-search {
+    animation: none;
+  }
+}

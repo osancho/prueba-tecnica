@@ -1,13 +1,51 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import HomePage from './page';
+import { describe, expect, it, vi } from 'vitest';
+import { getProducts } from '@/lib/products';
+import HomePage, { generateMetadata } from './page';
+
+vi.mock('@/lib/products', () => ({ getProducts: vi.fn() }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+  useSearchParams: () => new URLSearchParams({ search: 'samsung' }),
+}));
+
+const getProductsMock = vi.mocked(getProducts);
+
+function searchParams(search?: string) {
+  return Promise.resolve(search === undefined ? {} : { search });
+}
 
 describe('HomePage', () => {
-  it('renders the main heading', () => {
-    render(<HomePage />);
+  it('opens a shared search link with its results already listed', async () => {
+    getProductsMock.mockResolvedValue([
+      {
+        id: 'SMG-S24U',
+        brand: 'Samsung',
+        name: 'Galaxy S24 Ultra',
+        basePrice: 1329,
+        imageUrl: '/api/images/SMG-S24U.webp',
+      },
+    ]);
 
+    render(await HomePage({ searchParams: searchParams(' samsung ') }));
+
+    expect(getProductsMock).toHaveBeenCalledWith('samsung');
     expect(
       screen.getByRole('heading', { level: 1, name: 'Smartphones' }),
     ).toBeInTheDocument();
+    expect(screen.getByRole('searchbox')).toHaveValue('samsung');
+    expect(screen.getByText('1 result')).toBeInTheDocument();
+  });
+
+  it('keeps search result pages out of search engine indexes', async () => {
+    await expect(
+      generateMetadata({ searchParams: searchParams('samsung') }),
+    ).resolves.toMatchObject({
+      title: { absolute: 'Results for “samsung” | MBST' },
+      robots: { index: false, follow: true },
+    });
+    await expect(
+      generateMetadata({ searchParams: searchParams() }),
+    ).resolves.toEqual({});
   });
 });

@@ -28,6 +28,15 @@ export function LogoIcon(props: IconProps) {
   );
 }
 
+/* The viewBox is the 20×19 Figma icon frame, with the cross placed at its 6, 5.7 offset. */
+export function CloseIcon(props: IconProps) {
+  return (
+    <svg viewBox="-6 -5.7 20 19" fill="currentColor" {...decorative} {...props}>
+      <path d="M3.22887 3.66225L0 6.72967L0.626131 7.3245L3.855 4.25707L7.08387 7.3245L7.71 6.72967L4.48113 3.66225L7.71 0.594825L7.08387 0L3.855 3.06742L0.626131 0L0 0.594825L3.22887 3.66225Z" />
+    </svg>
+  );
+}
+
 export function BagIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 13 16" fill="currentColor" {...decorative} {...props}>
