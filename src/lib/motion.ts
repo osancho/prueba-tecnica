@@ -12,7 +12,7 @@ export function springTiming(): KeyframeAnimationOptions | null {
 
   const tokens = getComputedStyle(document.documentElement);
   return {
-    duration: parseFloat(tokens.getPropertyValue('--duration-spring')),
+    duration: Number.parseFloat(tokens.getPropertyValue('--duration-spring')),
     easing: tokens.getPropertyValue('--easing-spring').trim(),
   };
 }

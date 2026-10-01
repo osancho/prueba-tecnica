@@ -44,9 +44,10 @@ function fadeOutCopy(
     width: `${card.width}px`,
   });
   list.append(copy);
+  const removeCopy = () => copy.remove();
   copy
     .animate([{ opacity: 1 }, { opacity: 0 }], timing)
-    .finished.finally(() => copy.remove());
+    .finished.then(removeCopy, removeCopy);
 }
 
 /**
