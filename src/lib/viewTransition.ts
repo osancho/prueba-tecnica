@@ -21,5 +21,6 @@ export function updateWithViewTransition(
   const transition = document.startViewTransition(() => flushSync(update));
   // A skipped transition (hidden tab, a newer one) rejects `ready`; the update still applies.
   transition.ready.catch(() => {});
-  transition.finished.finally(() => delete root.dataset.viewTransition);
+  const cleanUp = () => delete root.dataset.viewTransition;
+  transition.finished.then(cleanUp, cleanUp);
 }
