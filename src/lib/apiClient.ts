@@ -1,21 +1,14 @@
 import 'server-only';
 import type { ApiError } from '@/types/product';
 import { ApiRequestError, NotFoundError } from './apiErrors';
+import { readServerEnv, UPSTREAM_TIMEOUT_MS } from './serverConfig';
 
 const REVALIDATE_SECONDS = 3600;
-// Render's free plan can take close to a minute to wake up.
-const REQUEST_TIMEOUT_MS = 60_000;
 
 type QueryParams = Record<string, string | undefined>;
 
-function readEnv(name: 'API_BASE_URL' | 'API_KEY'): string {
-  const value = process.env[name];
-  if (!value) throw new Error(`Missing environment variable: ${name}`);
-  return value;
-}
-
 function buildUrl(path: string, params: QueryParams): URL {
-  const url = new URL(path, readEnv('API_BASE_URL'));
+  const url = new URL(path, readServerEnv('API_BASE_URL'));
   for (const [key, value] of Object.entries(params)) {
     if (value) url.searchParams.set(key, value);
   }
@@ -27,9 +20,9 @@ export async function apiClient<T>(
   params: QueryParams = {},
 ): Promise<T> {
   const response = await fetch(buildUrl(path, params), {
-    headers: { 'x-api-key': readEnv('API_KEY') },
+    headers: { 'x-api-key': readServerEnv('API_KEY') },
     next: { revalidate: REVALIDATE_SECONDS },
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   });
 
   if (response.ok) return (await response.json()) as T;
