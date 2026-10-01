@@ -1,0 +1,21 @@
+.option-group {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.option-group__label {
+  margin-bottom: var(--space-selector-label-gap);
+  padding: 0;
+  font-size: var(--font-size-xs);
+  /* Figma "Option label" box is 17px around 12px text. */
+  line-height: var(--line-height-sm);
+  text-transform: uppercase;
+}
+
+.option-group__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-selector-label-gap);
+}
