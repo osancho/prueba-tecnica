@@ -54,6 +54,7 @@
   },
   "overrides": {
     "postcss": "^8.5.28",
+    "sharp": "^0.34.5",
     "test-exclude": "7.0.1",
     "@typescript-eslint/eslint-plugin": "8.55.0",
     "@typescript-eslint/parser": "8.55.0",
