@@ -1,0 +1,70 @@
+.search-box {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  height: var(--search-height);
+  padding-bottom: var(--space-2xs);
+  /* Figma inner stroke: drawn inside the 27px box without taking layout space. */
+  box-shadow: inset 0 calc(-1 * var(--border-width-thin)) 0 var(--color-black);
+}
+
+.search-box__input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  color: var(--color-black);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+}
+
+/* The text caret is the focus indicator, as in the Figma "Input active" state (WCAG 2.4.7). */
+.search-box__input:focus {
+  outline: none;
+}
+
+.search-box__input::placeholder {
+  color: var(--color-placeholder);
+  opacity: 1;
+}
+
+.search-box__input::-webkit-search-cancel-button,
+.search-box__input::-webkit-search-decoration {
+  appearance: none;
+}
+
+.search-box__clear {
+  flex-shrink: 0;
+  width: var(--close-button-width);
+  height: var(--close-button-height);
+  padding: 0;
+  color: var(--color-black);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.search-box__clear--hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity var(--duration-spring-reveal) var(--easing-spring-overshoot),
+    visibility var(--duration-spring-reveal);
+}
+
+.search-box__clear-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-box__clear--hidden {
+    transition: none;
+  }
+}

@@ -1,0 +1,24 @@
+.loading-bar {
+  max-width: 100%;
+  height: var(--loading-bar-height);
+  background-color: var(--color-black);
+  animation: loading-bar-fill var(--duration-loading-bar)
+    var(--easing-spring-overshoot);
+}
+
+/* Figma "Unloaded" → "Loading": the bar grows from 1px to the full width. */
+@keyframes loading-bar-fill {
+  from {
+    width: 1px;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-bar {
+    animation: none;
+  }
+}

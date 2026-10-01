@@ -75,6 +75,37 @@
     0.998,
     1
   );
+  /* Figma springs with damping ratio 0.75 (stiffness 100 / damping 15, 177.8 / 20, 400 / 30)
+     share this curve, overshoot included; only their durations differ */
+  --easing-spring-overshoot: linear(
+    0,
+    0.047,
+    0.158,
+    0.298,
+    0.444,
+    0.581,
+    0.7,
+    0.798,
+    0.875,
+    0.933,
+    0.974,
+    1.001,
+    1.017,
+    1.025,
+    1.028,
+    1.028,
+    1.025,
+    1.021,
+    1.017,
+    1.013,
+    1.009,
+    1.006,
+    1.004,
+    1.002,
+    1
+  );
+  --duration-spring-reveal: 800ms;
+  --duration-loading-bar: 400ms;
 
   --header-height: 80px;
   --header-z-index: 1;
@@ -90,9 +121,14 @@
   --swatch-size: 24px;
   --swatch-color-size: 20px;
   --button-height: 48px;
+  --search-height: 27px;
+  --close-button-width: 20px;
+  --close-button-height: 19px;
+  --results-count-row-height: 24px;
 
   --page-gutter: var(--space-sm);
   --list-content-spacing: var(--space-md);
+  --list-end-spacing: var(--space-md);
   --product-grid-columns: minmax(0, 1fr);
   --product-card-height: 344px;
   --product-card-aspect-ratio: auto;
@@ -151,9 +187,12 @@
     --font-size-detail-price: var(--font-size-lg);
     --font-size-detail-option: var(--font-size-sm);
 
+    --duration-loading-bar: 600ms;
+
     --button-height: 56px;
 
     --page-gutter: var(--space-5xl);
+    --list-end-spacing: var(--space-5xl);
     --product-grid-columns: repeat(5, minmax(0, 1fr));
     --product-card-height: auto;
     --product-card-aspect-ratio: 1;
