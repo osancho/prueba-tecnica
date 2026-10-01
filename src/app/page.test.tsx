@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { axe } from 'vitest-axe';
 import { getProducts } from '@/lib/products';
 import HomePage, { generateMetadata } from './page';
 
@@ -47,5 +48,23 @@ describe('HomePage', () => {
     await expect(
       generateMetadata({ searchParams: searchParams() }),
     ).resolves.toEqual({});
+  });
+
+  it('has no accessibility violations', async () => {
+    getProductsMock.mockResolvedValue([
+      {
+        id: 'SMG-S24U',
+        brand: 'Samsung',
+        name: 'Galaxy S24 Ultra',
+        basePrice: 1329,
+        imageUrl: '/api/images/SMG-S24U.webp',
+      },
+    ]);
+
+    const { container } = render(
+      await HomePage({ searchParams: searchParams() }),
+    );
+
+    expect(await axe(container)).toHaveNoViolations();
   });
 });

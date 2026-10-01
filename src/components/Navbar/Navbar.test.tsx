@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { axe } from 'vitest-axe';
 import { Navbar } from './Navbar';
 
 describe('Navbar', () => {
@@ -23,5 +24,15 @@ describe('Navbar', () => {
     expect(
       within(navigation).getByRole('link', { name: 'Cart' }),
     ).toBeVisible();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(
+      <Navbar>
+        <a href="/cart">Cart</a>
+      </Navbar>,
+    );
+
+    expect(await axe(container)).toHaveNoViolations();
   });
 });
