@@ -1,4 +1,4 @@
-/* Breakpoints (Figma frame widths): tablet 834px, desktop 1920px */
+/* Breakpoints: tablet 768px (Figma 834 frame), desktop 1280px (Figma 1920 frame) */
 :root {
   --color-black: #000000;
   --color-white: #ffffff;
@@ -79,7 +79,7 @@
   --pay-width: 100%;
 }
 
-@media (min-width: 834px) {
+@media (min-width: 768px) {
   :root {
     --color-button-primary: var(--color-highlight);
 
@@ -106,7 +106,7 @@
   }
 }
 
-@media (min-width: 1920px) {
+@media (min-width: 1280px) {
   :root {
     --font-size-page-title: var(--font-size-xl);
     --font-size-detail-price: var(--font-size-lg);
