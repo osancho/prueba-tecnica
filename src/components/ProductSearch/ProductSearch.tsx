@@ -6,8 +6,8 @@ import { LoadingBar } from '@/components/LoadingBar/LoadingBar';
 import { ProductGrid } from '@/components/ProductGrid/ProductGrid';
 import { ResultsCount } from '@/components/ResultsCount/ResultsCount';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
+import { useListTransition } from '@/lib/useListTransition';
 import type { ProductListItem } from '@/types/product';
-import { useGridTransition } from './useGridTransition';
 import { useProductSearch } from './useProductSearch';
 import './ProductSearch.css';
 
@@ -43,7 +43,7 @@ function ProductSearchView({
     clear,
   } = useProductSearch(initialSearch, initialProducts);
   const resultsRef = useRef<HTMLDivElement>(null);
-  useGridTransition(resultsRef, products, transition);
+  useListTransition(resultsRef, products, transition);
 
   return (
     <div className="product-search">

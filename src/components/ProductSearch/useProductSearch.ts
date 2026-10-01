@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { rememberListUrl } from '@/lib/listUrl';
 import { listDocumentTitle } from '@/lib/pageTitles';
 import type { ProductListItem } from '@/types/product';
-import type { GridTransition } from './useGridTransition';
+import type { ListTransition } from '@/lib/useListTransition';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -14,7 +14,7 @@ interface SearchInput {
 interface SearchResults {
   search: string;
   products: ProductListItem[];
-  transition: GridTransition;
+  transition: ListTransition;
 }
 
 async function fetchProducts(
