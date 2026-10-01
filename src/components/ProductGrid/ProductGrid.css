@@ -1,0 +1,7 @@
+.product-grid {
+  display: grid;
+  grid-template-columns: var(--product-grid-columns);
+  margin: 0;
+  padding: 0 var(--page-gutter);
+  list-style: none;
+}

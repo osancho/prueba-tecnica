@@ -4,7 +4,8 @@
   --color-white: #ffffff;
   --color-brand-text: #79736d;
   --color-placeholder: #aaaaaa;
-  --color-border-unselected: #cccccc;
+  --color-silver: #cccccc;
+  --color-border-unselected: var(--color-silver);
   --color-highlight: #1b1a18;
   --color-disabled-background: #f3f2f2;
   --color-disabled-text: #c2bfbc;
@@ -20,7 +21,13 @@
   --font-size-md: 16px;
   --font-size-lg: 20px;
   --font-size-xl: 24px;
-  --line-height-none: 1;
+  /* Rendered text box heights in Figma for each font size */
+  --line-height-2xs: 12px;
+  --line-height-xs: 15px;
+  --line-height-sm: 17px;
+  --line-height-md: 19px;
+  --line-height-lg: 24px;
+  --line-height-xl: 29px;
   --line-height-button: 16px;
   --letter-spacing-button: 0.08em;
 
@@ -46,6 +53,28 @@
   --border-width-thin: 0.5px;
   --border-width-regular: 1px;
 
+  /* Figma smart animate spring (mass 1, stiffness 80, damping 20), settles at 99.9% */
+  --duration-spring: 1337ms;
+  --easing-spring: linear(
+    0,
+    0.165,
+    0.413,
+    0.612,
+    0.75,
+    0.841,
+    0.899,
+    0.936,
+    0.96,
+    0.975,
+    0.984,
+    0.99,
+    0.994,
+    0.996,
+    0.997,
+    0.998,
+    1
+  );
+
   --header-height: 80px;
   --loading-bar-height: 1px;
   --icon-size-back: 20px;
@@ -56,8 +85,10 @@
 
   --page-gutter: var(--space-sm);
   --list-content-spacing: var(--space-md);
-  --grid-columns: 1;
+  --product-grid-columns: minmax(0, 1fr);
   --product-card-height: 344px;
+  --product-card-aspect-ratio: auto;
+  --product-card-fill-rest-height: 1px;
 
   --detail-content-max-width: none;
   --detail-image-width: 260px;
@@ -85,7 +116,7 @@
 
     --page-gutter: var(--space-lg);
     --list-content-spacing: var(--space-xl);
-    --grid-columns: 2;
+    --product-grid-columns: repeat(2, minmax(0, 1fr));
     --product-card-height: 377px;
 
     --detail-image-width: 336.34px;
@@ -115,8 +146,9 @@
     --button-height: 56px;
 
     --page-gutter: var(--space-5xl);
-    --grid-columns: 5;
-    --product-card-height: 344px;
+    --product-grid-columns: repeat(5, minmax(0, 1fr));
+    --product-card-height: auto;
+    --product-card-aspect-ratio: 1;
 
     --detail-content-max-width: 1200px;
     --detail-image-width: 510px;
