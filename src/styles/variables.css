@@ -1,2 +1,133 @@
+/* Breakpoints (Figma frame widths): tablet 834px, desktop 1920px */
 :root {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-brand-text: #79736d;
+  --color-placeholder: #aaaaaa;
+  --color-border-unselected: #cccccc;
+  --color-highlight: #1b1a18;
+  --color-disabled-background: #f3f2f2;
+  --color-disabled-text: #c2bfbc;
+  --color-delete: #df0000;
+  --color-button-primary: var(--color-black);
+
+  --font-family-base: Helvetica, Arial, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-size-2xs: 10px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --line-height-none: 1;
+  --line-height-button: 16px;
+  --letter-spacing-button: 0.08em;
+
+  --font-size-page-title: var(--font-size-lg);
+  --font-size-detail-price: var(--font-size-sm);
+  --font-size-detail-option: var(--font-size-xs);
+
+  --space-3xs: 4px;
+  --space-2xs: 8px;
+  --space-xs: 12px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 48px;
+  --space-2xl: 56px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+  --space-5xl: 100px;
+  --space-cart-badge-gap: 6px;
+  --space-title-price-gap: 11px;
+  --space-cart-info-gap: 20px;
+
+  --border-width-thin: 0.5px;
+  --border-width-regular: 1px;
+
+  --header-height: 80px;
+  --loading-bar-height: 1px;
+  --icon-size-back: 20px;
+  --icon-size-bag: 18px;
+  --swatch-size: 24px;
+  --swatch-color-size: 20px;
+  --button-height: 48px;
+
+  --page-gutter: var(--space-sm);
+  --list-content-spacing: var(--space-md);
+  --grid-columns: 1;
+  --product-card-height: 344px;
+
+  --detail-content-max-width: none;
+  --detail-image-width: 260px;
+  --detail-image-height: 273px;
+  --detail-info-width: 100%;
+  --detail-info-gap: var(--space-lg);
+  --storage-option-height: 48px;
+  --spec-label-width: 150px;
+  --spec-row-gap: var(--space-xs);
+  --add-to-cart-width: 100%;
+
+  --cart-image-width: 160px;
+  --cart-image-height: 197.86px;
+  --cart-item-gap: var(--space-md);
+  --cart-footer-padding-top: var(--space-sm);
+  --cart-footer-padding-bottom: var(--space-md);
+  --cart-total-gap: var(--space-md);
+  --continue-shopping-width: 100%;
+  --pay-width: 100%;
+}
+
+@media (min-width: 834px) {
+  :root {
+    --color-button-primary: var(--color-highlight);
+
+    --page-gutter: var(--space-lg);
+    --list-content-spacing: var(--space-xl);
+    --grid-columns: 2;
+    --product-card-height: 377px;
+
+    --detail-image-width: 336.34px;
+    --detail-image-height: 414.01px;
+    --detail-info-width: 362px;
+    --spec-label-width: 300px;
+    --spec-row-gap: var(--space-xl);
+    --add-to-cart-width: 260px;
+
+    --cart-image-width: 262px;
+    --cart-image-height: 324px;
+    --cart-item-gap: var(--space-lg);
+    --cart-footer-padding-top: var(--space-md);
+    --cart-footer-padding-bottom: var(--space-lg);
+    --cart-total-gap: var(--space-2xl);
+    --continue-shopping-width: 200px;
+    --pay-width: 260px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --font-size-page-title: var(--font-size-xl);
+    --font-size-detail-price: var(--font-size-lg);
+    --font-size-detail-option: var(--font-size-sm);
+
+    --button-height: 56px;
+
+    --page-gutter: var(--space-5xl);
+    --grid-columns: 5;
+    --product-card-height: 344px;
+
+    --detail-content-max-width: 1200px;
+    --detail-image-width: 510px;
+    --detail-image-height: 630px;
+    --detail-info-width: 380px;
+    --detail-info-gap: var(--space-3xl);
+    --storage-option-height: auto;
+    --add-to-cart-width: 100%;
+
+    --cart-footer-padding-bottom: var(--space-2xl);
+    --cart-total-gap: var(--space-4xl);
+    --continue-shopping-width: 260px;
+  }
 }
