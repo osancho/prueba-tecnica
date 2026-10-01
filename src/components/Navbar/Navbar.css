@@ -1,0 +1,27 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--header-z-index);
+  background-color: var(--color-white);
+}
+
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding-inline: var(--page-gutter);
+}
+
+.navbar__home {
+  display: block;
+  width: var(--logo-width);
+  height: var(--logo-height);
+  color: var(--color-black);
+}
+
+.navbar__logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

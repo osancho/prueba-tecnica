@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { CartLink } from '@/components/CartLink/CartLink';
+import { Navbar } from '@/components/Navbar/Navbar';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -17,7 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Navbar>
+          <CartLink count={0} />
+        </Navbar>
+        {children}
+      </body>
     </html>
   );
 }
