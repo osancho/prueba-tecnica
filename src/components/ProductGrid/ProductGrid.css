@@ -5,3 +5,12 @@
   padding: 0 var(--page-gutter);
   list-style: none;
 }
+
+.product-grid__item {
+  view-transition-name: var(--product-transition-name);
+}
+
+/* Figma dissolves the whole page instead of moving the cards when the search is cleared. */
+:root[data-view-transition='dissolve'] .product-grid__item {
+  view-transition-name: none;
+}

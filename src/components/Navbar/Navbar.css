@@ -3,6 +3,8 @@
   top: 0;
   z-index: var(--header-z-index);
   background-color: var(--color-white);
+  /* Own transition layer, so content animated by a view transition stays under the header. */
+  view-transition-name: navbar;
 }
 
 .navbar__nav {
