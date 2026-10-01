@@ -59,12 +59,12 @@ describe('getProducts', () => {
     expect(products.map(({ id }) => id)).toEqual(ids.slice(0, 20));
   });
 
-  it('serves every image over https so the browser never loads mixed content', async () => {
+  it('serves every phone picture through the image normalizer of our own domain', async () => {
     apiClientMock.mockResolvedValue([phone('P1')]);
 
     const [product] = await getProducts();
 
-    expect(product.imageUrl).toBe('https://cdn.test/images/P1.webp');
+    expect(product.imageUrl).toBe('/api/images/P1.webp');
   });
 
   it('forwards the search term to the API', async () => {
@@ -80,7 +80,7 @@ describe('getProducts', () => {
 });
 
 describe('getProduct', () => {
-  it('shows each similar product only once, with https images', async () => {
+  it('shows each similar product only once, every picture normalized', async () => {
     apiClientMock.mockResolvedValue(
       productDetail({
         similarProducts: [phone('S1'), phone('S2'), phone('S1')],
@@ -90,9 +90,9 @@ describe('getProduct', () => {
     const product = await getProduct('MAIN');
 
     expect(product?.similarProducts.map(({ id }) => id)).toEqual(['S1', 'S2']);
-    expect(product?.similarProducts[0].imageUrl).toMatch(/^https:/);
+    expect(product?.similarProducts[0].imageUrl).toBe('/api/images/S1.webp');
     expect(product?.colorOptions[0].imageUrl).toBe(
-      'https://cdn.test/images/MAIN-black.webp',
+      '/api/images/MAIN-black.webp',
     );
   });
 
