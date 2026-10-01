@@ -70,14 +70,14 @@ describe('CartProvider', () => {
   });
 
   it('ignores saved lines that are not valid phones', () => {
-    const valid = { ...pixel, quantity: 2 };
     localStorage.setItem(
       'mbst-cart',
       JSON.stringify([
-        valid,
-        { ...pixel, quantity: -1 },
-        { ...pixel, price: '459' },
-        { id: 'GPX-8A' },
+        { ...pixel, lineId: 'a' },
+        { ...pixel, lineId: 'b' },
+        { ...pixel, lineId: 'c', price: -1 },
+        { ...pixel, lineId: 'd', price: '459' },
+        pixel,
         null,
       ]),
     );
@@ -93,9 +93,11 @@ describe('CartProvider', () => {
     localStorage.setItem(
       'mbst-cart',
       JSON.stringify([
-        { ...pixel, price: 1229.1, quantity: 3 },
-        { ...pixel, colorName: 'Porcelana', price: 0.1, quantity: 1 },
-        { ...pixel, colorName: 'Celeste', price: 0.2, quantity: 1 },
+        { ...pixel, lineId: 'a', price: 1229.1 },
+        { ...pixel, lineId: 'b', price: 1229.1 },
+        { ...pixel, lineId: 'c', price: 1229.1 },
+        { ...pixel, lineId: 'd', price: 0.1 },
+        { ...pixel, lineId: 'e', price: 0.2 },
       ]),
     );
 

@@ -1,6 +1,7 @@
 import type { CartLine } from '@/types/cart';
 
 const TEXT_FIELDS = [
+  'lineId',
   'id',
   'brand',
   'name',
@@ -20,16 +21,14 @@ export function isCartLine(value: unknown): value is CartLine {
     ) &&
     typeof line.price === 'number' &&
     Number.isFinite(line.price) &&
-    line.price >= 0 &&
-    Number.isInteger(line.quantity) &&
-    (line.quantity as number) > 0
+    line.price >= 0
   );
 }
 
 // Adds whole cents so totals like 553.31 + 0.1 never turn into 553.4100000000001.
 export function cartTotal(lines: CartLine[]): number {
   const cents = lines.reduce(
-    (total, line) => total + Math.round(line.price * 100) * line.quantity,
+    (total, line) => total + Math.round(line.price * 100),
     0,
   );
   return cents / 100;

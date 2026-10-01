@@ -17,10 +17,12 @@ const STORAGE_KEY = 'mbst-cart';
 
 interface CartContextValue {
   lines: CartLine[];
+  /** False until the stored cart is read, so views don't flash an empty cart. */
+  isRestored: boolean;
   count: number;
   total: number;
   add: (line: NewCartLine) => void;
-  remove: (key: string) => void;
+  remove: (lineId: string) => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -62,12 +64,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(
     () => ({
       lines,
-      count: lines.reduce((total, line) => total + line.quantity, 0),
+      isRestored,
+      count: lines.length,
       total: cartTotal(lines),
-      add: (line) => dispatch({ type: 'add', line }),
-      remove: (key) => dispatch({ type: 'remove', key }),
+      add: (line) =>
+        dispatch({
+          type: 'add',
+          line: { ...line, lineId: crypto.randomUUID() },
+        }),
+      remove: (lineId) => dispatch({ type: 'remove', lineId }),
     }),
-    [lines],
+    [lines, isRestored],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
