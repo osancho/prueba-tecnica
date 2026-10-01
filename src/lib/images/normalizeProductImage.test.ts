@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { normalizeProductImage } from './normalizeProductImage';
 
 const PHONE = { width: 20, height: 40 };
+const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };
 
 async function phonePicture(
   background: sharp.Color,
@@ -23,42 +24,58 @@ async function phonePicture(
     .toBuffer();
 }
 
-async function describeResult(image: Buffer) {
-  const { data, info } = await sharp(image)
-    .ensureAlpha()
-    .raw()
+async function framing(image: Buffer) {
+  const { width, height } = await sharp(image).metadata();
+  const { info } = await sharp(image)
+    .trim({ background: TRANSPARENT })
     .toBuffer({ resolveWithObject: true });
-  return { width: info.width, height: info.height, topLeftAlpha: data[3] };
+  return {
+    picture: { width, height },
+    phone: { width: info.width, height: info.height },
+    phoneTop: -(info.trimOffsetTop ?? 0),
+  };
 }
 
 describe('normalizeProductImage', () => {
-  it('frames every phone the same way whatever margin the source image has', async () => {
-    const transparent = { r: 0, g: 0, b: 0, alpha: 0 };
-    const smallMargin = await phonePicture(transparent, { left: 2, top: 2 });
-    const bigMargin = await phonePicture(transparent, { left: 40, top: 30 });
+  it('shows every phone at the Figma scale: centred, filling 73% of a square picture', async () => {
+    const result = await framing(
+      await normalizeProductImage(
+        await phonePicture(TRANSPARENT, { left: 40, top: 30 }),
+      ),
+    );
 
-    expect(
-      await describeResult(await normalizeProductImage(smallMargin)),
-    ).toEqual(await describeResult(await normalizeProductImage(bigMargin)));
-    expect(
-      await describeResult(await normalizeProductImage(bigMargin)),
-    ).toMatchObject(PHONE);
+    expect(result).toEqual({
+      picture: { width: 55, height: 55 },
+      phone: PHONE,
+      phoneTop: 7,
+    });
+  });
+
+  it('frames phones the same way whatever margin or corner the source has', async () => {
+    const results = await Promise.all(
+      [
+        { left: 0, top: 0 },
+        { left: 2, top: 2 },
+        { left: 40, top: 30 },
+      ].map(async (position) =>
+        framing(
+          await normalizeProductImage(
+            await phonePicture(TRANSPARENT, position),
+          ),
+        ),
+      ),
+    );
+
+    expect(new Set(results.map((result) => JSON.stringify(result))).size).toBe(
+      1,
+    );
   });
 
   it('removes an opaque white background so no white box shows on hover', async () => {
     const onWhite = await phonePicture('#ffffff', { left: 30, top: 25 });
 
-    const result = await describeResult(await normalizeProductImage(onWhite));
+    const result = await framing(await normalizeProductImage(onWhite));
 
-    expect(result).toMatchObject(PHONE);
-  });
-
-  it('still crops a phone that touches the top-left corner of the image', async () => {
-    const transparent = { r: 0, g: 0, b: 0, alpha: 0 };
-    const inCorner = await phonePicture(transparent, { left: 0, top: 0 });
-
-    expect(
-      await describeResult(await normalizeProductImage(inCorner)),
-    ).toMatchObject({ ...PHONE, topLeftAlpha: 255 });
+    expect(result.phone).toEqual(PHONE);
   });
 });

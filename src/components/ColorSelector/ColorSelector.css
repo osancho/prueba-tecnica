@@ -1,0 +1,58 @@
+.color-selector {
+  position: relative;
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.color-selector__option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--swatch-size);
+  height: var(--swatch-size);
+  border: var(--border-width-regular) solid var(--color-border-unselected);
+  cursor: pointer;
+  transition: border-color var(--duration-spring) var(--easing-spring);
+}
+
+.color-selector__option:has(:checked) {
+  border-color: var(--color-black);
+}
+
+.color-selector__option:has(:focus-visible) {
+  outline: var(--border-width-regular) solid var(--color-black);
+  outline-offset: var(--border-width-regular);
+}
+
+.color-selector__swatch {
+  width: var(--swatch-color-size);
+  height: var(--swatch-color-size);
+}
+
+/* Figma hangs the name under the 24px swatch row, so showing it never moves the layout. */
+.color-selector__name {
+  position: absolute;
+  top: calc(var(--swatch-size) + var(--color-name-offset));
+  left: 0;
+  margin: 0;
+  white-space: nowrap;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+  animation: color-selector-name-in var(--duration-spring) var(--easing-spring);
+}
+
+@keyframes color-selector-name-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-selector__option {
+    transition: none;
+  }
+
+  .color-selector__name {
+    animation: none;
+  }
+}

@@ -1,0 +1,9 @@
+/* Both layers share one grid cell, so the fade never moves the layout. */
+.cross-fade {
+  display: grid;
+}
+
+.cross-fade__layer {
+  position: relative;
+  grid-area: 1 / 1;
+}

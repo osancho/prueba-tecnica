@@ -64,7 +64,7 @@ describe('getProducts', () => {
 
     const [product] = await getProducts();
 
-    expect(product.imageUrl).toBe('/api/images/P1.webp');
+    expect(product.imageUrl).toBe('/api/images/P1.webp?v=2');
   });
 
   it('forwards the search term to the API', async () => {
@@ -90,9 +90,11 @@ describe('getProduct', () => {
     const product = await getProduct('MAIN');
 
     expect(product?.similarProducts.map(({ id }) => id)).toEqual(['S1', 'S2']);
-    expect(product?.similarProducts[0].imageUrl).toBe('/api/images/S1.webp');
+    expect(product?.similarProducts[0].imageUrl).toBe(
+      '/api/images/S1.webp?v=2',
+    );
     expect(product?.colorOptions[0].imageUrl).toBe(
-      '/api/images/MAIN-black.webp',
+      '/api/images/MAIN-black.webp?v=2',
     );
   });
 

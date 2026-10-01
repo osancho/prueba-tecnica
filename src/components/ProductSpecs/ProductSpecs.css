@@ -1,0 +1,44 @@
+.product-specs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.product-specs__title {
+  margin: 0;
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-lg);
+  text-transform: uppercase;
+}
+
+.product-specs__list {
+  margin: 0;
+}
+
+/* Figma inner strokes: drawn inside each row without adding to its height. */
+.product-specs__row {
+  display: flex;
+  gap: var(--spec-row-gap);
+  padding-block: var(--space-sm);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+  box-shadow: inset 0 calc(var(--border-width-thin) * -1) 0 var(--color-black);
+}
+
+.product-specs__row:first-child {
+  box-shadow:
+    inset 0 var(--border-width-thin) 0 var(--color-black),
+    inset 0 calc(var(--border-width-thin) * -1) 0 var(--color-black);
+}
+
+.product-specs__label {
+  flex: 0 0 var(--spec-label-width);
+  text-transform: uppercase;
+}
+
+.product-specs__value {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}

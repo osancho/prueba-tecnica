@@ -1,0 +1,32 @@
+/* Fixed under the header in the prototype; Figma has no Back on tablet. */
+.back-bar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: var(--header-z-index);
+  display: var(--back-bar-display);
+  padding: var(--space-xs) var(--page-gutter);
+  background-color: var(--color-white);
+}
+
+.back-bar__link {
+  display: inline-flex;
+  gap: var(--space-3xs);
+  align-items: center;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+.back-bar__icon {
+  width: var(--icon-size-back);
+  height: var(--icon-size-back);
+}
+
+/* Keeps focused elements clear of the sticky header and this bar (WCAG 2.4.11). */
+:root:has(.back-bar) {
+  scroll-padding-top: calc(
+    var(--header-height) + 2 * var(--space-xs) + var(--icon-size-back)
+  );
+}

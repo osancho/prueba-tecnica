@@ -16,8 +16,13 @@ const pixel: NewCartLine = {
 };
 
 function AddPixel() {
-  const { add } = useCart();
-  return <button onClick={() => add(pixel)}>Add Pixel</button>;
+  const { add, total } = useCart();
+  return (
+    <>
+      <button onClick={() => add(pixel)}>Add Pixel</button>
+      <output aria-label="Total">{total}</output>
+    </>
+  );
 }
 
 function renderCart() {
@@ -62,5 +67,42 @@ describe('CartProvider', () => {
     expect(
       screen.getByRole('link', { name: '0 products in the cart' }),
     ).toBeInTheDocument();
+  });
+
+  it('ignores saved lines that are not valid phones', () => {
+    const valid = { ...pixel, quantity: 2 };
+    localStorage.setItem(
+      'mbst-cart',
+      JSON.stringify([
+        valid,
+        { ...pixel, quantity: -1 },
+        { ...pixel, price: '459' },
+        { id: 'GPX-8A' },
+        null,
+      ]),
+    );
+
+    renderCart();
+
+    expect(
+      screen.getByRole('link', { name: '2 products in the cart' }),
+    ).toBeInTheDocument();
+  });
+
+  it('adds prices with cents without rounding errors', () => {
+    localStorage.setItem(
+      'mbst-cart',
+      JSON.stringify([
+        { ...pixel, price: 1229.1, quantity: 3 },
+        { ...pixel, colorName: 'Porcelana', price: 0.1, quantity: 1 },
+        { ...pixel, colorName: 'Celeste', price: 0.2, quantity: 1 },
+      ]),
+    );
+
+    renderCart();
+
+    expect(screen.getByRole('status', { name: 'Total' })).toHaveTextContent(
+      /^3687\.6$/,
+    );
   });
 });

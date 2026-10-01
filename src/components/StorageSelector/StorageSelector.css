@@ -1,0 +1,55 @@
+.storage-selector {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Figma inner strokes take no space; neighbours share one line, so only the first draws its left side. */
+.storage-selector__option {
+  --option-stroke: var(--color-border-unselected);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--storage-option-height);
+  padding: var(--space-md);
+  font-size: var(--font-size-detail-option);
+  line-height: var(--line-height-detail-option);
+  box-shadow: inset 0 0 0 var(--border-width-regular) var(--option-stroke);
+  cursor: pointer;
+  transition: box-shadow var(--duration-spring) var(--easing-spring);
+}
+
+.storage-selector__option + .storage-selector__option {
+  box-shadow:
+    inset 0 var(--border-width-regular) 0 var(--option-stroke),
+    inset calc(var(--border-width-regular) * -1) 0 0 var(--option-stroke),
+    inset 0 calc(var(--border-width-regular) * -1) 0 var(--option-stroke);
+}
+
+.storage-selector__option:has(:checked) {
+  --option-stroke: var(--color-black);
+
+  z-index: 1;
+}
+
+/* The selected option paints its left side over the neighbour's shared line. */
+.storage-selector__option + .storage-selector__option:has(:checked) {
+  box-shadow:
+    inset 0 var(--border-width-regular) 0 var(--option-stroke),
+    inset calc(var(--border-width-regular) * -1) 0 0 var(--option-stroke),
+    inset 0 calc(var(--border-width-regular) * -1) 0 var(--option-stroke),
+    calc(var(--border-width-regular) * -1) 0 0 var(--option-stroke);
+}
+
+.storage-selector__option:has(:focus-visible) {
+  z-index: 1;
+  outline: var(--border-width-regular) solid var(--color-black);
+  outline-offset: var(--border-width-regular);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .storage-selector__option {
+    transition: none;
+  }
+}

@@ -10,25 +10,11 @@
   margin: 0;
   font-size: var(--font-size-page-title);
   font-weight: var(--font-weight-light);
-  line-height: var(--line-height-lg);
+  line-height: var(--line-height-page-title);
 }
 
 .page-error__message {
   margin: 0;
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
-}
-
-.page-error__retry {
-  height: var(--button-height);
-  padding-inline: var(--space-md);
-  font: inherit;
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-button);
-  letter-spacing: var(--letter-spacing-button);
-  text-transform: uppercase;
-  color: var(--color-white);
-  background-color: var(--color-button-primary);
-  border: 0;
-  cursor: pointer;
 }

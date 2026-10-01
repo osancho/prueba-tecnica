@@ -1,0 +1,56 @@
+.similar-products {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.similar-products__title {
+  margin: 0;
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-lg);
+  text-transform: uppercase;
+}
+
+/* Figma replaces the native scrollbar with its own bar below the list. */
+.similar-products__list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.similar-products__list::-webkit-scrollbar {
+  display: none;
+}
+
+.similar-products__item {
+  --product-card-height: var(--similar-card-size);
+  --product-card-aspect-ratio: auto;
+
+  flex: 0 0 var(--similar-card-size);
+}
+
+.similar-products__scrollbar {
+  /* A taller hit area around the 1px line, without moving the layout. */
+  margin-block: calc(var(--space-sm) * -1);
+  padding-block: var(--space-sm);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.similar-products__track {
+  position: relative;
+  height: var(--border-width-regular);
+  background-color: var(--color-silver);
+}
+
+.similar-products__thumb {
+  position: absolute;
+  inset-block: 0;
+  left: calc(var(--scroll-progress, 0) * (100% - var(--scroll-thumb-width)));
+  width: var(--scroll-thumb-width);
+  background-color: var(--color-black);
+}

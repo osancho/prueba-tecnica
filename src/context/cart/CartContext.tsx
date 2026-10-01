@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { CartLine, NewCartLine } from '@/types/cart';
+import { cartTotal, isCartLine } from './cartLine';
 import { cartReducer } from './cartReducer';
 
 const STORAGE_KEY = 'mbst-cart';
@@ -17,6 +18,7 @@ const STORAGE_KEY = 'mbst-cart';
 interface CartContextValue {
   lines: CartLine[];
   count: number;
+  total: number;
   add: (line: NewCartLine) => void;
   remove: (key: string) => void;
 }
@@ -29,7 +31,7 @@ function readStoredCart(): CartLine[] {
     const stored: unknown = JSON.parse(
       localStorage.getItem(STORAGE_KEY) ?? '[]',
     );
-    return Array.isArray(stored) ? stored : [];
+    return Array.isArray(stored) ? stored.filter(isCartLine) : [];
   } catch {
     return [];
   }
@@ -61,6 +63,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     () => ({
       lines,
       count: lines.reduce((total, line) => total + line.quantity, 0),
+      total: cartTotal(lines),
       add: (line) => dispatch({ type: 'add', line }),
       remove: (key) => dispatch({ type: 'remove', key }),
     }),

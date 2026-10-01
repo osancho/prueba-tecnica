@@ -35,6 +35,10 @@
   --font-size-page-title: var(--font-size-lg);
   --font-size-detail-price: var(--font-size-sm);
   --font-size-detail-option: var(--font-size-xs);
+  --font-size-section-title: var(--font-size-lg);
+  --line-height-page-title: var(--line-height-lg);
+  --line-height-detail-price: var(--line-height-sm);
+  --line-height-detail-option: var(--line-height-xs);
 
   --space-3xs: 4px;
   --space-2xs: 8px;
@@ -106,6 +110,8 @@
   );
   --duration-spring-reveal: 800ms;
   --duration-loading-bar: 400ms;
+  /* Detail reveal spring (stiffness 180, damping 30) has the same damping ratio as 80 / 20 */
+  --duration-spring-detail-reveal: 891ms;
 
   --header-height: 80px;
   --header-z-index: 1;
@@ -120,11 +126,15 @@
   --bag-shape-offset-y: 1.32px;
   --swatch-size: 24px;
   --swatch-color-size: 20px;
+  --color-name-offset: 10px;
   --button-height: 48px;
   --search-height: 27px;
   --close-button-width: 20px;
   --close-button-height: 19px;
   --results-count-row-height: 24px;
+  --scroll-thumb-width: 100px;
+  --space-selector-label-gap: 20px;
+  --space-selectors-gap: 32px;
 
   --page-gutter: var(--space-sm);
   --list-content-spacing: var(--space-md);
@@ -134,9 +144,17 @@
   --product-card-aspect-ratio: auto;
   --product-card-fill-rest-height: 1px;
 
-  --detail-content-max-width: none;
+  --detail-content-max-width: 100%;
+  --detail-content-offset: 5px;
+  --detail-layout-direction: column;
+  --detail-layout-align: flex-start;
+  --detail-selectors-padding-bottom: var(--space-md);
+  --back-bar-display: flex;
+  --detail-section-gap: var(--space-4xl);
+  --detail-end-spacing: 104px;
+  --similar-card-size: 344px;
   --detail-image-width: 260px;
-  --detail-image-height: 273px;
+  --detail-image-ratio: 260 / 273;
   --detail-info-width: 100%;
   --detail-info-gap: var(--space-lg);
   --storage-option-height: 48px;
@@ -163,8 +181,15 @@
     --product-grid-columns: repeat(2, minmax(0, 1fr));
     --product-card-height: 377px;
 
-    --detail-image-width: 336.34px;
-    --detail-image-height: 414.01px;
+    --detail-content-offset: var(--space-xl);
+    --detail-layout-direction: row;
+    --detail-layout-align: center;
+    --detail-selectors-padding-bottom: 0;
+    --back-bar-display: none;
+    --detail-section-gap: 88px;
+    --similar-card-size: 377px;
+    --detail-image-width: 337px;
+    --detail-image-ratio: 337 / 416;
     --detail-info-width: 362px;
     --spec-label-width: 300px;
     --spec-row-gap: var(--space-xl);
@@ -186,6 +211,9 @@
     --font-size-page-title: var(--font-size-xl);
     --font-size-detail-price: var(--font-size-lg);
     --font-size-detail-option: var(--font-size-sm);
+    --line-height-page-title: var(--line-height-xl);
+    --line-height-detail-price: var(--line-height-lg);
+    --line-height-detail-option: var(--line-height-sm);
 
     --duration-loading-bar: 600ms;
 
@@ -197,9 +225,17 @@
     --product-card-height: auto;
     --product-card-aspect-ratio: 1;
 
+    --scroll-thumb-width: 150px;
+
     --detail-content-max-width: 1200px;
+    --detail-content-offset: 110px;
+    --space-selector-label-gap: var(--space-md);
+    --space-selectors-gap: var(--space-lg);
+    --back-bar-display: flex;
+    --detail-section-gap: 154px;
+    --similar-card-size: 344px;
     --detail-image-width: 510px;
-    --detail-image-height: 630px;
+    --detail-image-ratio: 510 / 630;
     --detail-info-width: 380px;
     --detail-info-gap: var(--space-3xl);
     --storage-option-height: auto;

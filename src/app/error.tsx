@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { startTransition } from 'react';
+import { Button } from '@/components/Button/Button';
 import './error.css';
 
 interface ErrorPageProps {
@@ -25,9 +26,7 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
       <p className="page-error__message">
         We couldn’t load this page. Please try again in a moment.
       </p>
-      <button type="button" className="page-error__retry" onClick={retry}>
-        Try again
-      </button>
+      <Button onClick={retry}>Try again</Button>
     </main>
   );
 }
