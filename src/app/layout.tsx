@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import { CartLink } from '@/components/CartLink/CartLink';
 import { Navbar } from '@/components/Navbar/Navbar';
+import { DEFAULT_TITLE, TITLE_TEMPLATE } from '@/lib/pageTitles';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Smartphones | MBST',
-    template: '%s | MBST',
+    default: DEFAULT_TITLE,
+    template: TITLE_TEMPLATE,
   },
   description:
     'Browse the latest smartphones, compare models, choose storage and color and see the price update instantly.',
