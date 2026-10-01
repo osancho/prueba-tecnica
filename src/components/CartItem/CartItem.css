@@ -1,0 +1,56 @@
+.cart-item {
+  display: flex;
+  gap: var(--cart-item-gap);
+}
+
+.cart-item__media {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--cart-image-width);
+  aspect-ratio: var(--cart-image-ratio);
+}
+
+/* Same square photo as the detail: its margins keep the phone at 73% of the height. */
+.cart-item__image {
+  object-fit: cover;
+}
+
+.cart-item__details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-width: 0;
+  padding-block: var(--space-lg);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+}
+
+.cart-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-cart-info-gap);
+}
+
+.cart-item__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.cart-item__name,
+.cart-item__options,
+.cart-item__price {
+  margin: 0;
+  font: inherit;
+  text-transform: uppercase;
+}
+
+.cart-item__remove {
+  padding: 0;
+  font: inherit;
+  color: var(--color-delete);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}

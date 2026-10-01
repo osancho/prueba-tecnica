@@ -21,7 +21,7 @@ export function ProductGrid({
         <li
           key={product.id}
           className="product-grid__item"
-          data-product-id={product.id}
+          data-transition-key={product.id}
         >
           <ProductCard
             product={product}

@@ -1,0 +1,76 @@
+.cart {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - var(--header-height));
+}
+
+.cart__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--cart-content-gap);
+  padding: var(--cart-content-padding-top) var(--page-gutter)
+    var(--cart-content-gap);
+}
+
+.cart__title {
+  margin: 0;
+  font-size: var(--font-size-page-title);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-page-title);
+  text-transform: uppercase;
+}
+
+/* On desktop the items sit side by side; space-between spreads the columns over the width. */
+.cart__lines {
+  display: grid;
+  grid-template-columns: var(--cart-lines-columns);
+  justify-content: space-between;
+  gap: var(--cart-content-gap) var(--space-md);
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Figma pins the footer to the bottom of the screen while the lines scroll. */
+.cart__footer {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: var(--cart-footer-columns);
+  grid-template-areas: var(--cart-footer-areas);
+  gap: var(--space-md) var(--cart-footer-column-gap);
+  align-items: center;
+  padding: var(--cart-footer-padding-top) var(--page-gutter)
+    var(--cart-footer-padding-bottom);
+  background-color: var(--color-white);
+}
+
+.cart__footer--empty {
+  display: block;
+  padding-top: var(--space-md);
+}
+
+.cart__total {
+  grid-area: total;
+  display: flex;
+  justify-content: var(--cart-total-justify);
+  gap: var(--space-md);
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-sm);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cart__continue {
+  grid-area: continue;
+  width: var(--continue-shopping-width);
+}
+
+.cart__pay {
+  grid-area: pay;
+  width: var(--pay-width);
+}

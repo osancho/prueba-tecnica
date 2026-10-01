@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
-import { springTiming } from '@/lib/motion';
+import { FIGMA_SPRING, springTiming, type SpringTokens } from '@/lib/motion';
 import './CrossFade.css';
 
 interface Layer {
@@ -12,21 +12,27 @@ interface CrossFadeProps {
   id: string;
   children: ReactNode;
   className?: string;
+  spring?: SpringTokens;
 }
 
-export function CrossFade({ id, children, className }: CrossFadeProps) {
+export function CrossFade({
+  id,
+  children,
+  className,
+  spring = FIGMA_SPRING,
+}: CrossFadeProps) {
   const [current, setCurrent] = useState<Layer>({ id, content: children });
   const [leaving, setLeaving] = useState<Layer | null>(null);
   const enteringRef = useRef<HTMLSpanElement>(null);
   const leavingRef = useRef<HTMLSpanElement>(null);
 
   if (current.id !== id) {
-    setLeaving(springTiming() ? current : null);
+    setLeaving(springTiming(spring) ? current : null);
     setCurrent({ id, content: children });
   }
 
   useLayoutEffect(() => {
-    const timing = springTiming();
+    const timing = springTiming(spring);
     if (!leaving || !timing) return;
 
     enteringRef.current?.animate([{ opacity: 0 }, { opacity: 1 }], timing);
@@ -39,7 +45,7 @@ export function CrossFade({ id, children, className }: CrossFadeProps) {
       () => {},
     );
     return () => fadeOut?.cancel();
-  }, [leaving]);
+  }, [leaving, spring]);
 
   return (
     <span className={className ? `cross-fade ${className}` : 'cross-fade'}>

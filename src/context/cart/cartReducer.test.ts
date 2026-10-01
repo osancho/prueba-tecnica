@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import type { CartLine, NewCartLine } from '@/types/cart';
-import { cartLineKey, cartReducer } from './cartReducer';
+import type { CartLine } from '@/types/cart';
+import { cartReducer } from './cartReducer';
 
-const blackGalaxy: NewCartLine = {
+const blackGalaxy: CartLine = {
+  lineId: 'line-1',
   id: 'SMG-S24U',
   brand: 'Samsung',
   name: 'Galaxy S24 Ultra',
@@ -13,48 +14,34 @@ const blackGalaxy: NewCartLine = {
 };
 
 describe('cartReducer', () => {
-  it('adds a new phone as a line with one unit', () => {
+  it('adds a phone as a new line', () => {
     const lines = cartReducer([], { type: 'add', line: blackGalaxy });
 
-    expect(lines).toEqual([{ ...blackGalaxy, quantity: 1 }]);
+    expect(lines).toEqual([blackGalaxy]);
   });
 
-  it('adds another unit when the same phone, color and storage is added again', () => {
+  it('shows the same phone twice when the user adds it twice', () => {
+    const again = { ...blackGalaxy, lineId: 'line-2' };
+
     const once = cartReducer([], { type: 'add', line: blackGalaxy });
-    const twice = cartReducer(once, { type: 'add', line: blackGalaxy });
+    const twice = cartReducer(once, { type: 'add', line: again });
 
-    expect(twice).toEqual([{ ...blackGalaxy, quantity: 2 }]);
+    expect(twice).toEqual([blackGalaxy, again]);
   });
 
-  it('keeps a different color or storage of the same phone as its own line', () => {
-    const violet = { ...blackGalaxy, colorName: 'Titanium Violet' };
-    const bigger = { ...blackGalaxy, capacity: '512 GB', price: 1329 };
+  it('removes only the line the user deletes, even if another one is identical', () => {
+    const again = { ...blackGalaxy, lineId: 'line-2' };
 
-    const lines = [blackGalaxy, violet, bigger].reduce(
-      (cart, line) => cartReducer(cart, { type: 'add', line }),
-      [] as CartLine[],
-    );
-
-    expect(lines).toHaveLength(3);
-  });
-
-  it('removes only the line the user deletes', () => {
-    const violet = { ...blackGalaxy, colorName: 'Titanium Violet' };
-    const cart = [blackGalaxy, violet].reduce(
-      (lines, line) => cartReducer(lines, { type: 'add', line }),
-      [] as CartLine[],
-    );
-
-    const lines = cartReducer(cart, {
+    const lines = cartReducer([blackGalaxy, again], {
       type: 'remove',
-      key: cartLineKey(blackGalaxy),
+      lineId: 'line-1',
     });
 
-    expect(lines).toEqual([{ ...violet, quantity: 1 }]);
+    expect(lines).toEqual([again]);
   });
 
   it('restores a saved cart as it was', () => {
-    const saved = [{ ...blackGalaxy, quantity: 3 }];
+    const saved = [blackGalaxy];
 
     expect(cartReducer([], { type: 'restore', lines: saved })).toBe(saved);
   });
