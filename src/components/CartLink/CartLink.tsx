@@ -14,7 +14,13 @@ export function CartLink({ count }: CartLinkProps) {
   const Icon = count > 0 ? BagFilledIcon : BagIcon;
 
   return (
-    <Link href="/cart" className="cart-link" aria-label={cartCountLabel(count)}>
+    // Prefetching /cart preloads its CSS on every page, and Chrome warns that it goes unused.
+    <Link
+      href="/cart"
+      prefetch={false}
+      className="cart-link"
+      aria-label={cartCountLabel(count)}
+    >
       <span className="cart-link__icon">
         <Icon className="cart-link__bag" />
       </span>
