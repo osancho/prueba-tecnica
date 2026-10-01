@@ -29,6 +29,7 @@
   --line-height-lg: 24px;
   --line-height-xl: 29px;
   --line-height-button: 16px;
+  --line-height-cart-count: 16px;
   --letter-spacing-button: 0.08em;
 
   --font-size-page-title: var(--font-size-lg);
@@ -76,9 +77,16 @@
   );
 
   --header-height: 80px;
+  --header-z-index: 1;
+  --logo-width: 74px;
+  --logo-height: 24px;
   --loading-bar-height: 1px;
   --icon-size-back: 20px;
   --icon-size-bag: 18px;
+  --bag-shape-width: 13px;
+  --bag-shape-height: 16px;
+  --bag-shape-offset-x: 3px;
+  --bag-shape-offset-y: 1.32px;
   --swatch-size: 24px;
   --swatch-color-size: 20px;
   --button-height: 48px;
