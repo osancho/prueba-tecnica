@@ -28,6 +28,24 @@ export function LogoIcon(props: IconProps) {
   );
 }
 
+/* The viewBox is the 20×20 Figma icon frame, with the chevron placed at its 7.47, 5.65 offset. */
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <svg
+      viewBox="-7.47 -5.65 20 20"
+      fill="currentColor"
+      {...decorative}
+      {...props}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4.35355 0L5.06066 0.707107L1.41421 4.35355L5.06066 8L4.35355 8.70711L0 4.35355L4.35355 0Z"
+      />
+    </svg>
+  );
+}
+
 /* The viewBox is the 20×19 Figma icon frame, with the cross placed at its 6, 5.7 offset. */
 export function CloseIcon(props: IconProps) {
   return (

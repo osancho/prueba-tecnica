@@ -1,0 +1,24 @@
+/* Figma "Smartphone detail / Loading" → detail: spring 180 / 30, same curve as 80 / 20. */
+.product-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--detail-section-gap);
+  max-width: calc(var(--detail-content-max-width) + 2 * var(--page-gutter));
+  margin-inline: auto;
+  padding: var(--detail-content-offset) var(--page-gutter)
+    var(--detail-end-spacing);
+  animation: product-page-reveal var(--duration-spring-detail-reveal)
+    var(--easing-spring);
+}
+
+@keyframes product-page-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-page {
+    animation: none;
+  }
+}
