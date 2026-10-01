@@ -26,11 +26,3 @@ body {
   white-space: nowrap;
   border: 0;
 }
-
-/* Figma smart animate default: spring with mass 1, stiffness 80, damping 20 */
-::view-transition-group(*),
-::view-transition-old(*),
-::view-transition-new(*) {
-  animation-duration: var(--duration-spring);
-  animation-timing-function: var(--easing-spring);
-}

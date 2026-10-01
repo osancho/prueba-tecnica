@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { rememberListUrl } from '@/lib/listUrl';
 import { listDocumentTitle } from '@/lib/pageTitles';
-import { updateWithViewTransition } from '@/lib/viewTransition';
 import type { ProductListItem } from '@/types/product';
+import type { GridTransition } from './useGridTransition';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -13,6 +14,7 @@ interface SearchInput {
 interface SearchResults {
   search: string;
   products: ProductListItem[];
+  transition: GridTransition;
 }
 
 async function fetchProducts(
@@ -32,6 +34,7 @@ function syncSearchToPage(search: string) {
     : window.location.pathname;
   window.history.replaceState(null, '', url);
   document.title = listDocumentTitle(search);
+  rememberListUrl();
 }
 
 export function useProductSearch(
@@ -45,9 +48,12 @@ export function useProductSearch(
   const [results, setResults] = useState<SearchResults>({
     search: initialSearch,
     products: initialProducts,
+    transition: 'morph',
   });
   const [hasFailed, setHasFailed] = useState(false);
   const search = input.query.trim();
+
+  useEffect(() => rememberListUrl(), []);
 
   useEffect(() => {
     if (search === results.search) return;
@@ -57,10 +63,11 @@ export function useProductSearch(
       async () => {
         try {
           const products = await fetchProducts(search, controller.signal);
-          updateWithViewTransition(
-            () => setResults({ search, products }),
-            input.cleared ? 'dissolve' : 'morph',
-          );
+          setResults({
+            search,
+            products,
+            transition: input.cleared ? 'dissolve' : 'morph',
+          });
           syncSearchToPage(search);
         } catch {
           if (!controller.signal.aborted) setHasFailed(true);
@@ -88,6 +95,7 @@ export function useProductSearch(
   return {
     query: input.query,
     products: results.products,
+    transition: results.transition,
     isPending: search !== results.search && !hasFailed,
     hasFailed,
     changeQuery,

@@ -10,7 +10,7 @@
   }
 }
 
-/* Fixed under the header in the prototype; its own transition name keeps it above moving cards. */
+/* Fixed under the header in the prototype. */
 .product-search__bar {
   position: sticky;
   top: var(--header-height);
@@ -21,7 +21,14 @@
   padding: calc(var(--list-content-spacing) + var(--space-xs))
     var(--page-gutter) var(--space-xs);
   background-color: var(--color-white);
-  view-transition-name: search-bar;
+}
+
+/* Keeps focused cards clear of the sticky header and search bar (WCAG 2.4.11). */
+:root:has(.product-search__bar) {
+  scroll-padding-top: calc(
+    var(--header-height) + var(--list-content-spacing) + 3 * var(--space-xs) +
+      var(--search-height) + var(--results-count-row-height)
+  );
 }
 
 .product-search__status {

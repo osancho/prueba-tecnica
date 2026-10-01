@@ -1,12 +1,13 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LoadingBar } from '@/components/LoadingBar/LoadingBar';
 import { ProductGrid } from '@/components/ProductGrid/ProductGrid';
 import { ResultsCount } from '@/components/ResultsCount/ResultsCount';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
 import type { ProductListItem } from '@/types/product';
+import { useGridTransition } from './useGridTransition';
 import { useProductSearch } from './useProductSearch';
 import './ProductSearch.css';
 
@@ -32,8 +33,17 @@ function ProductSearchView({
   initialSearch,
   initialProducts,
 }: ProductSearchProps) {
-  const { query, products, isPending, hasFailed, changeQuery, clear } =
-    useProductSearch(initialSearch, initialProducts);
+  const {
+    query,
+    products,
+    transition,
+    isPending,
+    hasFailed,
+    changeQuery,
+    clear,
+  } = useProductSearch(initialSearch, initialProducts);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  useGridTransition(resultsRef, products, transition);
 
   return (
     <div className="product-search">
@@ -54,7 +64,11 @@ function ProductSearchView({
           )}
         </div>
       </div>
-      <div className="product-search__results" aria-busy={isPending}>
+      <div
+        ref={resultsRef}
+        className="product-search__results"
+        aria-busy={isPending}
+      >
         <ProductGrid
           products={products}
           prioritizeFirstRow={products === initialProducts}

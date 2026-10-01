@@ -47,6 +47,7 @@
   background: none;
   border: 0;
   cursor: pointer;
+  transition: opacity var(--duration-spring) var(--easing-spring);
 }
 
 .search-box__clear--hidden {
@@ -64,6 +65,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .search-box__clear,
   .search-box__clear--hidden {
     transition: none;
   }

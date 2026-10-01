@@ -3,6 +3,8 @@
   font-size: var(--font-size-xs);
   line-height: var(--line-height-xs);
   text-transform: uppercase;
+  /* Figma: appears with the 80 / 20 spring, hides with the 100 / 15 one. */
+  transition: opacity var(--duration-spring) var(--easing-spring);
 }
 
 .results-count--hidden {
@@ -12,6 +14,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .results-count,
   .results-count--hidden {
     transition: none;
   }
