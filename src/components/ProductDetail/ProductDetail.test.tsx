@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CartLinkContainer } from '@/components/CartLinkContainer/CartLinkContainer';
 import { CartProvider } from '@/context/cart/CartContext';
 import { ProductDetail } from './ProductDetail';
@@ -8,7 +8,10 @@ import { galaxy } from './productFixture';
 
 const push = vi.fn();
 
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push }),
+  useSearchParams: () => new URLSearchParams(window.location.search),
+}));
 
 function renderDetail() {
   render(
@@ -22,6 +25,8 @@ function renderDetail() {
 const addButton = () => screen.getByRole('button', { name: 'Añadir' });
 
 describe('ProductDetail', () => {
+  beforeEach(() => window.history.replaceState(null, '', '/product/SMG-S24U'));
+
   it('keeps "Añadir" disabled until both storage and color are chosen', async () => {
     renderDetail();
     expect(addButton()).toBeDisabled();
@@ -76,5 +81,45 @@ describe('ProductDetail', () => {
       screen.getByRole('link', { name: '1 product in the cart' }),
     ).toBeInTheDocument();
     expect(push).toHaveBeenCalledWith('/cart');
+  });
+
+  it('opens a shared link with the storage and color already chosen', () => {
+    window.history.replaceState(
+      null,
+      '',
+      '/product/SMG-S24U?storage=512+GB&color=Titanium+Black',
+    );
+
+    renderDetail();
+
+    expect(screen.getByRole('radio', { name: '512 GB' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'Titanium Black' })).toBeChecked();
+    expect(screen.getByText('1329 EUR')).toBeInTheDocument();
+    expect(addButton()).toBeEnabled();
+  });
+
+  it('keeps the chosen options in the address so the user can share them', async () => {
+    renderDetail();
+
+    await userEvent.click(screen.getByRole('radio', { name: '256 GB' }));
+    await userEvent.click(
+      screen.getByRole('radio', { name: 'Titanium Black' }),
+    );
+
+    expect(window.location.search).toBe('?storage=256+GB&color=Titanium+Black');
+  });
+
+  it('ignores options in the link that the phone does not have', () => {
+    window.history.replaceState(
+      null,
+      '',
+      '/product/SMG-S24U?storage=2+TB&color=Pink',
+    );
+
+    renderDetail();
+
+    expect(screen.getByText('From 1229 EUR')).toBeInTheDocument();
+    expect(addButton()).toBeDisabled();
+    expect(window.location.search).toBe('');
   });
 });

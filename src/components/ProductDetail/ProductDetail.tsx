@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { Button } from '@/components/Button/Button';
 import { ColorSelector } from '@/components/ColorSelector/ColorSelector';
 import { CrossFade } from '@/components/CrossFade/CrossFade';
@@ -11,6 +10,7 @@ import { useCart } from '@/context/cart/CartContext';
 import { formatPrice } from '@/lib/formatPrice';
 import { lowestPrice } from '@/lib/lowestPrice';
 import type { Product } from '@/types/product';
+import { useSelectionInUrl } from './useSelectionInUrl';
 import './ProductDetail.css';
 
 interface ProductDetailProps {
@@ -19,8 +19,10 @@ interface ProductDetailProps {
 
 export function ProductDetail({ product }: ProductDetailProps) {
   const { id, brand, name, colorOptions, storageOptions } = product;
-  const [capacity, setCapacity] = useState<string>();
-  const [colorName, setColorName] = useState<string>();
+  const { capacity, setCapacity, colorName, setColorName } = useSelectionInUrl(
+    storageOptions.map((option) => option.capacity),
+    colorOptions.map((option) => option.name),
+  );
   const { add } = useCart();
   const router = useRouter();
 
