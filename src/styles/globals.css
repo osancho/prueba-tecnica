@@ -10,7 +10,7 @@ body {
   margin: 0;
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-light);
-  line-height: var(--line-height-none);
+  line-height: var(--line-height-md);
   color: var(--color-black);
   background-color: var(--color-white);
 }
