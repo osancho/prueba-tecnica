@@ -1,7 +1,7 @@
 import type { Product, ProductListItem } from '@/types/product';
 import { apiClient } from './apiClient';
 import { NotFoundError } from './apiErrors';
-import { secureImageUrl } from './secureImageUrl';
+import { productImageUrl } from './images/productImageUrls';
 import { uniqueById } from './uniqueById';
 
 export const PRODUCT_LIST_SIZE = 20;
@@ -9,7 +9,7 @@ export const PRODUCT_LIST_SIZE = 20;
 const PRODUCT_LIST_FETCH_LIMIT = 40;
 
 function toListItem(item: ProductListItem): ProductListItem {
-  return { ...item, imageUrl: secureImageUrl(item.imageUrl) };
+  return { ...item, imageUrl: productImageUrl(item.imageUrl) };
 }
 
 export async function getProducts(search?: string): Promise<ProductListItem[]> {
@@ -31,7 +31,7 @@ export async function getProduct(id: string): Promise<Product | null> {
       ...product,
       colorOptions: product.colorOptions.map((color) => ({
         ...color,
-        imageUrl: secureImageUrl(color.imageUrl),
+        imageUrl: productImageUrl(color.imageUrl),
       })),
       similarProducts: uniqueById(product.similarProducts).map(toListItem),
     };
