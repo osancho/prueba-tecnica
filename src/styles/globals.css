@@ -8,5 +8,9 @@
 
 body {
   margin: 0;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-none);
+  color: var(--color-black);
+  background-color: var(--color-white);
 }
