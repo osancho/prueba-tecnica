@@ -214,4 +214,4 @@ Only the server talks to the API:
 
 ## How this was built
 
-I built this project with AI assistance (Claude Code), working under explicit rules versioned in [`CLAUDE.md`](CLAUDE.md): Node 18 end to end, Figma as the source of truth, accessibility, tests named after behaviour and a single source of truth for every value. I reviewed every change in a pull request, and checked every design decision against the Figma file.
+I built this project with AI assistance (Claude Code), working under explicit rules versioned in [`AGENTS.md`](AGENTS.md): Node 18 end to end, Figma as the source of truth, accessibility, tests named after behaviour and a single source of truth for every value. I reviewed every change in a pull request, and checked every design decision against the Figma file.

@@ -214,4 +214,4 @@ Solo el servidor habla con la API:
 
 ## Cómo se ha hecho
 
-He construido este proyecto con ayuda de IA (Claude Code), trabajando con reglas explícitas versionadas en [`CLAUDE.md`](CLAUDE.md): Node 18 de principio a fin, Figma como fuente de verdad, accesibilidad, tests con nombres que describen comportamiento y una única fuente de verdad para cada valor. Revisé cada cambio en una pull request y contrasté cada decisión de diseño con el archivo de Figma.
+He construido este proyecto con ayuda de IA (Claude Code), trabajando con reglas explícitas versionadas en [`AGENTS.md`](AGENTS.md): Node 18 de principio a fin, Figma como fuente de verdad, accesibilidad, tests con nombres que describen comportamiento y una única fuente de verdad para cada valor. Revisé cada cambio en una pull request y contrasté cada decisión de diseño con el archivo de Figma.
