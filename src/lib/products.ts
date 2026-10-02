@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import type { Product, ProductListItem } from '@/types/product';
 import { apiClient } from './apiClient';
 import { NotFoundError } from './apiErrors';
@@ -21,7 +22,12 @@ export async function getProducts(search?: string): Promise<ProductListItem[]> {
   return uniqueById(items).slice(0, PRODUCT_LIST_SIZE).map(toListItem);
 }
 
-export async function getProduct(id: string): Promise<Product | null> {
+// The page and its metadata both ask for the product. Next merges the two calls only when the
+// response is cached; when the API fails or is waking up it would be asked, and waited for,
+// twice. cache() keeps it to one call per render.
+export const getProduct = cache(async function getProduct(
+  id: string,
+): Promise<Product | null> {
   try {
     const product = await apiClient<Product>(
       `/products/${encodeURIComponent(id)}`,
@@ -39,4 +45,4 @@ export async function getProduct(id: string): Promise<Product | null> {
     if (error instanceof NotFoundError) return null;
     throw error;
   }
-}
+});
