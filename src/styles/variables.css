@@ -58,24 +58,24 @@
   --border-width-thin: 0.5px;
   --border-width-regular: 1px;
 
-  /* Figma smart animate spring (mass 1, stiffness 80, damping 20), settles at 99.9% */
-  --duration-spring: 1337ms;
+  /* Figma "Slow" spring (mass 1, stiffness 80, damping 20), cut where Figma's prototype ends it */
+  --duration-spring: 1250ms;
   --easing-spring: linear(
     0,
-    0.165,
-    0.413,
-    0.612,
-    0.75,
-    0.841,
-    0.899,
-    0.936,
-    0.96,
-    0.975,
-    0.984,
-    0.99,
+    0.149,
+    0.382,
+    0.578,
+    0.719,
+    0.815,
+    0.879,
+    0.922,
+    0.949,
+    0.967,
+    0.978,
+    0.986,
+    0.991,
     0.994,
     0.996,
-    0.997,
     0.998,
     1
   );
