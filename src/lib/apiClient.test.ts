@@ -62,4 +62,17 @@ describe('apiClient', () => {
     );
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it('keeps responses that only one user needs out of the shared cache', async () => {
+    fetchMock.mockImplementation(async () => jsonResponse([]));
+
+    await apiClient('/products', {}, { cacheable: false });
+    await apiClient('/products');
+
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({ cache: 'no-store' });
+    expect(fetchMock.mock.calls[0][1].next).toBeUndefined();
+    expect(fetchMock.mock.calls[1][1]).toMatchObject({
+      next: { revalidate: 3600 },
+    });
+  });
 });

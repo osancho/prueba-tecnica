@@ -87,6 +87,28 @@ describe('getProducts', () => {
     await expect(getProducts()).rejects.toThrow(InvalidApiResponseError);
   });
 
+  it('caches the catalog for everyone but never a single search', async () => {
+    apiClientMock.mockResolvedValue([]);
+
+    await getProducts();
+    await getProducts('galaxy');
+
+    expect(apiClientMock.mock.calls[0][2]).toEqual({ cacheable: true });
+    expect(apiClientMock.mock.calls[1][2]).toEqual({ cacheable: false });
+  });
+
+  it('sends at most 50 characters of a search to the API', async () => {
+    apiClientMock.mockResolvedValue([]);
+
+    await getProducts('a'.repeat(80));
+
+    expect(apiClientMock).toHaveBeenCalledWith(
+      '/products',
+      expect.objectContaining({ search: 'a'.repeat(50) }),
+      expect.anything(),
+    );
+  });
+
   it('forwards the search term to the API', async () => {
     apiClientMock.mockResolvedValue([]);
 
@@ -95,6 +117,7 @@ describe('getProducts', () => {
     expect(apiClientMock).toHaveBeenCalledWith(
       '/products',
       expect.objectContaining({ search: 'galaxy' }),
+      expect.anything(),
     );
   });
 });

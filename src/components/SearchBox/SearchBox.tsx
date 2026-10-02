@@ -1,5 +1,6 @@
 import { useId, useRef } from 'react';
 import { CloseIcon } from '@/components/icons';
+import { SEARCH_MAX_LENGTH } from '@/lib/searchTerm';
 import './SearchBox.css';
 
 interface SearchBoxProps {
@@ -7,6 +8,7 @@ interface SearchBoxProps {
   showClear: boolean;
   onChange: (value: string) => void;
   onClear: () => void;
+  onSubmit: () => void;
 }
 
 export function SearchBox({
@@ -14,6 +16,7 @@ export function SearchBox({
   showClear,
   onChange,
   onClear,
+  onSubmit,
 }: SearchBoxProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -24,7 +27,14 @@ export function SearchBox({
   }
 
   return (
-    <div className="search-box" role="search">
+    <form
+      className="search-box"
+      role="search"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit();
+      }}
+    >
       <label className="visually-hidden" htmlFor={inputId}>
         Search for a smartphone
       </label>
@@ -35,6 +45,7 @@ export function SearchBox({
         type="search"
         enterKeyHint="search"
         autoComplete="off"
+        maxLength={SEARCH_MAX_LENGTH}
         placeholder="Search for a smartphone..."
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -49,6 +60,6 @@ export function SearchBox({
       >
         <CloseIcon className="search-box__clear-icon" />
       </button>
-    </div>
+    </form>
   );
 }
