@@ -109,6 +109,9 @@
     1
   );
   --duration-spring-reveal: 800ms;
+  /* The file sets no transition for leaving a "While hovering" state; timed on the prototype */
+  --duration-hover-out-height: 200ms;
+  --duration-hover-out: 250ms;
   --duration-loading-bar: 400ms;
   /* Figma "Loading" holds the full bar for 300 ms before the list comes in */
   --first-load-hold: 300ms;
