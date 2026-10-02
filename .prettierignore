@@ -1,4 +1,6 @@
 .next
 coverage
+test-results
+playwright-report
 package-lock.json
 next-env.d.ts
