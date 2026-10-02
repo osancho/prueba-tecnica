@@ -31,6 +31,19 @@
     var(--cart-content-gap);
 }
 
+/* Figma has no design for this message: it follows the cart item text. */
+.cart__notice {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+  text-transform: uppercase;
+}
+
+/* Out of the flow while empty, so it adds no gap to Figma's layout. */
+.cart__notice:empty {
+  position: absolute;
+}
+
 .cart__title {
   margin: 0;
   font-size: var(--font-size-page-title);

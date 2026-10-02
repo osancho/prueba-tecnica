@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 import { CartProvider } from '@/context/cart/cart-context';
+import { httpProductRepository } from '@/core/product/infrastructure/http-product-repository';
 import CartPage, { metadata } from '../page';
+
+vi.mock('@/core/product/infrastructure/http-product-repository', () => ({
+  httpProductRepository: { findById: vi.fn() },
+}));
 
 function renderCartPage() {
   return render(
@@ -13,6 +18,12 @@ function renderCartPage() {
 }
 
 describe('CartPage', () => {
+  // Offline: the saved cart is shown as it was.
+  beforeEach(() => {
+    vi.mocked(httpProductRepository.findById).mockRejectedValue(
+      new Error('offline'),
+    );
+  });
   afterEach(() => localStorage.clear());
 
   it('shows the cart under its own title', async () => {
