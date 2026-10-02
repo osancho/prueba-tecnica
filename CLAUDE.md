@@ -22,24 +22,27 @@ Technical test for a senior frontend role (Inditex / Zara): smartphone catalog w
 ## Stack
 
 - Next.js 15 App Router + TypeScript, React 19, SSR.
-- **Node 18 strict**: `.nvmrc` = 18.20.8 (last Node 18 release), `engines` `>=18.18.0 <19` enforced by `engine-strict=true` in `.npmrc`. Pin any new tool to a Node 18 compatible version (e.g. Vitest 3, Vite 6, jsdom 26, lint-staged 15; typescript-eslint pinned to 8.55.0 via `overrides`). `postcss` is overridden to ^8.5.28 to patch the copy bundled by Next. `sharp` is overridden to ^0.34.5 (0.35 needs Node 20 and npm silently skips it, leaving `next/image` unoptimized); its HIGH libvips/libheif advisory is accepted: only images from the API host are processed. Known and accepted: 2 moderate advisories in Vitest 3 (GHSA-82fw-gwwq-j7x9, dev-only, fixed only in Vitest ≥ 4.1.11 which needs Node 20), documented in the README.
+- **Node 18 strict**: `.nvmrc` = 18.20.8 (last Node 18 release), `engines` `>=18.18.0 <19` enforced by `engine-strict=true` in `.npmrc`. Pin any new tool to a Node 18 compatible version (e.g. Vitest 3, Vite 6, jsdom 26, lint-staged 15; typescript-eslint pinned to 8.55.0 via `pnpm.overrides`). `postcss` is overridden to ^8.5.28 to patch the copy bundled by Next. `sharp` is overridden to ^0.34.5 (0.35 needs Node 20 and would be skipped silently, leaving `next/image` unoptimized); its HIGH libvips/libheif advisory is accepted: only images from the API host are processed. Known and accepted: 2 moderate advisories in Vitest 3 (GHSA-82fw-gwwq-j7x9, dev-only, fixed only in Vitest ≥ 4.1.11 which needs Node 20), documented in the README.
 - Plain CSS, BEM, CSS custom properties. No Sass, Tailwind or CSS-in-JS.
 - Cart state: React Context + `useReducer`, no external libraries.
 - Vitest + Testing Library + vitest-axe 0.1.0 (`toHaveNoViolations` on every page; contrast is disabled in jsdom and checked in the browser). ESLint (next core-web-vitals + typescript + prettier) + Prettier. Husky + lint-staged on pre-commit.
-- Deployment: the user's own VPS running Node 18 (`npm run build` + `npm start`), so the whole chain stays on Node 18 end to end. Vercel was discarded because it no longer offers Node 18.
+- **pnpm 10.34.6** (last major on Node 18), pinned in `packageManager` and provided by Corepack (`corepack enable`). `pnpm.onlyBuiltDependencies` allows the install scripts of `esbuild`, `sharp` and `unrs-resolver`; any new dependency with a build script must be added there. Never use npm or npx in commands, scripts or docs.
+- Deployment: the user's own VPS running Node 18 (`pnpm build` + `pnpm start`), so the whole chain stays on Node 18 end to end. Vercel was discarded because it no longer offers Node 18.
 
 ## Commands
 
 ```
 nvm use
-npm run dev       # development (not minified)
-npm run build     # production build (minified, concatenated)
-npm start         # serve production build
-npm run lint
-npm run typecheck
-npm run format        # format:check in CI
-npm test              # test:coverage in CI
-npm run test:e2e      # Playwright on the production build
+corepack enable   # once per Node install
+pnpm install
+pnpm dev          # development (not minified)
+pnpm build        # production build (minified, concatenated)
+pnpm start        # serve production build
+pnpm lint
+pnpm typecheck
+pnpm format       # format:check in CI
+pnpm test         # test:coverage in CI
+pnpm test:e2e     # Playwright on the production build
 ```
 
 ## Structure
@@ -106,4 +109,4 @@ Naming:
 - Precise and complete wording in everything written (copy, alt texts, metadata, commits, docs).
 - Minimal by default: native platform and stdlib first, no speculative abstractions, smallest diff that fully meets the requirements. Never trade away accessibility, security or required features.
 - Tests describe what the end user experiences (named by outcome), not implementation details; pure helpers are covered through the behaviour that uses them. Server modules use `// @vitest-environment node`. Mocks/stubs are reset globally in `vitest.config.mts` — no per-file reset boilerplate.
-- Minimum tests: cart reducer, search, detail add-to-cart disabled state. Playwright 1.61.1 E2E (`e2e/`, Chromium only, `npm run test:e2e`) runs the user journeys and a clean-console check on the production build; CI runs it with the `API_BASE_URL` and `API_KEY` secrets.
+- Minimum tests: cart reducer, search, detail add-to-cart disabled state. Playwright 1.61.1 E2E (`e2e/`, Chromium only, `pnpm test:e2e`) runs the user journeys and a clean-console check on the production build; CI runs it with the `API_BASE_URL` and `API_KEY` secrets.

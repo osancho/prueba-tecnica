@@ -27,7 +27,7 @@ How each point of the brief is met.
 | Similar products at the bottom                                                      | `SimilarProducts`                                                                                            |
 | Cart: image, name, storage and color, price; remove; total; continue shopping       | `Cart`, `CartItem`                                                                                           |
 | Responsive and faithful to Figma, Helvetica, Arial, sans-serif                      | `src/styles/variables.css` and each component's CSS                                                          |
-| Development (unminified) and production (concatenated, minified) modes              | `npm run dev`, `npm run build && npm start`                                                                  |
+| Development (unminified) and production (concatenated, minified) modes              | `pnpm dev`, `pnpm build && pnpm start`                                                                       |
 | React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                  | React 19.1, plain CSS, Node 18.20.8, `CartContext`, `src/services/api-client.ts`                             |
 | Tests, accessibility, linters and formatters, clean console                         | [Quality](#quality), [Accessibility](#accessibility)                                                         |
 | Optional: SSR with Next.js and CSS variables                                        | Server components for the list and detail; tokens in `variables.css`                                         |
@@ -35,13 +35,16 @@ How each point of the brief is met.
 
 ## Getting started
 
-Requirements: **Node 18.20.8** (`.nvmrc`). `package.json` declares `"engines": { "node": ">=18.18.0 <19" }` and `.npmrc` sets `engine-strict=true`, so `npm` refuses to install on another major version.
+Requirements: **Node 18.20.8** (`.nvmrc`) and **pnpm 10.34.6**, the last pnpm major that runs on Node 18. `package.json` pins pnpm in `packageManager`, so Corepack (bundled with Node) provides that exact version with no global install. It also declares `"engines": { "node": ">=18.18.0 <19" }`, and `.npmrc` sets `engine-strict=true`, so installing on another Node major fails.
 
 ```bash
 nvm use
-npm ci
-cp .env.example .env.local   # then set API_KEY
+corepack enable                  # once per Node install: provides the pinned pnpm
+pnpm install --frozen-lockfile
+cp .env.example .env.local       # then set API_KEY
 ```
+
+pnpm 10 skips dependency install scripts unless they are allowed: `pnpm.onlyBuiltDependencies` lists the three that prepare native binaries (`esbuild`, `sharp`, `unrs-resolver`).
 
 | Variable       | Purpose                                                                           |
 | -------------- | --------------------------------------------------------------------------------- |
@@ -51,23 +54,23 @@ cp .env.example .env.local   # then set API_KEY
 ## Development and production
 
 ```bash
-npm run dev                  # development: unminified assets, fast refresh
-npm run build && npm start   # production: concatenated and minified assets on port 3000
+pnpm dev                  # development: unminified assets, fast refresh
+pnpm build && pnpm start  # production: concatenated and minified assets on port 3000
 ```
 
 ## Scripts
 
-| Script                            | What it does                                                                   |
-| --------------------------------- | ------------------------------------------------------------------------------ |
-| `npm run dev`                     | Development server.                                                            |
-| `npm run build`                   | Production build.                                                              |
-| `npm start`                       | Serves the production build.                                                   |
-| `npm run lint`                    | ESLint (Next core web vitals, TypeScript, Prettier compatibility).             |
-| `npm run typecheck`               | `tsc --noEmit`.                                                                |
-| `npm run format` / `format:check` | Prettier, writing or only checking.                                            |
-| `npm test`                        | Vitest unit and component tests.                                               |
-| `npm run test:coverage`           | The same with V8 coverage in `coverage/`.                                      |
-| `npm run test:e2e`                | Playwright end-to-end tests on the production build (see [Quality](#quality)). |
+| Script                         | What it does                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| `pnpm dev`                     | Development server.                                                            |
+| `pnpm build`                   | Production build.                                                              |
+| `pnpm start`                   | Serves the production build.                                                   |
+| `pnpm lint`                    | ESLint (Next core web vitals, TypeScript, Prettier compatibility).             |
+| `pnpm typecheck`               | `tsc --noEmit`.                                                                |
+| `pnpm format` / `format:check` | Prettier, writing or only checking.                                            |
+| `pnpm test`                    | Vitest unit and component tests.                                               |
+| `pnpm test:coverage`           | The same with V8 coverage in `coverage/`.                                      |
+| `pnpm test:e2e`                | Playwright end-to-end tests on the production build (see [Quality](#quality)). |
 
 ## Architecture
 
@@ -170,7 +173,7 @@ Only the server talks to the API:
   - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
   - a check that fails on any console warning or error, or any unused stylesheet preload, on the list, a product, the cart and a 404;
   - a second server pointed at a fake API that is down, proving a product page asks the API once.
-  - First run: `npx playwright install chromium`. They use the real API, so `.env.local` must be set, and ports 3150, 3151 and 3199 must be free.
+  - First run: `pnpm exec playwright install chromium`. They use the real API, so `.env.local` must be set, and ports 3150, 3151 and 3199 must be free.
 - **Pre-commit**: Husky runs lint-staged (ESLint and Prettier on staged files).
 - **CI** (GitHub Actions, each action pinned to a commit SHA): format check, lint, typecheck, tests with coverage, build and SonarCloud, then the E2E job, which uploads the Playwright report if it fails.
 - **Git flow**: one branch per change, Conventional Commits, and every change merged through a reviewed [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr).
