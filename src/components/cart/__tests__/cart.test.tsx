@@ -151,8 +151,11 @@ describe('Cart', () => {
       pixel,
     ]);
 
-    expect(await screen.findByRole('status')).toHaveTextContent(
-      'A phone in your cart is no longer available and was removed.',
+    // The status region is there from the start, empty; wait for the check to fill it.
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent(
+        'A phone in your cart is no longer available and was removed.',
+      ),
     );
     expect(screen.getAllByRole('listitem')).toHaveLength(1);
     expect(
@@ -164,8 +167,11 @@ describe('Cart', () => {
     findById.mockResolvedValue(galaxy);
     renderCartWith([{ ...violetGalaxy, capacity: '256 GB', price: 1 }]);
 
-    expect(await screen.findByRole('status')).toHaveTextContent(
-      'A phone in your cart has a new price.',
+    // The status region is there from the start, empty; wait for the check to fill it.
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent(
+        'A phone in your cart has a new price.',
+      ),
     );
     expect(screen.getByText('1229 EUR', { selector: 'span' })).toBeVisible();
   });
