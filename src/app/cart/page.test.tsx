@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { axe } from 'vitest-axe';
-import { CartProvider } from '@/context/cart/CartContext';
+import { CartProvider } from '@/context/cart/cart_context';
 import CartPage, { metadata } from './page';
 
 function renderCartPage() {

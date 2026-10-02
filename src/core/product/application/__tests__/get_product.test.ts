@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { galaxy } from '@/components/ProductDetail/productFixture';
+import { galaxy } from '@/components/product_detail/product_fixture';
 import type { Product, ProductListItem } from '../../domain/product';
 import type { ProductRepository } from '../../domain/product_repository';
 import { getProduct } from '../get_product';

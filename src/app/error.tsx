@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { startTransition } from 'react';
-import { Button } from '@/components/Button/Button';
+import { Button } from '@/components/button/button';
 import './error.css';
 
 interface ErrorPageProps {

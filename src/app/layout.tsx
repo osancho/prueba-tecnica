@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { CartLinkContainer } from '@/components/CartLinkContainer/CartLinkContainer';
-import { Navbar } from '@/components/Navbar/Navbar';
-import { PageLoadBar } from '@/components/PageLoadBar/PageLoadBar';
-import { CartProvider } from '@/context/cart/CartContext';
-import { DEFAULT_TITLE, TITLE_TEMPLATE } from '@/lib/pageTitles';
+import { CartLinkContainer } from '@/components/cart_link_container/cart_link_container';
+import { Navbar } from '@/components/navbar/navbar';
+import { PageLoadBar } from '@/components/page_load_bar/page_load_bar';
+import { CartProvider } from '@/context/cart/cart_context';
+import { DEFAULT_TITLE, TITLE_TEMPLATE } from '@/lib/page_titles';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {

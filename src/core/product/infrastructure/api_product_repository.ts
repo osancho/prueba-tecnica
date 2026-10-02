@@ -1,4 +1,4 @@
-import { SEARCH_MAX_LENGTH } from '@/lib/searchTerm';
+import { SEARCH_MAX_LENGTH } from '@/lib/search_term';
 import { apiClient } from '@/services/api_client';
 import { InvalidApiResponseError, NotFoundError } from '@/services/api_errors';
 import { productImageUrl } from '@/services/images/product_image_urls';

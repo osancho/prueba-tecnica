@@ -1,4 +1,4 @@
-import { uniqueById } from '@/lib/uniqueById';
+import { uniqueById } from '@/lib/unique_by_id';
 import type { ProductListItem } from '../domain/product';
 import type { ProductRepository } from '../domain/product_repository';
 
