@@ -9,11 +9,13 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { CartLine, NewCartLine } from '@/types/cart';
-import { cartTotal, isCartLine } from './cartLine';
-import { cartReducer } from './cartReducer';
-
-const STORAGE_KEY = 'mbst-cart';
+import {
+  cartTotal,
+  type CartLine,
+  type NewCartLine,
+} from '@/core/cart/domain/cart_line';
+import { cartReducer } from '@/core/cart/domain/cart_reducer';
+import { localStorageCartRepository as cartRepository } from '@/core/cart/infrastructure/local_storage_cart_repository';
 
 interface CartContextValue {
   lines: CartLine[];
@@ -27,38 +29,18 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-// Storage can be blocked (private mode) or hold data from an older version: start empty then.
-function readStoredCart(): CartLine[] {
-  try {
-    const stored: unknown = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) ?? '[]',
-    );
-    return Array.isArray(stored) ? stored.filter(isCartLine) : [];
-  } catch {
-    return [];
-  }
-}
-
-function storeCart(lines: CartLine[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
-  } catch {
-    // The cart keeps working for this visit without persistence.
-  }
-}
-
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, dispatch] = useReducer(cartReducer, []);
   // Read after mount so the server and the first client render agree on an empty cart.
   const [isRestored, setIsRestored] = useState(false);
 
   useEffect(() => {
-    dispatch({ type: 'restore', lines: readStoredCart() });
+    dispatch({ type: 'restore', lines: cartRepository.load() });
     setIsRestored(true);
   }, []);
 
   useEffect(() => {
-    if (isRestored) storeCart(lines);
+    if (isRestored) cartRepository.save(lines);
   }, [lines, isRestored]);
 
   const value = useMemo<CartContextValue>(

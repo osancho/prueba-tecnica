@@ -1,4 +1,8 @@
-import type { ApiError } from '@/types/product';
+/** Error body the API and our route handlers answer with. */
+export interface ApiError {
+  error: string;
+  message: string;
+}
 
 export class NotFoundError extends Error {
   constructor(path: string) {

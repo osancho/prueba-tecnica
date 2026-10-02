@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { CartLinkContainer } from '@/components/CartLinkContainer/CartLinkContainer';
-import type { NewCartLine } from '@/types/cart';
+import type { NewCartLine } from '@/core/cart/domain/cart_line';
 import { CartProvider, useCart } from './CartContext';
 
 const pixel: NewCartLine = {

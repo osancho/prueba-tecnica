@@ -2,8 +2,8 @@
 
 import { useRef, type PointerEvent } from 'react';
 import { ProductCard } from '@/components/ProductCard/ProductCard';
+import type { ProductListItem } from '@/core/product/domain/product';
 import { useDragScroll } from '@/lib/useDragScroll';
-import type { ProductListItem } from '@/types/product';
 import './SimilarProducts.css';
 
 interface SimilarProductsProps {

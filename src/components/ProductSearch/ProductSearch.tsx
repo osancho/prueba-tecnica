@@ -6,8 +6,8 @@ import { LoadingBar } from '@/components/LoadingBar/LoadingBar';
 import { ProductGrid } from '@/components/ProductGrid/ProductGrid';
 import { ResultsCount } from '@/components/ResultsCount/ResultsCount';
 import { SearchBox } from '@/components/SearchBox/SearchBox';
+import type { ProductListItem } from '@/core/product/domain/product';
 import { useListTransition } from '@/lib/useListTransition';
-import type { ProductListItem } from '@/types/product';
 import { useProductSearch } from './useProductSearch';
 import './ProductSearch.css';
 

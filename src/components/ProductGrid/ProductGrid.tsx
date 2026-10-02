@@ -1,5 +1,5 @@
 import { ProductCard } from '@/components/ProductCard/ProductCard';
-import type { ProductListItem } from '@/types/product';
+import type { ProductListItem } from '@/core/product/domain/product';
 import './ProductGrid.css';
 
 // Widest first row in the design (desktop): these images can be the LCP.

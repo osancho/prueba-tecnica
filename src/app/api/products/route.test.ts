@@ -1,10 +1,13 @@
 // @vitest-environment node
 import { NextRequest } from 'next/server';
 import { describe, expect, it, vi } from 'vitest';
-import { getProducts } from '@/lib/products';
+import { getProducts } from '@/core/product/application/get_products';
+import { apiProductRepository } from '@/core/product/infrastructure/api_product_repository';
 import { GET } from './route';
 
-vi.mock('@/lib/products', () => ({ getProducts: vi.fn() }));
+vi.mock('@/core/product/application/get_products', () => ({
+  getProducts: vi.fn(),
+}));
 
 const getProductsMock = vi.mocked(getProducts);
 
@@ -27,7 +30,10 @@ describe('GET /api/products', () => {
 
     const response = await GET(searchRequest('?search=%20galaxy%20'));
 
-    expect(getProductsMock).toHaveBeenCalledWith('galaxy');
+    expect(getProductsMock).toHaveBeenCalledWith(
+      apiProductRepository,
+      'galaxy',
+    );
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual(results);
   });
@@ -37,7 +43,10 @@ describe('GET /api/products', () => {
 
     await GET(searchRequest('?search=%20%20'));
 
-    expect(getProductsMock).toHaveBeenCalledWith(undefined);
+    expect(getProductsMock).toHaveBeenCalledWith(
+      apiProductRepository,
+      undefined,
+    );
   });
 
   it('answers with a readable 502 when the products API is down', async () => {

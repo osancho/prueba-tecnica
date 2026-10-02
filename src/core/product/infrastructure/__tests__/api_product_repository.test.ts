@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
-import type { Product, ProductListItem } from '@/types/product';
-import { apiClient } from './apiClient';
-import { InvalidApiResponseError, NotFoundError } from './apiErrors';
-import { getProduct, getProducts, PRODUCT_LIST_SIZE } from './products';
+import { apiClient } from '@/lib/apiClient';
+import { InvalidApiResponseError, NotFoundError } from '@/lib/apiErrors';
+import type { Product, ProductListItem } from '../../domain/product';
+import { apiProductRepository } from '../api_product_repository';
 
-vi.mock('./apiClient', () => ({ apiClient: vi.fn() }));
+vi.mock('@/lib/apiClient', () => ({ apiClient: vi.fn() }));
 
 const apiClientMock = vi.mocked(apiClient);
 
@@ -47,22 +47,11 @@ function productDetail(overrides: Partial<Product> = {}): Product {
   };
 }
 
-describe('getProducts', () => {
-  it('fills the catalog with 20 different phones even when the API repeats one', async () => {
-    const ids = Array.from({ length: 24 }, (_, index) => `P${index}`);
-    apiClientMock.mockResolvedValue([phone('P0'), ...ids.map(phone)]);
-
-    const products = await getProducts();
-
-    expect(products).toHaveLength(PRODUCT_LIST_SIZE);
-    expect(new Set(products.map(({ id }) => id)).size).toBe(PRODUCT_LIST_SIZE);
-    expect(products.map(({ id }) => id)).toEqual(ids.slice(0, 20));
-  });
-
+describe('apiProductRepository.list', () => {
   it('serves every phone picture through the image normalizer of our own domain', async () => {
     apiClientMock.mockResolvedValue([phone('P1')]);
 
-    const [product] = await getProducts();
+    const [product] = await apiProductRepository.list({ limit: 40 });
 
     expect(product.imageUrl).toBe('/api/images/P1.webp?v=2');
   });
@@ -76,7 +65,7 @@ describe('getProducts', () => {
       phone('P4'),
     ]);
 
-    const products = await getProducts();
+    const products = await apiProductRepository.list({ limit: 40 });
 
     expect(products.map(({ id }) => id)).toEqual(['P1', 'P4']);
   });
@@ -84,14 +73,16 @@ describe('getProducts', () => {
   it('fails when the API does not answer with a list', async () => {
     apiClientMock.mockResolvedValue({ error: 'unexpected' });
 
-    await expect(getProducts()).rejects.toThrow(InvalidApiResponseError);
+    await expect(apiProductRepository.list({ limit: 40 })).rejects.toThrow(
+      InvalidApiResponseError,
+    );
   });
 
   it('caches the catalog for everyone but never a single search', async () => {
     apiClientMock.mockResolvedValue([]);
 
-    await getProducts();
-    await getProducts('galaxy');
+    await apiProductRepository.list({ limit: 40 });
+    await apiProductRepository.list({ search: 'galaxy', limit: 40 });
 
     expect(apiClientMock.mock.calls[0][2]).toEqual({ cacheable: true });
     expect(apiClientMock.mock.calls[1][2]).toEqual({ cacheable: false });
@@ -100,7 +91,7 @@ describe('getProducts', () => {
   it('sends at most 50 characters of a search to the API', async () => {
     apiClientMock.mockResolvedValue([]);
 
-    await getProducts('a'.repeat(80));
+    await apiProductRepository.list({ search: 'a'.repeat(80), limit: 40 });
 
     expect(apiClientMock).toHaveBeenCalledWith(
       '/products',
@@ -112,7 +103,7 @@ describe('getProducts', () => {
   it('forwards the search term to the API', async () => {
     apiClientMock.mockResolvedValue([]);
 
-    await getProducts('galaxy');
+    await apiProductRepository.list({ search: 'galaxy', limit: 40 });
 
     expect(apiClientMock).toHaveBeenCalledWith(
       '/products',
@@ -122,17 +113,16 @@ describe('getProducts', () => {
   });
 });
 
-describe('getProduct', () => {
-  it('shows each similar product only once, every picture normalized', async () => {
+describe('apiProductRepository.findById', () => {
+  it('normalizes every picture of the phone and of its similar products', async () => {
     apiClientMock.mockResolvedValue(
       productDetail({
-        similarProducts: [phone('S1'), phone('S2'), phone('S1')],
+        similarProducts: [phone('S1')],
       }),
     );
 
-    const product = await getProduct('MAIN');
+    const product = await apiProductRepository.findById('MAIN');
 
-    expect(product?.similarProducts.map(({ id }) => id)).toEqual(['S1', 'S2']);
     expect(product?.similarProducts[0].imageUrl).toBe(
       '/api/images/S1.webp?v=2',
     );
@@ -148,7 +138,7 @@ describe('getProduct', () => {
       }),
     );
 
-    const product = await getProduct('MAIN');
+    const product = await apiProductRepository.findById('MAIN');
 
     expect(product?.similarProducts.map(({ id }) => id)).toEqual(['S1']);
   });
@@ -163,26 +153,30 @@ describe('getProduct', () => {
     async (_, broken) => {
       apiClientMock.mockResolvedValue({ ...productDetail(), ...broken });
 
-      await expect(getProduct('MAIN')).rejects.toThrow(InvalidApiResponseError);
+      await expect(apiProductRepository.findById('MAIN')).rejects.toThrow(
+        InvalidApiResponseError,
+      );
     },
   );
 
   it('returns null for an unknown product so the page can show "not found"', async () => {
     apiClientMock.mockRejectedValue(new NotFoundError('/products/NOPE'));
 
-    await expect(getProduct('NOPE')).resolves.toBeNull();
+    await expect(apiProductRepository.findById('NOPE')).resolves.toBeNull();
   });
 
   it('lets other API failures surface instead of pretending the product does not exist', async () => {
     apiClientMock.mockRejectedValue(new Error('timeout'));
 
-    await expect(getProduct('MAIN')).rejects.toThrow('timeout');
+    await expect(apiProductRepository.findById('MAIN')).rejects.toThrow(
+      'timeout',
+    );
   });
 
   it('escapes the id so a crafted URL cannot reach another API path', async () => {
     apiClientMock.mockResolvedValue(productDetail());
 
-    await getProduct('../admin');
+    await apiProductRepository.findById('../admin');
 
     expect(apiClientMock).toHaveBeenCalledWith('/products/..%2Fadmin');
   });

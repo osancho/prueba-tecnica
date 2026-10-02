@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useId } from 'react';
+import type { ProductListItem } from '@/core/product/domain/product';
 import { formatPrice } from '@/lib/formatPrice';
-import type { ProductListItem } from '@/types/product';
 import './ProductCard.css';
 
 interface ProductCardProps {

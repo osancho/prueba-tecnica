@@ -1,6 +1,6 @@
 import Image from 'next/image';
+import type { CartLine } from '@/core/cart/domain/cart_line';
 import { formatPrice } from '@/lib/formatPrice';
-import type { CartLine } from '@/types/cart';
 import './CartItem.css';
 
 interface CartItemProps {

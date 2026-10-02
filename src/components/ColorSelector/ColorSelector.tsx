@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { CrossFade } from '@/components/CrossFade/CrossFade';
 import { OptionGroup } from '@/components/OptionGroup/OptionGroup';
-import type { ColorOption } from '@/types/product';
+import type { ColorOption } from '@/core/product/domain/product';
 import './ColorSelector.css';
 
 interface ColorSelectorProps {

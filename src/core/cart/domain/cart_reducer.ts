@@ -1,4 +1,4 @@
-import type { CartLine } from '@/types/cart';
+import type { CartLine } from './cart_line';
 
 export type CartAction =
   | { type: 'add'; line: CartLine }

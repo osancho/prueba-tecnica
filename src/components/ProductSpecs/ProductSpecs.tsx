@@ -1,4 +1,4 @@
-import type { Product } from '@/types/product';
+import type { Product } from '@/core/product/domain/product';
 import './ProductSpecs.css';
 
 interface ProductSpecsProps {

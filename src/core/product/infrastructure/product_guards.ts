@@ -4,7 +4,7 @@ import type {
   ProductListItem,
   ProductSpecs,
   StorageOption,
-} from '@/types/product';
+} from '../domain/product';
 
 type Fields = Record<string, unknown>;
 

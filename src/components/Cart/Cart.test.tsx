@@ -2,7 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CartProvider } from '@/context/cart/CartContext';
-import type { CartLine } from '@/types/cart';
+import type { CartLine } from '@/core/cart/domain/cart_line';
 import { Cart } from './Cart';
 
 const violetGalaxy: CartLine = {

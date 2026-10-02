@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { OptionGroup } from '@/components/OptionGroup/OptionGroup';
-import type { StorageOption } from '@/types/product';
+import type { StorageOption } from '@/core/product/domain/product';
 import './StorageSelector.css';
 
 interface StorageSelectorProps {

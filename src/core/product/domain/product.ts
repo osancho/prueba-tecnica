@@ -40,8 +40,3 @@ export interface Product {
   storageOptions: StorageOption[];
   similarProducts: ProductListItem[];
 }
-
-export interface ApiError {
-  error: string;
-  message: string;
-}

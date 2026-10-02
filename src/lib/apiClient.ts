@@ -1,6 +1,5 @@
 import 'server-only';
-import type { ApiError } from '@/types/product';
-import { ApiRequestError, NotFoundError } from './apiErrors';
+import { ApiRequestError, NotFoundError, type ApiError } from './apiErrors';
 import { readServerEnv, UPSTREAM_TIMEOUT_MS } from './serverConfig';
 
 const REVALIDATE_SECONDS = 3600;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { CartLine } from '@/types/cart';
-import { cartReducer } from './cartReducer';
+import type { CartLine } from '../cart_line';
+import { cartReducer } from '../cart_reducer';
 
 const blackGalaxy: CartLine = {
   lineId: 'line-1',

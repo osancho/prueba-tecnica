@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ProductListItem } from '@/types/product';
+import type { ProductListItem } from '@/core/product/domain/product';
 import { ProductSearch } from './ProductSearch';
 
 const refresh = vi.fn();

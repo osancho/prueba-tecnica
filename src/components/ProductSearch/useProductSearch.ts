@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import type { ProductListItem } from '@/core/product/domain/product';
 import { rememberListUrl } from '@/lib/listUrl';
 import { listDocumentTitle } from '@/lib/pageTitles';
-import type { ProductListItem } from '@/types/product';
 import type { ListTransition } from '@/lib/useListTransition';
 
 const SEARCH_DEBOUNCE_MS = 300;

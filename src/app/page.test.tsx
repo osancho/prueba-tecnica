@@ -1,10 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
-import { getProducts } from '@/lib/products';
+import { getProducts } from '@/core/product/application/get_products';
+import { apiProductRepository } from '@/core/product/infrastructure/api_product_repository';
 import HomePage, { generateMetadata } from './page';
 
-vi.mock('@/lib/products', () => ({ getProducts: vi.fn() }));
+vi.mock('@/core/product/application/get_products', () => ({
+  getProducts: vi.fn(),
+}));
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
   useSearchParams: () => new URLSearchParams({ search: 'samsung' }),
@@ -30,7 +33,10 @@ describe('HomePage', () => {
 
     render(await HomePage({ searchParams: searchParams(' samsung ') }));
 
-    expect(getProductsMock).toHaveBeenCalledWith('samsung');
+    expect(getProductsMock).toHaveBeenCalledWith(
+      apiProductRepository,
+      'samsung',
+    );
     expect(
       screen.getByRole('heading', { level: 1, name: 'Smartphones' }),
     ).toBeInTheDocument();

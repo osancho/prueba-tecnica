@@ -3,10 +3,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 import { CartProvider } from '@/context/cart/CartContext';
 import { galaxy } from '@/components/ProductDetail/productFixture';
-import { getProduct } from '@/lib/products';
+import { getProduct } from '@/core/product/application/get_product';
 import ProductPage, { generateMetadata } from './page';
 
-vi.mock('@/lib/products', () => ({ getProduct: vi.fn() }));
+vi.mock('@/core/product/application/get_product', () => ({
+  getProduct: vi.fn(),
+}));
 vi.mock('next/navigation', () => ({
   notFound: () => {
     throw new Error('NEXT_NOT_FOUND');
