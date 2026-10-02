@@ -46,6 +46,10 @@
   text-transform: uppercase;
 }
 
+.cart-item__options {
+  white-space: pre-wrap;
+}
+
 .cart-item__remove {
   padding: 0;
   font: inherit;

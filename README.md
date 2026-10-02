@@ -114,10 +114,11 @@ Only the server talks to the API:
 
 - **Plain CSS, BEM and tokens.** Every visual value lives once in `src/styles/variables.css`; breakpoints override the token, not each component.
 - **Motion from the prototype.** Its springs become CSS `linear()` easings and duration tokens, run with CSS transitions and the Web Animations API on top of the live DOM. They never block a click, hover or keystroke, and `prefers-reduced-motion` turns them off.
-- **Similar items scrollbar**: a decorative, draggable thumb over a natively scrollable list, as Figma shows.
-- **"Añadir" opens the cart**, as in the prototype.
+- **Similar items**: a natively scrollable list that runs out to the right edge of the window, as the Figma carousel does. A mouse can drag the list itself or its decorative thumb, as in the prototype; touch keeps native scrolling.
+- **"Añadir" opens the cart**, which dissolves in with the prototype's "Slow" spring.
 - **Ambiguous Figma points**, resolved:
-  - Sizes come from the Design page; the Proto page is used for behaviour and motion.
+  - Sizes come from the Design page; the Proto page is used for behaviour and motion. Some Proto frames sit a few pixels off the Design ones (search 51 px under the header instead of 60; "Specifications" 140 px under the add button instead of 154): the Design values are used.
+  - The colour swatches and names come from the API (`hexCode`, `name`). The Figma frames use sample colours and Spanish sample names ("Violeta Titanium") that do not match any product.
   - A cart with several phones stacks them on mobile and tablet, and uses 548 px columns (the Figma cart item) on desktop.
   - The header bag is hidden on the cart page except on tablet with products in the cart, as the frames show.
   - "Continue shopping" goes to the full list, as in the prototype.

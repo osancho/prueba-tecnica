@@ -10,7 +10,8 @@ interface CartItemProps {
 
 export function CartItem({ line, onRemove }: CartItemProps) {
   const { brand, name, imageUrl, colorName, capacity, price } = line;
-  const options = `${capacity} | ${colorName}`;
+  // Figma sets two spaces before the bar; the CSS keeps them.
+  const options = `${capacity}  | ${colorName}`;
 
   return (
     <li className="cart-item" data-transition-key={line.lineId}>

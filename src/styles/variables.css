@@ -58,24 +58,24 @@
   --border-width-thin: 0.5px;
   --border-width-regular: 1px;
 
-  /* Figma smart animate spring (mass 1, stiffness 80, damping 20), settles at 99.9% */
-  --duration-spring: 1337ms;
+  /* Figma "Slow" spring (mass 1, stiffness 80, damping 20), cut where Figma's prototype ends it */
+  --duration-spring: 1250ms;
   --easing-spring: linear(
     0,
-    0.165,
-    0.413,
-    0.612,
-    0.75,
-    0.841,
-    0.899,
-    0.936,
-    0.96,
-    0.975,
-    0.984,
-    0.99,
+    0.149,
+    0.382,
+    0.578,
+    0.719,
+    0.815,
+    0.879,
+    0.922,
+    0.949,
+    0.967,
+    0.978,
+    0.986,
+    0.991,
     0.994,
     0.996,
-    0.997,
     0.998,
     1
   );
@@ -109,6 +109,9 @@
     1
   );
   --duration-spring-reveal: 800ms;
+  /* The file sets no transition for leaving a "While hovering" state; timed on the prototype */
+  --duration-hover-out-height: 200ms;
+  --duration-hover-out: 250ms;
   --duration-loading-bar: 400ms;
   /* Figma "Loading" holds the full bar for 300 ms before the list comes in */
   --first-load-hold: 300ms;
@@ -131,7 +134,9 @@
   --bag-shape-offset-y: 1.32px;
   --swatch-size: 24px;
   --swatch-color-size: 20px;
-  --color-name-offset: 10px;
+  --color-name-offset: var(--space-2xs);
+  --font-size-color-name: var(--font-size-xs);
+  --line-height-color-name: var(--line-height-xs);
   --button-height: 48px;
   --button-padding-inline: 7px;
   --search-height: 27px;
@@ -170,6 +175,7 @@
 
   --cart-content-padding-top: var(--space-md);
   --cart-content-gap: var(--space-md);
+  --cart-top-rule-height: 0px;
   --cart-lines-columns: minmax(0, 1fr);
   --cart-image-width: 160px;
   --cart-image-ratio: 160 / 197.86;
@@ -188,6 +194,8 @@
 @media (min-width: 768px) {
   :root {
     --color-add-to-cart: var(--color-highlight);
+    --font-size-color-name: var(--font-size-2xs);
+    --line-height-color-name: var(--line-height-2xs);
 
     --page-gutter: var(--space-lg);
     --list-content-spacing: var(--space-xl);
@@ -215,8 +223,9 @@
     --cart-item-gap: var(--space-lg);
     --cart-footer-padding-top: var(--space-md);
     --cart-footer-padding-bottom: var(--space-lg);
-    --cart-footer-columns: auto 1fr auto auto;
-    --cart-footer-areas: 'continue . total pay';
+    /* Figma pushes "Continue shopping" and the total + pay group apart; only total and pay keep a gap */
+    --cart-footer-columns: minmax(0, 1fr) auto auto;
+    --cart-footer-areas: 'continue total pay';
     --cart-footer-column-gap: var(--space-2xl);
     --cart-total-justify: flex-start;
     --continue-shopping-width: 200px;
@@ -229,6 +238,8 @@
 @media (min-width: 1280px) {
   :root {
     --font-size-page-title: var(--font-size-xl);
+    --font-size-color-name: var(--font-size-xs);
+    --line-height-color-name: var(--line-height-xs);
     --font-size-detail-price: var(--font-size-lg);
     --font-size-detail-option: var(--font-size-sm);
     --line-height-page-title: var(--line-height-xl);
@@ -263,6 +274,8 @@
 
     --cart-content-padding-top: 60px;
     --cart-content-gap: 60px;
+    /* Only Figma's desktop cart with items keeps the loading bar under the header */
+    --cart-top-rule-height: var(--loading-bar-height);
     /* Figma's desktop cart item is a fixed 548px box (image 262 + gap 40 + info 246) */
     --cart-lines-columns: repeat(auto-fill, 548px);
     --cart-footer-padding-bottom: var(--space-2xl);
