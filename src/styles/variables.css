@@ -160,7 +160,7 @@
   --detail-layout-direction: column;
   --detail-layout-align: flex-start;
   --detail-selectors-padding-bottom: var(--space-md);
-  --back-bar-display: flex;
+  --back-link-display: flex;
   --detail-section-gap: var(--space-4xl);
   --detail-end-spacing: 104px;
   --similar-card-size: 344px;
@@ -206,7 +206,7 @@
     --detail-layout-direction: row;
     --detail-layout-align: center;
     --detail-selectors-padding-bottom: 0;
-    --back-bar-display: none;
+    --back-link-display: none;
     --detail-section-gap: 88px;
     --similar-card-size: 377px;
     --detail-image-width: 337px;
@@ -262,7 +262,7 @@
     --detail-content-offset: 110px;
     --space-selector-label-gap: var(--space-md);
     --space-selectors-gap: var(--space-lg);
-    --back-bar-display: flex;
+    --back-link-display: flex;
     --detail-section-gap: 154px;
     --similar-card-size: 344px;
     --detail-image-width: 510px;
