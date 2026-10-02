@@ -77,14 +77,17 @@ Hexagonal: the business rules know nothing about Next, the API or the browser; e
 src/
   app/                  routes, and the composition root: they hand the real adapters to the use cases
     api/products        Route Handler for the client-side search
+    api/products/[id]   one phone for the cart check, so the API key stays on the server
     api/images          image proxy that normalizes product photos
   core/
     product/
       domain/           Product types, the ProductRepository port, the "From" price rule
       application/      use cases: get-products (unique phones, 20 of them), get-product
-      infrastructure/   api-product-repository: calls the API, validates, builds image URLs
+      infrastructure/   api-product-repository: calls the API, validates, builds image URLs;
+                        http-product-repository: the browser's way in, through our Route Handler
     cart/
-      domain/           cart lines, total, reducer and the CartRepository port
+      domain/           cart lines, total, reducer, the changes a catalog check can bring, CartRepository port
+      application/      revalidate-cart: checks saved lines against the catalog
       infrastructure/   local-storage-cart-repository
   services/             API client and errors, server config, image normalization
   lib/                  pure helpers and UI hooks
@@ -116,9 +119,11 @@ Only the server talks to the API:
 
 ### State
 
-- **Cart with Context and `useReducer`.** Three actions (add, remove, restore) need no library.
+- **Cart with Context and `useReducer`.** Four actions (add, remove, restore and apply the catalog check) need no library.
 - **One line per "Añadir"**, because Figma has no quantity control. A `crypto.randomUUID()` id lets "Eliminar" remove exactly that line.
 - **Stored cart read after mount and validated**, so server and first client render agree and edited or outdated data is ignored. The total is added in cents.
+- **The saved cart is checked against the catalog when it opens.** Each phone is asked once through `/api/products/[id]`: a line whose phone, storage or color is no longer sold is removed, a line whose storage changed price gets the current one, and a short message says so. A phone that cannot be checked (network error, API down) is left as it is, so a failed request never empties a cart. Changes apply by line, so a line removed meanwhile stays removed.
+- **A phone that left the catalog answers `null`, not 404**, from `/api/products/[id]`: it is an expected answer for the cart, and a 404 would print an error in the browser console.
 - **Storage, color and search live in the URL**, so a configured phone or a search can be shared. `replaceState` keeps Back from undoing each choice.
 - **Search retries without new UI.** A network error or a 5xx is retried once; pressing Enter repeats a failed search. Figma has no retry button.
 
@@ -195,7 +200,7 @@ Only the server talks to the API:
 - Some source photos have an opaque floor reflection under the phone (the Pixel 8a, for example) that cannot be told apart from the device safely. It is left as is; the fix belongs in the source image.
 - The E2E suite depends on the real API being reachable.
 - The normalized image cache lives in the server process and empties on restart.
-- There is no design for the 404, error and failed-search states: they use the existing tokens with minimal styling.
+- There is no design for the 404, error and failed-search states, nor for the message about cart changes: they use the existing tokens with minimal styling.
 - Accepted security advisories:
   - 2 moderate in Vitest 3 (GHSA-82fw-gwwq-j7x9): development only; fixed in Vitest 4.1.11, which requires Node 20.
   - High in the libvips bundled with sharp: the app only processes images from the API host.
