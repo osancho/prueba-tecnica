@@ -24,6 +24,25 @@ describe('ColorSelector', () => {
     expect(onChange).toHaveBeenCalledWith('Titanium Black');
   });
 
+  it('lets keyboard users move to the next color with the arrow keys', async () => {
+    const onChange = vi.fn();
+    render(
+      <ColorSelector
+        options={options}
+        value="Titanium Violet"
+        onChange={onChange}
+      />,
+    );
+
+    await userEvent.tab();
+    expect(
+      screen.getByRole('radio', { name: 'Titanium Violet' }),
+    ).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    expect(onChange).toHaveBeenLastCalledWith('Titanium Black');
+  });
+
   it('shows the name of the chosen color only once one is chosen', () => {
     const { rerender } = render(
       <ColorSelector options={options} onChange={vi.fn()} />,
