@@ -134,7 +134,9 @@
   --bag-shape-offset-y: 1.32px;
   --swatch-size: 24px;
   --swatch-color-size: 20px;
-  --color-name-offset: 10px;
+  --color-name-offset: var(--space-2xs);
+  --font-size-color-name: var(--font-size-xs);
+  --line-height-color-name: var(--line-height-xs);
   --button-height: 48px;
   --button-padding-inline: 7px;
   --search-height: 27px;
@@ -192,6 +194,8 @@
 @media (min-width: 768px) {
   :root {
     --color-add-to-cart: var(--color-highlight);
+    --font-size-color-name: var(--font-size-2xs);
+    --line-height-color-name: var(--line-height-2xs);
 
     --page-gutter: var(--space-lg);
     --list-content-spacing: var(--space-xl);
@@ -234,6 +238,8 @@
 @media (min-width: 1280px) {
   :root {
     --font-size-page-title: var(--font-size-xl);
+    --font-size-color-name: var(--font-size-xs);
+    --line-height-color-name: var(--line-height-xs);
     --font-size-detail-price: var(--font-size-lg);
     --font-size-detail-option: var(--font-size-sm);
     --line-height-page-title: var(--line-height-xl);

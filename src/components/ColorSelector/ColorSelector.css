@@ -36,8 +36,8 @@
   left: 0;
   margin: 0;
   white-space: nowrap;
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-xs);
+  font-size: var(--font-size-color-name);
+  line-height: var(--line-height-color-name);
   animation: color-selector-name-in var(--duration-spring) var(--easing-spring);
 }
 
