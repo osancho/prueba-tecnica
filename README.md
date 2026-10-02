@@ -1,5 +1,7 @@
 # MBST — Smartphones
 
+**English** · [Español](README.es.md)
+
 A smartphone store built with Next.js 15 and React 19: browse and search the catalog, configure a phone and keep a cart.
 
 - **List** (`/`): the first 20 phones, live search with the result count, and the search kept in the URL.
@@ -171,6 +173,7 @@ Only the server talks to the API:
   - catalog and search, detail and add-to-cart, and the cart;
   - an axe audit (WCAG 2.2 AA and best practices, contrast included) of eight screens at 393, 834 and 1920 px;
   - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
+  - the cart check against the catalog, with a clean console;
   - a check that fails on any console warning or error, or any unused stylesheet preload, on the list, a product, the cart and a 404;
   - a second server pointed at a fake API that is down, proving a product page asks the API once.
   - First run: `pnpm exec playwright install chromium`. They use the real API, so `.env.local` must be set, and ports 3150, 3151 and 3199 must be free.
@@ -185,6 +188,7 @@ Only the server talks to the API:
 - After "Eliminar", focus moves to the cart title, which reads the new count.
 - Spanish copy from Figma ("Añadir", "Eliminar") is marked `lang="es"` on an English page.
 - Card pictures keep a descriptive `alt` for when they fail to load; the card link takes its name from the visible text only, so the phone is announced once.
+- The message about cart changes is a `role="status"` region, present from the start so it is announced when it fills.
 - Animations respect `prefers-reduced-motion`.
 - Two deliberate Figma choices: the search input has no outline, the text caret being its focus indicator (the "Input active" frame), and the placeholder keeps the design's grey.
 
