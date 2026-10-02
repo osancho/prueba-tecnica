@@ -22,13 +22,13 @@ export default defineConfig({
       reuseExistingServer: false,
     },
     {
-      command: `npm run build && npm start -- -p ${portOf(APP_URL)}`,
+      command: `pnpm build && pnpm start -p ${portOf(APP_URL)}`,
       url: APP_URL,
       reuseExistingServer: false,
       timeout: 180_000,
     },
     {
-      command: `npm start -- -p ${portOf(FAKE_API_APP_URL)}`,
+      command: `pnpm start -p ${portOf(FAKE_API_APP_URL)}`,
       url: FAKE_API_APP_URL,
       reuseExistingServer: false,
       env: { API_BASE_URL: FAKE_API_URL, API_KEY: 'fake-api-key' },

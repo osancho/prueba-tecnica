@@ -2,6 +2,7 @@
   "name": "zara-challenge",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.34.6",
   "engines": {
     "node": ">=18.18.0 <19"
   },
@@ -57,12 +58,19 @@
     "vitest": "^3.2.7",
     "vitest-axe": "0.1.0"
   },
-  "overrides": {
-    "postcss": "^8.5.28",
-    "sharp": "^0.34.5",
-    "test-exclude": "7.0.1",
-    "@typescript-eslint/eslint-plugin": "8.55.0",
-    "@typescript-eslint/parser": "8.55.0",
-    "typescript-eslint": "8.55.0"
+  "pnpm": {
+    "overrides": {
+      "postcss": "^8.5.28",
+      "sharp": "^0.34.5",
+      "test-exclude": "7.0.1",
+      "@typescript-eslint/eslint-plugin": "8.55.0",
+      "@typescript-eslint/parser": "8.55.0",
+      "typescript-eslint": "8.55.0"
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
