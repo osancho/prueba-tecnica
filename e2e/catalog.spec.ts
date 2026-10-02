@@ -11,7 +11,7 @@ test('lists 20 different smartphones', async ({ page }) => {
       anchors.map((anchor) => anchor.getAttribute('href')),
     );
   expect(new Set(links).size).toBe(20);
-  await expect(page.getByText('20 results')).toBeVisible();
+  await expect(page.getByRole('main').getByText('20 results')).toBeVisible();
 });
 
 test('narrows the list as the user searches and keeps the search in the address', async ({
@@ -29,7 +29,9 @@ test('narrows the list as the user searches and keeps the search in the address'
   const count = await phones.count();
   expect(count).toBeGreaterThan(0);
   await expect(
-    page.getByText(`${count} ${count === 1 ? 'result' : 'results'}`),
+    page
+      .getByRole('main')
+      .getByText(`${count} ${count === 1 ? 'result' : 'results'}`),
   ).toBeVisible();
   for (const phone of await phones.all()) {
     await expect(phone).toContainText(/samsung/i);
@@ -44,7 +46,7 @@ test('shows the loading bar first and then the list, as in the prototype', async
   const bar = page.getByRole('progressbar', { name: 'Loading' });
   await expect(bar).toBeVisible();
   await expect(bar).toBeHidden();
-  await expect(page.getByText('20 results')).toBeVisible();
+  await expect(page.getByRole('main').getByText('20 results')).toBeVisible();
 });
 
 test('fills the loading bar once, without starting over', async ({ page }) => {
