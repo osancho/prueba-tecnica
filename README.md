@@ -14,11 +14,11 @@ How each point of the brief is met.
 
 | Brief                                                                               | Where                                                                                                        |
 | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Grid with the first 20 phones: image, name, brand and base price                    | `ProductGrid`, `ProductCard`, use case `src/core/product/application/get_products.ts`                        |
+| Grid with the first 20 phones: image, name, brand and base price                    | `ProductGrid`, `ProductCard`, use case `src/core/product/application/get-products.ts`                        |
 | Real-time search by name or brand, filtered by the API                              | `ProductSearch` → `/api/products`                                                                            |
 | Result count next to the search                                                     | `ResultsCount` (`aria-live`)                                                                                 |
 | Navbar with a home link and the cart count                                          | `Navbar`, `CartLink`                                                                                         |
-| Persistent cart (`localStorage`)                                                    | `src/core/cart/infrastructure/local_storage_cart_repository.ts`                                              |
+| Persistent cart (`localStorage`)                                                    | `src/core/cart/infrastructure/local-storage-cart-repository.ts`                                              |
 | Click a phone to open its detail                                                    | `ProductCard` link to `/product/[id]`                                                                        |
 | Detail: name, brand, large image that changes with the color                        | `ProductDetail` (name in the title, image per color), `ProductSpecs` (brand in the specs table, as in Figma) |
 | Storage and color selectors with real-time price; base price and storage variations | `StorageSelector`, `ColorSelector`, `ProductDetail`                                                          |
@@ -28,7 +28,7 @@ How each point of the brief is met.
 | Cart: image, name, storage and color, price; remove; total; continue shopping       | `Cart`, `CartItem`                                                                                           |
 | Responsive and faithful to Figma, Helvetica, Arial, sans-serif                      | `src/styles/variables.css` and each component's CSS                                                          |
 | Development (unminified) and production (concatenated, minified) modes              | `npm run dev`, `npm run build && npm start`                                                                  |
-| React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                  | React 19.1, plain CSS, Node 18.20.8, `CartContext`, `src/services/api_client.ts`                             |
+| React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                  | React 19.1, plain CSS, Node 18.20.8, `CartContext`, `src/services/api-client.ts`                             |
 | Tests, accessibility, linters and formatters, clean console                         | [Quality](#quality), [Accessibility](#accessibility)                                                         |
 | Optional: SSR with Next.js and CSS variables                                        | Server components for the list and detail; tokens in `variables.css`                                         |
 | Optional: deployment                                                                | Own VPS on Node 18 (link above once published)                                                               |
@@ -81,15 +81,15 @@ src/
   core/
     product/
       domain/           Product types, the ProductRepository port, the "From" price rule
-      application/      use cases: get_products (unique phones, 20 of them), get_product
-      infrastructure/   api_product_repository: calls the API, validates, builds image URLs
+      application/      use cases: get-products (unique phones, 20 of them), get-product
+      infrastructure/   api-product-repository: calls the API, validates, builds image URLs
     cart/
       domain/           cart lines, total, reducer and the CartRepository port
-      infrastructure/   local_storage_cart_repository
+      infrastructure/   local-storage-cart-repository
   services/             API client and errors, server config, image normalization
   lib/                  pure helpers and UI hooks
   context/cart/         React context that wires the cart to its repository
-  components/           one snake_case folder per component: component.tsx, .css, __tests__/
+  components/           one kebab-case folder per component: component.tsx, .css, __tests__/
   styles/               variables.css (design tokens) and globals.css
 e2e/                    Playwright specs, API warm-up and the fake API used by one test
 ```
@@ -98,7 +98,7 @@ Tests live in `__tests__/` next to the code they cover, and shared fixtures in `
 
 Only the server talks to the API:
 
-1. The list and detail pages are server components that run the `get_products` and `get_product` use cases with `apiProductRepository`. The cart lives in the browser and needs no API call.
+1. The list and detail pages are server components that run the `get-products` and `get-product` use cases with `apiProductRepository`. The cart lives in the browser and needs no API call.
 2. The use cases remove duplicated phones; the repository validates the API data and points images to our domain.
 3. `apiClient` (`import 'server-only'`) is the one place that knows the API URL and key. It maps a 404 to "not found" and sets caching and timeouts.
 4. In the browser, the search calls our Route Handler `/api/products`, which runs the same use case.

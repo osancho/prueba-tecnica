@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import { BackLink } from '@/components/back_link/back_link';
-import { ProductDetail } from '@/components/product_detail/product_detail';
-import { ProductSpecs } from '@/components/product_specs/product_specs';
-import { SimilarProducts } from '@/components/similar_products/similar_products';
-import { getProduct } from '@/core/product/application/get_product';
-import { lowestPrice } from '@/core/product/domain/lowest_price';
+import { BackLink } from '@/components/back-link/back-link';
+import { ProductDetail } from '@/components/product-detail/product-detail';
+import { ProductSpecs } from '@/components/product-specs/product-specs';
+import { SimilarProducts } from '@/components/similar-products/similar-products';
+import { getProduct } from '@/core/product/application/get-product';
+import { lowestPrice } from '@/core/product/domain/lowest-price';
 import type { Product } from '@/core/product/domain/product';
-import { apiProductRepository } from '@/core/product/infrastructure/api_product_repository';
-import { formatPrice } from '@/lib/format_price';
+import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
+import { formatPrice } from '@/lib/format-price';
 import './page.css';
 
 // The page and its metadata both ask for the product. Next merges the two calls only when the

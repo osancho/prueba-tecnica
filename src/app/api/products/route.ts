@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getProducts } from '@/core/product/application/get_products';
-import { apiProductRepository } from '@/core/product/infrastructure/api_product_repository';
-import type { ApiError } from '@/services/api_errors';
+import { getProducts } from '@/core/product/application/get-products';
+import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
+import type { ApiError } from '@/services/api-errors';
 
 export async function GET(request: NextRequest) {
   const search =
