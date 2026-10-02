@@ -17,7 +17,9 @@ export function useCartRevalidation(): CartChanges | null {
     if (!isRestored || hasChecked.current || lines.length === 0) return;
     hasChecked.current = true;
 
-    revalidateCart(lines, httpProductRepository).then((found) => {
+    // Never rejects: lines it cannot check are kept. `void` rather than a catch, so a real bug
+    // would still surface as an unhandled rejection instead of being swallowed.
+    void revalidateCart(lines, httpProductRepository).then((found) => {
       applyChanges(found);
       setChanges(found);
     });
