@@ -32,11 +32,19 @@ describe('ProductCard', () => {
     expect(card).toHaveTextContent('1329 EUR');
   });
 
-  it('describes the phone picture for screen reader users', () => {
+  it('reads the phone once to screen reader users, without repeating the picture', () => {
     render(<ProductCard product={galaxy} />);
 
     expect(
-      screen.getByRole('img', { name: 'Samsung Galaxy S24 Ultra smartphone' }),
+      screen.getByRole('link', { name: 'Samsung Galaxy S24 Ultra 1329 EUR' }),
+    ).toBeInTheDocument();
+  });
+
+  it('describes the picture in case it fails to load', () => {
+    render(<ProductCard product={galaxy} />);
+
+    expect(
+      screen.getByRole('img', { name: 'Samsung Galaxy S24 Ultra' }),
     ).toBeInTheDocument();
   });
 });

@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Product, ProductListItem } from '@/types/product';
 import { apiClient } from './apiClient';
-import { NotFoundError } from './apiErrors';
+import { InvalidApiResponseError, NotFoundError } from './apiErrors';
 import { getProduct, getProducts, PRODUCT_LIST_SIZE } from './products';
 
 vi.mock('./apiClient', () => ({ apiClient: vi.fn() }));
@@ -67,6 +67,26 @@ describe('getProducts', () => {
     expect(product.imageUrl).toBe('/api/images/P1.webp?v=2');
   });
 
+  it('leaves out a malformed phone instead of failing the whole catalog', async () => {
+    apiClientMock.mockResolvedValue([
+      phone('P1'),
+      { ...phone('P2'), basePrice: '100' },
+      { id: 'P3' },
+      null,
+      phone('P4'),
+    ]);
+
+    const products = await getProducts();
+
+    expect(products.map(({ id }) => id)).toEqual(['P1', 'P4']);
+  });
+
+  it('fails when the API does not answer with a list', async () => {
+    apiClientMock.mockResolvedValue({ error: 'unexpected' });
+
+    await expect(getProducts()).rejects.toThrow(InvalidApiResponseError);
+  });
+
   it('forwards the search term to the API', async () => {
     apiClientMock.mockResolvedValue([]);
 
@@ -97,6 +117,32 @@ describe('getProduct', () => {
       '/api/images/MAIN-black.webp?v=2',
     );
   });
+
+  it('leaves out malformed similar products', async () => {
+    apiClientMock.mockResolvedValue(
+      productDetail({
+        similarProducts: [phone('S1'), { id: 'S2' } as ProductListItem],
+      }),
+    );
+
+    const product = await getProduct('MAIN');
+
+    expect(product?.similarProducts.map(({ id }) => id)).toEqual(['S1']);
+  });
+
+  it.each([
+    ['no storage options', { storageOptions: undefined }],
+    ['a price that is not a number', { basePrice: '1329' }],
+    ['a color without picture', { colorOptions: [{ name: 'Black' }] }],
+    ['missing specs', { specs: undefined }],
+  ])(
+    'treats a product with %s as an error, not as "not found"',
+    async (_, broken) => {
+      apiClientMock.mockResolvedValue({ ...productDetail(), ...broken });
+
+      await expect(getProduct('MAIN')).rejects.toThrow(InvalidApiResponseError);
+    },
+  );
 
   it('returns null for an unknown product so the page can show "not found"', async () => {
     apiClientMock.mockRejectedValue(new NotFoundError('/products/NOPE'));
