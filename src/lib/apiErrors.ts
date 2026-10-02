@@ -16,3 +16,11 @@ export class ApiRequestError extends Error {
     this.name = 'ApiRequestError';
   }
 }
+
+/** The API answered, but not with the shape the app renders. */
+export class InvalidApiResponseError extends Error {
+  constructor(path: string) {
+    super(`Unexpected API response: ${path}`);
+    this.name = 'InvalidApiResponseError';
+  }
+}

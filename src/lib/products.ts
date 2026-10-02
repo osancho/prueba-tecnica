@@ -1,8 +1,9 @@
 import { cache } from 'react';
 import type { Product, ProductListItem } from '@/types/product';
 import { apiClient } from './apiClient';
-import { NotFoundError } from './apiErrors';
+import { InvalidApiResponseError, NotFoundError } from './apiErrors';
 import { productImageUrl } from './images/productImageUrls';
+import { isProduct, isProductListItem } from './productGuards';
 import { uniqueById } from './uniqueById';
 
 export const PRODUCT_LIST_SIZE = 20;
@@ -14,12 +15,16 @@ function toListItem(item: ProductListItem): ProductListItem {
 }
 
 export async function getProducts(search?: string): Promise<ProductListItem[]> {
-  const items = await apiClient<ProductListItem[]>('/products', {
+  const items = await apiClient<unknown>('/products', {
     search,
     limit: String(PRODUCT_LIST_FETCH_LIMIT),
   });
+  if (!Array.isArray(items)) throw new InvalidApiResponseError('/products');
 
-  return uniqueById(items).slice(0, PRODUCT_LIST_SIZE).map(toListItem);
+  // A malformed phone is left out rather than taking the whole catalog down.
+  return uniqueById(items.filter(isProductListItem))
+    .slice(0, PRODUCT_LIST_SIZE)
+    .map(toListItem);
 }
 
 // The page and its metadata both ask for the product. Next merges the two calls only when the
@@ -29,9 +34,9 @@ export const getProduct = cache(async function getProduct(
   id: string,
 ): Promise<Product | null> {
   try {
-    const product = await apiClient<Product>(
-      `/products/${encodeURIComponent(id)}`,
-    );
+    const path = `/products/${encodeURIComponent(id)}`;
+    const product = await apiClient<unknown>(path);
+    if (!isProduct(product)) throw new InvalidApiResponseError(path);
 
     return {
       ...product,
@@ -39,7 +44,9 @@ export const getProduct = cache(async function getProduct(
         ...color,
         imageUrl: productImageUrl(color.imageUrl),
       })),
-      similarProducts: uniqueById(product.similarProducts).map(toListItem),
+      similarProducts: uniqueById(
+        product.similarProducts.filter(isProductListItem),
+      ).map(toListItem),
     };
   } catch (error) {
     if (error instanceof NotFoundError) return null;
