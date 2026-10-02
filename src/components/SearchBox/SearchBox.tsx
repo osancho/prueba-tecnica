@@ -1,5 +1,6 @@
 import { useId, useRef } from 'react';
 import { CloseIcon } from '@/components/icons';
+import { SEARCH_MAX_LENGTH } from '@/lib/searchTerm';
 import './SearchBox.css';
 
 interface SearchBoxProps {
@@ -44,6 +45,7 @@ export function SearchBox({
         type="search"
         enterKeyHint="search"
         autoComplete="off"
+        maxLength={SEARCH_MAX_LENGTH}
         placeholder="Search for a smartphone..."
         value={value}
         onChange={(event) => onChange(event.target.value)}

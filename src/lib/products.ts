@@ -3,6 +3,7 @@ import type { Product, ProductListItem } from '@/types/product';
 import { apiClient } from './apiClient';
 import { InvalidApiResponseError, NotFoundError } from './apiErrors';
 import { productImageUrl } from './images/productImageUrls';
+import { SEARCH_MAX_LENGTH } from './searchTerm';
 import { isProduct, isProductListItem } from './productGuards';
 import { uniqueById } from './uniqueById';
 
@@ -15,10 +16,15 @@ function toListItem(item: ProductListItem): ProductListItem {
 }
 
 export async function getProducts(search?: string): Promise<ProductListItem[]> {
-  const items = await apiClient<unknown>('/products', {
-    search,
-    limit: String(PRODUCT_LIST_FETCH_LIMIT),
-  });
+  // Every term would be a new cache entry on disk, so only the catalog without a search is kept.
+  const items = await apiClient<unknown>(
+    '/products',
+    {
+      search: search?.slice(0, SEARCH_MAX_LENGTH),
+      limit: String(PRODUCT_LIST_FETCH_LIMIT),
+    },
+    { cacheable: !search },
+  );
   if (!Array.isArray(items)) throw new InvalidApiResponseError('/products');
 
   // A malformed phone is left out rather than taking the whole catalog down.

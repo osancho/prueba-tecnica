@@ -159,4 +159,12 @@ describe('ProductSearch', () => {
     expect(screen.getByRole('searchbox')).toHaveValue('galaxy');
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
+
+  it('stops the search at 50 characters', async () => {
+    const { user } = setup('', [iphone]);
+
+    await user.type(screen.getByRole('searchbox'), 'a'.repeat(60));
+
+    expect(screen.getByRole('searchbox')).toHaveValue('a'.repeat(50));
+  });
 });

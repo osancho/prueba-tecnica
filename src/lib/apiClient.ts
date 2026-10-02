@@ -15,13 +15,21 @@ function buildUrl(path: string, params: QueryParams): URL {
   return url;
 }
 
+interface ApiClientOptions {
+  /** Only responses many users share should land in Next's on-disk Data Cache. */
+  cacheable?: boolean;
+}
+
 export async function apiClient<T>(
   path: string,
   params: QueryParams = {},
+  { cacheable = true }: ApiClientOptions = {},
 ): Promise<T> {
   const response = await fetch(buildUrl(path, params), {
     headers: { 'x-api-key': readServerEnv('API_KEY') },
-    next: { revalidate: REVALIDATE_SECONDS },
+    ...(cacheable
+      ? { next: { revalidate: REVALIDATE_SECONDS } }
+      : { cache: 'no-store' }),
     signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   });
 
