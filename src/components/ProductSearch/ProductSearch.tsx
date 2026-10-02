@@ -11,6 +11,15 @@ import type { ProductListItem } from '@/types/product';
 import { useProductSearch } from './useProductSearch';
 import './ProductSearch.css';
 
+// The server only renders page loads; in the browser, a page load of the list still has the
+// layout's PageLoadBar on screen while it hydrates. Client navigations find no bar.
+function isPageLoadOfList(): boolean {
+  return (
+    typeof document === 'undefined' ||
+    document.querySelector('.page-load-bar') !== null
+  );
+}
+
 interface ProductSearchProps {
   initialSearch: string;
   initialProducts: ProductListItem[];
@@ -45,9 +54,17 @@ function ProductSearchView({
   } = useProductSearch(initialSearch, initialProducts);
   const resultsRef = useRef<HTMLDivElement>(null);
   useListTransition(resultsRef, products, transition);
+  // On a page load the list waits for the layout's loading bar; client navigations show it at once.
+  const [isFirstLoad] = useState(isPageLoadOfList);
 
   return (
-    <div className="product-search">
+    <div
+      className={
+        isFirstLoad
+          ? 'product-search product-search--first-load'
+          : 'product-search'
+      }
+    >
       <div className="product-search__bar">
         <SearchBox
           value={query}

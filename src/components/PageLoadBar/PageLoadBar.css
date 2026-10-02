@@ -1,0 +1,24 @@
+/* Drawn under the header without moving the page by its height. */
+.page-load-bar {
+  height: 0;
+}
+
+/* Starts when the list arrives, together with its reveal (`.product-search--first-load`). */
+body:has(.product-search) .page-load-bar {
+  animation: page-load-bar-out var(--duration-spring-reveal)
+    var(--easing-spring-overshoot) var(--first-load-reveal-delay) both;
+}
+
+/* Hidden at the end, so screen readers stop announcing a finished progress bar. */
+@keyframes page-load-bar-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-load-bar {
+    display: none;
+  }
+}

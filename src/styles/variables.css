@@ -110,6 +110,11 @@
   );
   --duration-spring-reveal: 800ms;
   --duration-loading-bar: 400ms;
+  /* Figma "Loading" holds the full bar for 300 ms before the list comes in */
+  --first-load-hold: 300ms;
+  --first-load-reveal-delay: calc(
+    var(--duration-loading-bar) + var(--first-load-hold)
+  );
   /* Detail reveal spring (stiffness 180, damping 30) has the same damping ratio as 80 / 20 */
   --duration-spring-detail-reveal: 891ms;
 
