@@ -40,6 +40,26 @@ describe('cartReducer', () => {
     expect(lines).toEqual([again]);
   });
 
+  it('drops unavailable lines and reprices the rest after checking the catalog', () => {
+    const again = { ...blackGalaxy, lineId: 'line-2' };
+
+    const lines = cartReducer([blackGalaxy, again], {
+      type: 'apply-changes',
+      changes: { unavailable: ['line-1'], repriced: { 'line-2': 1199 } },
+    });
+
+    expect(lines).toEqual([{ ...again, price: 1199 }]);
+  });
+
+  it('keeps a line removed while the catalog was being checked removed', () => {
+    const lines = cartReducer([], {
+      type: 'apply-changes',
+      changes: { unavailable: [], repriced: { 'line-1': 1199 } },
+    });
+
+    expect(lines).toEqual([]);
+  });
+
   it('restores a saved cart as it was', () => {
     const saved = [blackGalaxy];
 

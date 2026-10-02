@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import type { CartChanges } from '@/core/cart/domain/cart-changes';
 import {
   cartTotal,
   type CartLine,
@@ -25,6 +26,7 @@ interface CartContextValue {
   total: number;
   add: (line: NewCartLine) => void;
   remove: (lineId: string) => void;
+  applyChanges: (changes: CartChanges) => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -55,6 +57,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           line: { ...line, lineId: crypto.randomUUID() },
         }),
       remove: (lineId) => dispatch({ type: 'remove', lineId }),
+      applyChanges: (changes) => dispatch({ type: 'apply-changes', changes }),
     }),
     [lines, isRestored],
   );

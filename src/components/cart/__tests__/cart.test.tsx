@@ -1,9 +1,17 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CartProvider } from '@/context/cart/cart-context';
 import type { CartLine } from '@/core/cart/domain/cart-line';
+import { galaxy } from '@/core/product/domain/__mocks__/product-fixture';
+import { httpProductRepository } from '@/core/product/infrastructure/http-product-repository';
 import { Cart } from '../cart';
+
+vi.mock('@/core/product/infrastructure/http-product-repository', () => ({
+  httpProductRepository: { findById: vi.fn() },
+}));
+
+const findById = vi.mocked(httpProductRepository.findById);
 
 const violetGalaxy: CartLine = {
   lineId: 'line-1',
@@ -51,6 +59,10 @@ function renderCartWith(lines: CartLine[]) {
 }
 
 describe('Cart', () => {
+  // Offline unless a test says otherwise: the saved cart is shown as it was.
+  beforeEach(() => {
+    findById.mockRejectedValue(new Error('offline'));
+  });
   afterEach(() => localStorage.clear());
 
   it('lists every phone with its storage, color and price, and the total', async () => {
@@ -128,5 +140,41 @@ describe('Cart', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: 'Cart (0)' }),
     ).toBeInTheDocument();
+  });
+
+  it('removes a phone that is no longer sold and tells the user', async () => {
+    findById.mockImplementation(async (id) =>
+      id === galaxy.id ? galaxy : null,
+    );
+    renderCartWith([
+      { ...violetGalaxy, capacity: '256 GB', price: 1229 },
+      pixel,
+    ]);
+
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'A phone in your cart is no longer available and was removed.',
+    );
+    expect(screen.getAllByRole('listitem')).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Cart (1)' }),
+    ).toBeInTheDocument();
+  });
+
+  it('shows the current price of a phone whose price changed, and the new total', async () => {
+    findById.mockResolvedValue(galaxy);
+    renderCartWith([{ ...violetGalaxy, capacity: '256 GB', price: 1 }]);
+
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'A phone in your cart has a new price.',
+    );
+    expect(screen.getByText('1229 EUR', { selector: 'span' })).toBeVisible();
+  });
+
+  it('leaves the cart and the message empty when the catalog cannot be checked', async () => {
+    renderCartWith([violetGalaxy]);
+
+    await waitFor(() => expect(findById).toHaveBeenCalled());
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    expect(screen.getAllByRole('listitem')).toHaveLength(1);
   });
 });
