@@ -14,11 +14,11 @@ How each point of the brief is met.
 
 | Brief                                                                               | Where                                                                                                        |
 | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Grid with the first 20 phones: image, name, brand and base price                    | `ProductGrid`, `ProductCard`, `getProducts` in `src/lib/products.ts`                                         |
+| Grid with the first 20 phones: image, name, brand and base price                    | `ProductGrid`, `ProductCard`, use case `src/core/product/application/get_products.ts`                        |
 | Real-time search by name or brand, filtered by the API                              | `ProductSearch` → `/api/products`                                                                            |
 | Result count next to the search                                                     | `ResultsCount` (`aria-live`)                                                                                 |
 | Navbar with a home link and the cart count                                          | `Navbar`, `CartLink`                                                                                         |
-| Persistent cart (`localStorage`)                                                    | `src/context/cart/CartContext.tsx`                                                                           |
+| Persistent cart (`localStorage`)                                                    | `src/core/cart/infrastructure/local_storage_cart_repository.ts`                                              |
 | Click a phone to open its detail                                                    | `ProductCard` link to `/product/[id]`                                                                        |
 | Detail: name, brand, large image that changes with the color                        | `ProductDetail` (name in the title, image per color), `ProductSpecs` (brand in the specs table, as in Figma) |
 | Storage and color selectors with real-time price; base price and storage variations | `StorageSelector`, `ColorSelector`, `ProductDetail`                                                          |
@@ -28,7 +28,7 @@ How each point of the brief is met.
 | Cart: image, name, storage and color, price; remove; total; continue shopping       | `Cart`, `CartItem`                                                                                           |
 | Responsive and faithful to Figma, Helvetica, Arial, sans-serif                      | `src/styles/variables.css` and each component's CSS                                                          |
 | Development (unminified) and production (concatenated, minified) modes              | `npm run dev`, `npm run build && npm start`                                                                  |
-| React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                  | React 19.1, plain CSS, Node 18.20.8, `CartContext`, `src/lib/apiClient.ts`                                   |
+| React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                  | React 19.1, plain CSS, Node 18.20.8, `CartContext`, `src/services/api_client.ts`                             |
 | Tests, accessibility, linters and formatters, clean console                         | [Quality](#quality), [Accessibility](#accessibility)                                                         |
 | Optional: SSR with Next.js and CSS variables                                        | Server components for the list and detail; tokens in `variables.css`                                         |
 | Optional: deployment                                                                | Own VPS on Node 18 (link above once published)                                                               |
@@ -71,25 +71,37 @@ npm run build && npm start   # production: concatenated and minified assets on p
 
 ## Architecture
 
+Hexagonal: the business rules know nothing about Next, the API or the browser; each outside world plugs in through a port.
+
 ```
 src/
-  app/            routes: list, product/[id], cart, error and not-found pages
-    api/products  Route Handler for the client-side search
-    api/images    image proxy that normalizes product photos
-  components/     one folder per component: Component.tsx, .css, .test.tsx
-  context/cart    cart context, reducer and stored-line validation
-  lib/            API client, data access, guards, helpers and hooks
-  styles/         variables.css (design tokens) and globals.css
-  types/          API domain types
-e2e/              Playwright specs, API warm-up and the fake API used by one test
+  app/                  routes, and the composition root: they hand the real adapters to the use cases
+    api/products        Route Handler for the client-side search
+    api/images          image proxy that normalizes product photos
+  core/
+    product/
+      domain/           Product types, the ProductRepository port, the "From" price rule
+      application/      use cases: get_products (unique phones, 20 of them), get_product
+      infrastructure/   api_product_repository: calls the API, validates, builds image URLs
+    cart/
+      domain/           cart lines, total, reducer and the CartRepository port
+      infrastructure/   local_storage_cart_repository
+  services/             API client and errors, server config, image normalization
+  lib/                  pure helpers and UI hooks
+  context/cart/         React context that wires the cart to its repository
+  components/           one snake_case folder per component: component.tsx, .css, __tests__/
+  styles/               variables.css (design tokens) and globals.css
+e2e/                    Playwright specs, API warm-up and the fake API used by one test
 ```
+
+Tests live in `__tests__/` next to the code they cover, and shared fixtures in `__mocks__/`. Use cases are tested with an in-memory repository, adapters with a stubbed API client.
 
 Only the server talks to the API:
 
-1. The list and detail pages are server components that call `src/lib/products.ts`. The cart lives in the browser and needs no API call.
-2. `products.ts` validates and shapes the data (deduplication, image URLs) and calls `apiClient`.
+1. The list and detail pages are server components that run the `get_products` and `get_product` use cases with `apiProductRepository`. The cart lives in the browser and needs no API call.
+2. The use cases remove duplicated phones; the repository validates the API data and points images to our domain.
 3. `apiClient` (`import 'server-only'`) is the one place that knows the API URL and key. It maps a 404 to "not found" and sets caching and timeouts.
-4. In the browser, the search calls our Route Handler `/api/products`, which goes through the same `products.ts`.
+4. In the browser, the search calls our Route Handler `/api/products`, which runs the same use case.
 5. Product photos load from `/api/images/[file]`, which fetches the original from the API host and normalizes it.
 
 ## Decisions
@@ -146,9 +158,11 @@ Only the server talks to the API:
 ## Quality
 
 - **Unit and component tests** (Vitest, Testing Library), named after what the user experiences.
-- **Accessibility checks** with vitest-axe on every page. Contrast is checked in the browser, since jsdom loads no CSS.
+- **Accessibility checks** with vitest-axe on every page. jsdom loads no CSS, so contrast is checked by the end-to-end axe audit.
 - **End-to-end tests** (Playwright, Chromium only) on the production build:
   - catalog and search, detail and add-to-cart, and the cart;
+  - an axe audit (WCAG 2.2 AA and best practices, contrast included) of eight screens at 393, 834 and 1920 px;
+  - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
   - a check that fails on any console warning or error, or any unused stylesheet preload, on the list, a product, the cart and a 404;
   - a second server pointed at a fake API that is down, proving a product page asks the API once.
   - First run: `npx playwright install chromium`. They use the real API, so `.env.local` must be set, and ports 3150, 3151 and 3199 must be free.

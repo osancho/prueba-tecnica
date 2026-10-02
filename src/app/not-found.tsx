@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import '@/components/Button/Button.css';
+import '@/components/button/button.css';
 import './error.css';
 
 export const metadata: Metadata = { title: 'Page not found' };

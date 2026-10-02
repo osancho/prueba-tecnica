@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { ProductSearch } from '@/components/ProductSearch/ProductSearch';
-import { listDocumentTitle } from '@/lib/pageTitles';
-import { getProducts } from '@/lib/products';
+import { ProductSearch } from '@/components/product_search/product_search';
+import { getProducts } from '@/core/product/application/get_products';
+import { apiProductRepository } from '@/core/product/infrastructure/api_product_repository';
+import { listDocumentTitle } from '@/lib/page_titles';
 
 interface HomePageProps {
   searchParams: Promise<{ search?: string | string[] }>;
@@ -26,7 +27,7 @@ export async function generateMetadata({
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const search = await readSearch(searchParams);
-  const products = await getProducts(search || undefined);
+  const products = await getProducts(apiProductRepository, search || undefined);
 
   return (
     <main>
