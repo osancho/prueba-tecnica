@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { useRef } from 'react';
 import { Button } from '@/components/button/button';
-import { CartItem } from '@/components/cart_item/cart_item';
-import { CrossFade } from '@/components/cross_fade/cross_fade';
-import { useCart } from '@/context/cart/cart_context';
-import { formatPrice } from '@/lib/format_price';
+import { CartItem } from '@/components/cart-item/cart-item';
+import { CrossFade } from '@/components/cross-fade/cross-fade';
+import { useCart } from '@/context/cart/cart-context';
+import { formatPrice } from '@/lib/format-price';
 import { FIGMA_SPRING_BOUNCY } from '@/lib/motion';
-import { useListTransition } from '@/lib/use_list_transition';
+import { useListTransition } from '@/lib/use-list-transition';
 import './cart.css';
 
 export function Cart() {

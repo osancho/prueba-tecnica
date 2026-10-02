@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { chooseOption } from './choose_option';
+import { chooseOption } from './choose-option';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/product/SMG-S24U');

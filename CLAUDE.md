@@ -51,20 +51,20 @@ src/
   app/          routes and composition root: pages and route handlers pass the real adapters to the use cases
                 (page.tsx list, product/[id], cart, api/products search proxy, api/images image normalizer)
   core/<context>/
-    domain/          types, ports (product_repository.ts, cart_repository.ts) and business rules (lowest_price, cart_line, cart_reducer)
-    application/     use cases that receive a port: get_products (dedupe, 20 items), get_product
-    infrastructure/  adapters: api_product_repository (validation, image URLs), local_storage_cart_repository
-  services/     what talks to the outside: api_client.ts (server-only, single entry point to the API), api_errors.ts, server_config.ts, images/
+    domain/          types, ports (product-repository.ts, cart-repository.ts) and business rules (lowest-price, cart-line, cart-reducer)
+    application/     use cases that receive a port: get-products (dedupe, 20 items), get-product
+    infrastructure/  adapters: api-product-repository (validation, image URLs), local-storage-cart-repository
+  services/     what talks to the outside: api-client.ts (server-only, single entry point to the API), api-errors.ts, server-config.ts, images/
   lib/          pure helpers and UI hooks only
   context/cart/ React adapter: wires the cart reducer to its repository
-  components/   <component_name>/component_name.tsx + component_name.css
+  components/   <component-name>/component-name.tsx + component-name.css
   styles/       variables.css (Figma tokens), globals.css
 e2e/            Playwright specs, API warm-up, fake API (servers.ts holds the ports)
 ```
 
 Naming:
 
-- Folders and files in snake_case (`product_card/product_card.tsx`). Exceptions: Next's special files (`page.tsx`, `layout.tsx`, `route.ts`, `[id]`) and config files. React components keep PascalCase names.
+- Folders and files in kebab-case (`product-card/product-card.tsx`). Exceptions: Next's special files (`page.tsx`, `layout.tsx`, `route.ts`, `[id]`) and config files. React components keep PascalCase names.
 - The BEM block is the component name in kebab-case (`ProductCard` → `.product-card`).
 - Tests in a `__tests__/` folder next to the code they cover; shared fixtures and mocks in `__mocks__/` (excluded from coverage and from Sonar sources).
 - On macOS (`core.ignorecase`), case-only renames need `git rm -r --cached` before `git add`, or Linux CI sees the old names.
@@ -84,7 +84,7 @@ Naming:
 
 ## API
 
-- Base URL `API_BASE_URL`, header `x-api-key` = `API_KEY` (in `.env.local`, never `NEXT_PUBLIC_`). **The key never reaches the browser.** Every call to the external API goes through a single `apiClient` (`src/services/api_client.ts`, `import 'server-only'`): base URL, auth header, error mapping (404 → not found), caching and timeouts live there; no other module calls `fetch` against the API. Responses are validated in `api_product_repository.ts` and deduped in the use cases. Client search goes through our Route Handler `/api/products`.
+- Base URL `API_BASE_URL`, header `x-api-key` = `API_KEY` (in `.env.local`, never `NEXT_PUBLIC_`). **The key never reaches the browser.** Every call to the external API goes through a single `apiClient` (`src/services/api-client.ts`, `import 'server-only'`): base URL, auth header, error mapping (404 → not found), caching and timeouts live there; no other module calls `fetch` against the API. Responses are validated in `api-product-repository.ts` and deduped in the use cases. Client search goes through our Route Handler `/api/products`.
 - Endpoints: `GET /products` (`search`, `limit`, `offset`; default 24) and `GET /products/{id}`.
 - Duplicated ids in the list and in `similarProducts` → dedupe in the API layer. To show 20 unique products, request more than 20 and slice after deduping.
 - Images come over `http://` and are inconsistent (2 of 62 with opaque white background, phone filling 60–100% of the picture). Ideally they would come right from the backend; since they do not, every image goes through `/api/images/[file]` (sharp: white background connected to the border → transparent, trim to the phone, then centre it in a transparent square at the Figma scale, 73.2%) to guarantee the quality standard. Results are kept in memory and served `immutable` (URLs carry `?v=`). `next/image` runs with `images.unoptimized: true`, since the optimizer would only add a second lossy pass. Known limit (documented in the README): some photos have an opaque floor reflection painted under the phone (e.g. Pixel 8a); it cannot be told apart from the device safely, so it is left as is — the right fix is the source asset.

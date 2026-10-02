@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
-import { getProducts } from '@/core/product/application/get_products';
-import { apiProductRepository } from '@/core/product/infrastructure/api_product_repository';
+import { getProducts } from '@/core/product/application/get-products';
+import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
 import HomePage, { generateMetadata } from '../page';
 
-vi.mock('@/core/product/application/get_products', () => ({
+vi.mock('@/core/product/application/get-products', () => ({
   getProducts: vi.fn(),
 }));
 vi.mock('next/navigation', () => ({

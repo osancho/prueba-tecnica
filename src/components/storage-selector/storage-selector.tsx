@@ -1,0 +1,38 @@
+import { useId } from 'react';
+import { OptionGroup } from '@/components/option-group/option-group';
+import type { StorageOption } from '@/core/product/domain/product';
+import './storage-selector.css';
+
+interface StorageSelectorProps {
+  options: StorageOption[];
+  value?: string;
+  onChange: (capacity: string) => void;
+}
+
+export function StorageSelector({
+  options,
+  value,
+  onChange,
+}: StorageSelectorProps) {
+  const name = useId();
+
+  return (
+    <OptionGroup label="Storage ¿how much space do you need?">
+      <div className="storage-selector">
+        {options.map(({ capacity }) => (
+          <label key={capacity} className="storage-selector__option">
+            <input
+              className="visually-hidden"
+              type="radio"
+              name={name}
+              value={capacity}
+              checked={value === capacity}
+              onChange={() => onChange(capacity)}
+            />
+            {capacity}
+          </label>
+        ))}
+      </div>
+    </OptionGroup>
+  );
+}

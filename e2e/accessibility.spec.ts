@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import axe from 'axe-core';
-import { chooseOption } from './choose_option';
+import { chooseOption } from './choose-option';
 
 declare global {
   interface Window {

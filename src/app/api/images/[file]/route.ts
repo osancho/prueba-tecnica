@@ -1,9 +1,9 @@
-import { normalizeProductImage } from '@/services/images/normalize_product_image';
+import { normalizeProductImage } from '@/services/images/normalize-product-image';
 import {
   isProductImageFile,
   originalImageUrl,
-} from '@/services/images/product_image_urls';
-import { UPSTREAM_TIMEOUT_MS } from '@/services/server_config';
+} from '@/services/images/product-image-urls';
+import { UPSTREAM_TIMEOUT_MS } from '@/services/server-config';
 
 // Same lifetime the API gives its images.
 const CACHE_SECONDS = 86_400;

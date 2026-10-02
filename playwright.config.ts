@@ -3,7 +3,7 @@ import { APP_URL, FAKE_API_APP_URL, FAKE_API_URL, portOf } from './e2e/servers';
 
 export default defineConfig({
   testDir: 'e2e',
-  globalSetup: './e2e/warm_up_api.ts',
+  globalSetup: './e2e/warm-up-api.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
@@ -17,7 +17,7 @@ export default defineConfig({
   // these tests guard against only exist after `next build`, never in `next dev`.
   webServer: [
     {
-      command: `node e2e/fake_api.mjs ${portOf(FAKE_API_URL)}`,
+      command: `node e2e/fake-api.mjs ${portOf(FAKE_API_URL)}`,
       url: `${FAKE_API_URL}/__hits`,
       reuseExistingServer: false,
     },

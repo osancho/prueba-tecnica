@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { ProductSearch } from '@/components/product_search/product_search';
-import { getProducts } from '@/core/product/application/get_products';
-import { apiProductRepository } from '@/core/product/infrastructure/api_product_repository';
-import { listDocumentTitle } from '@/lib/page_titles';
+import { ProductSearch } from '@/components/product-search/product-search';
+import { getProducts } from '@/core/product/application/get-products';
+import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
+import { listDocumentTitle } from '@/lib/page-titles';
 
 interface HomePageProps {
   searchParams: Promise<{ search?: string | string[] }>;

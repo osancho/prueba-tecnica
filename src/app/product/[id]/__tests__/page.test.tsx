@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
-import { CartProvider } from '@/context/cart/cart_context';
-import { getProduct } from '@/core/product/application/get_product';
-import { galaxy } from '@/core/product/domain/__mocks__/product_fixture';
+import { CartProvider } from '@/context/cart/cart-context';
+import { getProduct } from '@/core/product/application/get-product';
+import { galaxy } from '@/core/product/domain/__mocks__/product-fixture';
 import ProductPage, { generateMetadata } from '../page';
 
-vi.mock('@/core/product/application/get_product', () => ({
+vi.mock('@/core/product/application/get-product', () => ({
   getProduct: vi.fn(),
 }));
 vi.mock('next/navigation', () => ({
