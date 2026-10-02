@@ -38,7 +38,10 @@
   );
 }
 
+/* Figma centres the counter in its 24px row. */
 .product-search__status {
+  display: flex;
+  align-items: center;
   min-height: var(--results-count-row-height);
 }
 
