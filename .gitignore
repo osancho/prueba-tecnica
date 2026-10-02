@@ -36,9 +36,6 @@ yarn-error.log*
 .env*
 !.env.example
 
-# AI assistant guidelines (local only)
-CLAUDE.md
-
 # vercel
 .vercel
 
