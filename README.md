@@ -121,7 +121,7 @@ Only the server talks to the API:
   - A cart with several phones stacks them on mobile and tablet, and uses 548 px columns (the Figma cart item) on desktop.
   - The header bag is hidden on the cart page except on tablet with products in the cart, as the frames show.
   - "Continue shopping" goes to the full list, as in the prototype.
-  - First load: the prototype goes from "Unloaded" (header only) to "Loading" (the black bar grows to full width), then reveals the list, with fixed delays standing in for the network. The app plays the same bar and reveal springs, but only waits as long as the data takes.
+  - First load: the prototype goes from "Unloaded" (header only) to "Loading" (the black bar grows to full width), then reveals the list, with fixed delays standing in for the network. The app keeps the prototype's exact timing in pure CSS: on a page load of the list, the header shows with the loading bar filling under it (a single element in the layout, so it never starts over); when the list arrives, the bar holds 300 ms and hands over to the list with the reveal spring. Navigating back to the list inside the app shows it at once.
   - The prototype cross-fades from a card straight into the detail. The app shows the loading bar only while the product is on its way, then the detail enters with the prototype's spring.
 
 ### Performance

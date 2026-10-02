@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { CartLinkContainer } from '@/components/CartLinkContainer/CartLinkContainer';
 import { Navbar } from '@/components/Navbar/Navbar';
+import { PageLoadBar } from '@/components/PageLoadBar/PageLoadBar';
 import { CartProvider } from '@/context/cart/CartContext';
 import { DEFAULT_TITLE, TITLE_TEMPLATE } from '@/lib/pageTitles';
 import '@/styles/globals.css';
@@ -26,6 +27,7 @@ export default function RootLayout({
           <Navbar>
             <CartLinkContainer />
           </Navbar>
+          <PageLoadBar />
           {children}
         </CartProvider>
       </body>

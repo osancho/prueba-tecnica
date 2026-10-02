@@ -35,3 +35,41 @@ test('narrows the list as the user searches and keeps the search in the address'
     await expect(phone).toContainText(/samsung/i);
   }
 });
+
+test('shows the loading bar first and then the list, as in the prototype', async ({
+  page,
+}) => {
+  await page.goto('/', { waitUntil: 'commit' });
+
+  const bar = page.getByRole('progressbar', { name: 'Loading' });
+  await expect(bar).toBeVisible();
+  await expect(bar).toBeHidden();
+  await expect(page.getByText('20 results')).toBeVisible();
+});
+
+test('fills the loading bar once, without starting over', async ({ page }) => {
+  await page.addInitScript(() => {
+    const widths: number[] = [];
+    Object.assign(window, { loadingBarWidths: widths });
+    const sample = () => {
+      // React streams a hidden copy of the page before swapping it in; only the visible bar counts.
+      const bar = [...document.querySelectorAll('.loading-bar')].find(
+        (element) => !element.closest('[hidden]'),
+      );
+      if (bar) widths.push(bar.getBoundingClientRect().width);
+      if (performance.now() < 3000) requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
+  });
+
+  await page.goto('/');
+  await expect(page.getByRole('progressbar', { name: 'Loading' })).toBeHidden();
+
+  const widths = await page.evaluate(
+    () =>
+      (window as unknown as { loadingBarWidths: number[] }).loadingBarWidths,
+  );
+  const shrinks = widths.filter((width, i) => i > 0 && width < widths[i - 1]);
+  expect(widths.length).toBeGreaterThan(0);
+  expect(shrinks).toEqual([]);
+});
