@@ -173,6 +173,7 @@
 
   --cart-content-padding-top: var(--space-md);
   --cart-content-gap: var(--space-md);
+  --cart-top-rule-height: 0px;
   --cart-lines-columns: minmax(0, 1fr);
   --cart-image-width: 160px;
   --cart-image-ratio: 160 / 197.86;
@@ -218,8 +219,9 @@
     --cart-item-gap: var(--space-lg);
     --cart-footer-padding-top: var(--space-md);
     --cart-footer-padding-bottom: var(--space-lg);
-    --cart-footer-columns: auto 1fr auto auto;
-    --cart-footer-areas: 'continue . total pay';
+    /* Figma pushes "Continue shopping" and the total + pay group apart; only total and pay keep a gap */
+    --cart-footer-columns: minmax(0, 1fr) auto auto;
+    --cart-footer-areas: 'continue total pay';
     --cart-footer-column-gap: var(--space-2xl);
     --cart-total-justify: flex-start;
     --continue-shopping-width: 200px;
@@ -266,6 +268,8 @@
 
     --cart-content-padding-top: 60px;
     --cart-content-gap: 60px;
+    /* Only Figma's desktop cart with items keeps the loading bar under the header */
+    --cart-top-rule-height: var(--loading-bar-height);
     /* Figma's desktop cart item is a fixed 548px box (image 262 + gap 40 + info 246) */
     --cart-lines-columns: repeat(auto-fill, 548px);
     --cart-footer-padding-bottom: var(--space-2xl);

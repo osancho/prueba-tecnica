@@ -29,7 +29,7 @@ export function Cart() {
   const isEmpty = count === 0;
 
   return (
-    <div ref={cartRef} className="cart">
+    <div ref={cartRef} className={isEmpty ? 'cart' : 'cart cart--filled'}>
       <div className="cart__content">
         <h1 ref={titleRef} className="cart__title" tabIndex={-1}>
           <CrossFade id={String(count)} spring={FIGMA_SPRING_BOUNCY}>

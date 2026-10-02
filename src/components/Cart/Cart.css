@@ -2,6 +2,24 @@
   display: flex;
   flex-direction: column;
   min-height: calc(100dvh - var(--header-height));
+  /* Figma "Dissolve", Slow spring; opacity only, so the cart is usable while it fades in */
+  animation: cart-dissolve var(--duration-spring) var(--easing-spring);
+}
+
+.cart--filled {
+  box-shadow: inset 0 var(--cart-top-rule-height) 0 var(--color-black);
+}
+
+@keyframes cart-dissolve {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart {
+    animation: none;
+  }
 }
 
 .cart__content {
