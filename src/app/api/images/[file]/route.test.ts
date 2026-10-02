@@ -34,9 +34,38 @@ describe('GET /api/images/[file]', () => {
     );
     expect(response.status).toBe(200);
     expect(response.headers.get('Content-Type')).toBe('image/webp');
+    expect(response.headers.get('Cache-Control')).toBe(
+      'public, max-age=31536000, immutable',
+    );
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(
       new Uint8Array([9, 9]),
     );
+  });
+
+  it('serves a picture it already prepared without fetching or processing it again', async () => {
+    fetchMock.mockImplementation(
+      async () => new Response(new Uint8Array([1, 2, 3])),
+    );
+    normalizeMock.mockResolvedValue(Buffer.from([7, 7]));
+
+    await requestImage('GPX-8A-obsidiana.webp');
+    const again = await requestImage('GPX-8A-obsidiana.webp');
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(normalizeMock).toHaveBeenCalledOnce();
+    expect(new Uint8Array(await again.arrayBuffer())).toEqual(
+      new Uint8Array([7, 7]),
+    );
+  });
+
+  it('asks the API again for a picture it could not get', async () => {
+    fetchMock
+      .mockResolvedValueOnce(new Response(null, { status: 500 }))
+      .mockResolvedValueOnce(new Response(new Uint8Array([1])));
+    normalizeMock.mockResolvedValue(Buffer.from([5]));
+
+    expect((await requestImage('XMI-14-black.webp')).status).toBe(502);
+    expect((await requestImage('XMI-14-black.webp')).status).toBe(200);
   });
 
   it.each(['../.env.local', 'logo.svg', 'photo.webp?x=1'])(
