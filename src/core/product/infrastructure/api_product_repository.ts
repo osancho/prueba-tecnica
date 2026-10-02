@@ -1,7 +1,7 @@
-import { apiClient } from '@/lib/apiClient';
-import { InvalidApiResponseError, NotFoundError } from '@/lib/apiErrors';
-import { productImageUrl } from '@/lib/images/productImageUrls';
 import { SEARCH_MAX_LENGTH } from '@/lib/searchTerm';
+import { apiClient } from '@/services/api_client';
+import { InvalidApiResponseError, NotFoundError } from '@/services/api_errors';
+import { productImageUrl } from '@/services/images/product_image_urls';
 import type { ProductListItem } from '../domain/product';
 import type { ProductRepository } from '../domain/product_repository';
 import { isProduct, isProductListItem } from './product_guards';

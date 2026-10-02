@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { apiClient } from './apiClient';
-import { ApiRequestError, NotFoundError } from './apiErrors';
+import { apiClient } from '../api_client';
+import { ApiRequestError, NotFoundError } from '../api_errors';
 
 const fetchMock = vi.fn();
 

@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
-import { apiClient } from '@/lib/apiClient';
-import { InvalidApiResponseError, NotFoundError } from '@/lib/apiErrors';
+import { apiClient } from '@/services/api_client';
+import { InvalidApiResponseError, NotFoundError } from '@/services/api_errors';
 import type { Product, ProductListItem } from '../../domain/product';
 import { apiProductRepository } from '../api_product_repository';
 
-vi.mock('@/lib/apiClient', () => ({ apiClient: vi.fn() }));
+vi.mock('@/services/api_client', () => ({ apiClient: vi.fn() }));
 
 const apiClientMock = vi.mocked(apiClient);
 

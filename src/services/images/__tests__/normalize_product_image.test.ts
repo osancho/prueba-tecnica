@@ -1,7 +1,7 @@
 // @vitest-environment node
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
-import { normalizeProductImage } from './normalizeProductImage';
+import { normalizeProductImage } from '../normalize_product_image';
 
 const PHONE = { width: 20, height: 40 };
 const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };

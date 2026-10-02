@@ -1,6 +1,6 @@
 import 'server-only';
-import { ApiRequestError, NotFoundError, type ApiError } from './apiErrors';
-import { readServerEnv, UPSTREAM_TIMEOUT_MS } from './serverConfig';
+import { ApiRequestError, NotFoundError, type ApiError } from './api_errors';
+import { readServerEnv, UPSTREAM_TIMEOUT_MS } from './server_config';
 
 const REVALIDATE_SECONDS = 3600;
 

@@ -1,4 +1,4 @@
-import { readServerEnv } from '@/lib/serverConfig';
+import { readServerEnv } from '@/services/server_config';
 
 const IMAGE_FILE_PATTERN = /^[\w-]+\.(?:webp|png|jpe?g)$/i;
 

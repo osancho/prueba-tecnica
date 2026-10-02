@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { removeWhiteBackground } from './removeWhiteBackground';
+import { removeWhiteBackground } from './remove_white_background';
 
 const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };
 // Figma's product photos are squares with the phone filling 73.2% of them:

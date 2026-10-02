@@ -7,9 +7,9 @@ import { ColorSelector } from '@/components/ColorSelector/ColorSelector';
 import { CrossFade } from '@/components/CrossFade/CrossFade';
 import { StorageSelector } from '@/components/StorageSelector/StorageSelector';
 import { useCart } from '@/context/cart/CartContext';
+import { lowestPrice } from '@/core/product/domain/lowest_price';
 import type { Product } from '@/core/product/domain/product';
 import { formatPrice } from '@/lib/formatPrice';
-import { lowestPrice } from '@/core/product/domain/lowest_price';
 import { useSelectionInUrl } from './useSelectionInUrl';
 import './ProductDetail.css';
 

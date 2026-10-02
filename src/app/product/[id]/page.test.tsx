@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
-import { CartProvider } from '@/context/cart/CartContext';
 import { galaxy } from '@/components/ProductDetail/productFixture';
+import { CartProvider } from '@/context/cart/CartContext';
 import { getProduct } from '@/core/product/application/get_product';
 import ProductPage, { generateMetadata } from './page';
 

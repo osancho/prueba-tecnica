@@ -1,9 +1,9 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { normalizeProductImage } from '@/lib/images/normalizeProductImage';
+import { normalizeProductImage } from '@/services/images/normalize_product_image';
 import { GET } from './route';
 
-vi.mock('@/lib/images/normalizeProductImage', () => ({
+vi.mock('@/services/images/normalize_product_image', () => ({
   normalizeProductImage: vi.fn(),
 }));
 

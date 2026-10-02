@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { removeWhiteBackground } from './removeWhiteBackground';
+import { removeWhiteBackground } from '../remove_white_background';
 
 const WHITE = [255, 255, 255, 255];
 const BLACK = [0, 0, 0, 255];
