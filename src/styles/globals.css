@@ -8,6 +8,8 @@
 
 body {
   margin: 0;
+  /* 100vw counts a classic scrollbar, so bleeding to the window edge would overflow by its width */
+  overflow-x: clip;
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-light);
   line-height: var(--line-height-md);

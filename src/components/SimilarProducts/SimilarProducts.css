@@ -12,10 +12,11 @@
   text-transform: uppercase;
 }
 
-/* Figma replaces the native scrollbar with its own bar below the list. */
+/* Figma replaces the native scrollbar with its own bar below the list.
+   The list starts at the content edge and runs out to the right edge of the window. */
 .similar-products__list {
   display: flex;
-  margin: 0;
+  margin: 0 calc(50% - 50vw) 0 0;
   padding: 0;
   overflow-x: auto;
   list-style: none;

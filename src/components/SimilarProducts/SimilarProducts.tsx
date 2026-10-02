@@ -2,6 +2,7 @@
 
 import { useRef, type PointerEvent } from 'react';
 import { ProductCard } from '@/components/ProductCard/ProductCard';
+import { useDragScroll } from '@/lib/useDragScroll';
 import type { ProductListItem } from '@/types/product';
 import './SimilarProducts.css';
 
@@ -12,6 +13,7 @@ interface SimilarProductsProps {
 export function SimilarProducts({ products }: SimilarProductsProps) {
   const listRef = useRef<HTMLUListElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
+  const dragScroll = useDragScroll<HTMLUListElement>();
 
   // A style property instead of state: scrolling should not re-render the cards.
   function moveThumb() {
@@ -47,7 +49,12 @@ export function SimilarProducts({ products }: SimilarProductsProps) {
       <h2 id="similar-products-title" className="similar-products__title">
         Similar items
       </h2>
-      <ul ref={listRef} className="similar-products__list" onScroll={moveThumb}>
+      <ul
+        ref={listRef}
+        className="similar-products__list"
+        onScroll={moveThumb}
+        {...dragScroll}
+      >
         {products.map((product) => (
           <li key={product.id} className="similar-products__item">
             <ProductCard product={product} headingLevel={3} />
