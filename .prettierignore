@@ -2,5 +2,5 @@
 coverage
 test-results
 playwright-report
-package-lock.json
+pnpm-lock.yaml
 next-env.d.ts
