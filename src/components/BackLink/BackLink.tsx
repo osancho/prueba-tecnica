@@ -12,9 +12,9 @@ export function BackLink() {
   useEffect(() => setHref(lastListUrl()), []);
 
   return (
-    <nav className="back-bar" aria-label="Back to the list">
-      <Link href={href} className="back-bar__link">
-        <ChevronLeftIcon className="back-bar__icon" />
+    <nav className="back-link" aria-label="Back to the list">
+      <Link href={href} className="back-link__link">
+        <ChevronLeftIcon className="back-link__icon" />
         Back
       </Link>
     </nav>
