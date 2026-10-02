@@ -12,6 +12,7 @@ describe('SearchBox', () => {
         showClear={false}
         onChange={onChange}
         onClear={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -30,6 +31,7 @@ describe('SearchBox', () => {
         showClear={false}
         onChange={vi.fn()}
         onClear={vi.fn()}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -46,6 +48,7 @@ describe('SearchBox', () => {
         showClear
         onChange={vi.fn()}
         onClear={onClear}
+        onSubmit={vi.fn()}
       />,
     );
 
@@ -53,5 +56,22 @@ describe('SearchBox', () => {
 
     expect(onClear).toHaveBeenCalledOnce();
     expect(screen.getByRole('searchbox')).toHaveFocus();
+  });
+
+  it('submits the search when the user presses Enter', async () => {
+    const onSubmit = vi.fn();
+    render(
+      <SearchBox
+        value="pixel"
+        showClear
+        onChange={vi.fn()}
+        onClear={vi.fn()}
+        onSubmit={onSubmit}
+      />,
+    );
+
+    await userEvent.type(screen.getByRole('searchbox'), '{Enter}');
+
+    expect(onSubmit).toHaveBeenCalledOnce();
   });
 });

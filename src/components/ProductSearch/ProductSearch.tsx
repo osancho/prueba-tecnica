@@ -41,6 +41,7 @@ function ProductSearchView({
     hasFailed,
     changeQuery,
     clear,
+    retry,
   } = useProductSearch(initialSearch, initialProducts);
   const resultsRef = useRef<HTMLDivElement>(null);
   useListTransition(resultsRef, products, transition);
@@ -53,6 +54,7 @@ function ProductSearchView({
           showClear={query !== '' && !isPending}
           onChange={changeQuery}
           onClear={clear}
+          onSubmit={retry}
         />
         <div className="product-search__status">
           {hasFailed ? (

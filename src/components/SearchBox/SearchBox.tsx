@@ -7,6 +7,7 @@ interface SearchBoxProps {
   showClear: boolean;
   onChange: (value: string) => void;
   onClear: () => void;
+  onSubmit: () => void;
 }
 
 export function SearchBox({
@@ -14,6 +15,7 @@ export function SearchBox({
   showClear,
   onChange,
   onClear,
+  onSubmit,
 }: SearchBoxProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -24,7 +26,14 @@ export function SearchBox({
   }
 
   return (
-    <div className="search-box" role="search">
+    <form
+      className="search-box"
+      role="search"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit();
+      }}
+    >
       <label className="visually-hidden" htmlFor={inputId}>
         Search for a smartphone
       </label>
@@ -49,6 +58,6 @@ export function SearchBox({
       >
         <CloseIcon className="search-box__clear-icon" />
       </button>
-    </div>
+    </form>
   );
 }

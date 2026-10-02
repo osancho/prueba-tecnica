@@ -17,14 +17,37 @@ interface SearchResults {
   transition: ListTransition;
 }
 
+class SearchRequestError extends Error {
+  constructor(readonly status: number) {
+    super(`Search failed: ${status}`);
+  }
+}
+
 async function fetchProducts(
   search: string,
   signal: AbortSignal,
 ): Promise<ProductListItem[]> {
   const params = search ? `?${new URLSearchParams({ search })}` : '';
   const response = await fetch(`/api/products${params}`, { signal });
-  if (!response.ok) throw new Error(`Search failed: ${response.status}`);
+  if (!response.ok) throw new SearchRequestError(response.status);
   return response.json();
+}
+
+// A dropped connection or a 5xx (the API waking up) often works a moment later; a 4xx will not.
+function isTransient(error: unknown): boolean {
+  return !(error instanceof SearchRequestError) || error.status >= 500;
+}
+
+async function fetchProductsRetryingOnce(
+  search: string,
+  signal: AbortSignal,
+): Promise<ProductListItem[]> {
+  try {
+    return await fetchProducts(search, signal);
+  } catch (error) {
+    if (signal.aborted || !isTransient(error)) throw error;
+    return fetchProducts(search, signal);
+  }
 }
 
 // replaceState, not pushState: Back should leave the page, not undo each keystroke.
@@ -51,6 +74,7 @@ export function useProductSearch(
     transition: 'morph',
   });
   const [hasFailed, setHasFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const search = input.query.trim();
 
   useEffect(() => rememberListUrl(), []);
@@ -62,7 +86,10 @@ export function useProductSearch(
     const timer = setTimeout(
       async () => {
         try {
-          const products = await fetchProducts(search, controller.signal);
+          const products = await fetchProductsRetryingOnce(
+            search,
+            controller.signal,
+          );
           setResults({
             search,
             products,
@@ -80,7 +107,7 @@ export function useProductSearch(
       clearTimeout(timer);
       controller.abort();
     };
-  }, [search, input.cleared, results.search]);
+  }, [search, input.cleared, results.search, attempt]);
 
   function changeQuery(query: string) {
     setHasFailed(false);
@@ -92,6 +119,13 @@ export function useProductSearch(
     setInput({ query: '', cleared: true });
   }
 
+  // Figma has no retry button: submitting the same search again is the way to retry it.
+  function retry() {
+    if (!hasFailed) return;
+    setHasFailed(false);
+    setAttempt((count) => count + 1);
+  }
+
   return {
     query: input.query,
     products: results.products,
@@ -100,5 +134,6 @@ export function useProductSearch(
     hasFailed,
     changeQuery,
     clear,
+    retry,
   };
 }

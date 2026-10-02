@@ -118,4 +118,45 @@ describe('ProductSearch', () => {
       screen.getByRole('link', { name: /iPhone 15 Pro/ }),
     ).toBeInTheDocument();
   });
+
+  it('shows the results when the search only failed for a moment', async () => {
+    const { fetchMock, user } = setup('', [iphone]);
+    fetchMock
+      .mockResolvedValueOnce({ ok: false, status: 503 } as Response)
+      .mockResolvedValueOnce(respondWith([galaxy]));
+
+    await user.type(screen.getByRole('searchbox'), 'galaxy');
+    await act(() => vi.advanceTimersByTimeAsync(300));
+
+    expect(await screen.findByText('1 result')).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('does not repeat a search the server rejected', async () => {
+    const { fetchMock, user } = setup('', [iphone]);
+    fetchMock.mockResolvedValue({ ok: false, status: 400 } as Response);
+
+    await user.type(screen.getByRole('searchbox'), 'galaxy');
+    await act(() => vi.advanceTimersByTimeAsync(300));
+
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it('repeats a failed search when the user presses Enter', async () => {
+    const { fetchMock, user } = setup('', [iphone]);
+    fetchMock.mockResolvedValue({ ok: false, status: 502 } as Response);
+    await user.type(screen.getByRole('searchbox'), 'galaxy');
+    await act(() => vi.advanceTimersByTimeAsync(300));
+    await screen.findByRole('alert');
+
+    fetchMock.mockResolvedValue(respondWith([galaxy]));
+    await user.type(screen.getByRole('searchbox'), '{Enter}');
+    await act(() => vi.advanceTimersByTimeAsync(300));
+
+    expect(await screen.findByText('1 result')).toBeInTheDocument();
+    expect(screen.getByRole('searchbox')).toHaveValue('galaxy');
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
 });
