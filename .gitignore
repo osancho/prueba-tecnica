@@ -43,5 +43,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Local Claude Code settings
-/.claude/
+# Local Claude Code settings; the screen agents and their commands are shared
+/.claude/*
+!/.claude/agents/
+!/.claude/skills/
