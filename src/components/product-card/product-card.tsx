@@ -5,17 +5,25 @@ import type { ProductListItem } from '@/core/product/domain/product';
 import { formatPrice } from '@/lib/format-price';
 import './product-card.css';
 
+// Side of the square photo on screen with the list's tokens: the card height (344px, 377px,
+// or its width on desktop: (100vw - 200px) / 5) minus padding, gap and the info line (87px).
+const GRID_IMAGE_SIZES =
+  '(min-width: 1280px) calc(20vw - 127px), (min-width: 768px) 290px, 257px';
+
 interface ProductCardProps {
   product: ProductListItem;
   priority?: boolean;
   /** 3 when the cards sit under a section heading, as in "Similar items". */
   headingLevel?: 2 | 3;
+  /** The photo's `sizes`, for cards laid out other than in the product grid. */
+  imageSizes?: string;
 }
 
 export function ProductCard({
   product,
   priority = false,
   headingLevel = 2,
+  imageSizes = GRID_IMAGE_SIZES,
 }: ProductCardProps) {
   const { id, brand, name, basePrice, imageUrl } = product;
   const Name = headingLevel === 3 ? 'h3' : 'h2';
@@ -36,6 +44,7 @@ export function ProductCard({
           src={imageUrl}
           alt={`${brand} ${name}`}
           fill
+          sizes={imageSizes}
           priority={priority}
         />
       </div>

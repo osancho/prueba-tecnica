@@ -6,6 +6,10 @@ import type { ProductListItem } from '@/core/product/domain/product';
 import { useDragScroll } from '@/lib/use-drag-scroll';
 import './similar-products.css';
 
+// --similar-card-size (344px, 377px, 344px) minus the card's padding, gap and info line.
+const SIMILAR_IMAGE_SIZES =
+  '(min-width: 1280px) 257px, (min-width: 768px) 290px, 257px';
+
 interface SimilarProductsProps {
   products: ProductListItem[];
 }
@@ -57,7 +61,11 @@ export function SimilarProducts({ products }: SimilarProductsProps) {
       >
         {products.map((product) => (
           <li key={product.id} className="similar-products__item">
-            <ProductCard product={product} headingLevel={3} />
+            <ProductCard
+              product={product}
+              headingLevel={3}
+              imageSizes={SIMILAR_IMAGE_SIZES}
+            />
           </li>
         ))}
       </ul>

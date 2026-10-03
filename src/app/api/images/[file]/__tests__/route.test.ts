@@ -10,8 +10,8 @@ vi.mock('@/services/images/normalize-product-image', () => ({
 const fetchMock = vi.fn();
 const normalizeMock = vi.mocked(normalizeProductImage);
 
-function requestImage(file: string) {
-  return GET(new Request(`http://localhost/api/images/${file}`), {
+function requestImage(file: string, query = '?v=3&w=648') {
+  return GET(new Request(`http://localhost/api/images/${file}${query}`), {
     params: Promise.resolve({ file }),
   });
 }
@@ -32,6 +32,7 @@ describe('GET /api/images/[file]', () => {
     expect(String(fetchMock.mock.calls[0][0])).toBe(
       'https://api.test/images/SMG-S24U-titanium-violet.webp',
     );
+    expect(normalizeMock).toHaveBeenCalledWith(expect.any(Buffer), 648);
     expect(response.status).toBe(200);
     expect(response.headers.get('Content-Type')).toBe('image/webp');
     expect(response.headers.get('Cache-Control')).toBe(
@@ -57,6 +58,41 @@ describe('GET /api/images/[file]', () => {
       new Uint8Array([7, 7]),
     );
   });
+
+  it('prepares each width once, so every slot gets its own size', async () => {
+    fetchMock.mockImplementation(
+      async () => new Response(new Uint8Array([1, 2, 3])),
+    );
+    normalizeMock.mockResolvedValue(Buffer.from([7, 7]));
+
+    await requestImage('GPX-8A-obsidiana.webp', '?v=3&w=360');
+    await requestImage('GPX-8A-obsidiana.webp', '?v=3&w=1260');
+    await requestImage('GPX-8A-obsidiana.webp', '?v=3&w=360');
+
+    expect(normalizeMock.mock.calls.map(([, width]) => width)).toEqual([
+      360, 1260,
+    ]);
+  });
+
+  it('keeps serving pictures to URLs without a width, saved by an older version', async () => {
+    fetchMock.mockResolvedValue(new Response(new Uint8Array([1])));
+    normalizeMock.mockResolvedValue(Buffer.from([5]));
+
+    const response = await requestImage('XMI-14-negro.webp', '?v=2');
+
+    expect(response.status).toBe(200);
+    expect(normalizeMock).toHaveBeenCalledWith(expect.any(Buffer), 1260);
+  });
+
+  it.each(['?w=100', '?w=abc', '?w=0648', '?w='])(
+    'rejects the width in %s without contacting any server',
+    async (query) => {
+      const response = await requestImage('XMI-14-negro.webp', query);
+
+      expect(response.status).toBe(400);
+      expect(fetchMock).not.toHaveBeenCalled();
+    },
+  );
 
   it('asks the API again for a picture it could not get', async () => {
     fetchMock
