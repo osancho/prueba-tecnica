@@ -57,7 +57,7 @@ src/
                 (page.tsx list, product/[id], cart, api/products search proxy, api/images image normalizer)
   core/<context>/
     domain/          types, ports (product-repository.ts, cart-repository.ts) and business rules (lowest-price, cart-line, cart-reducer)
-    application/     use cases that receive a port: get-products (dedupe, 20 items), get-product
+    application/     use cases that receive a port: get-products (dedupe; the first 20, or every match of a search), get-product
     infrastructure/  adapters: api-product-repository (validation, image URLs), local-storage-cart-repository
   services/     what talks to the outside: api-client.ts (server-only, single entry point to the API), api-errors.ts, server-config.ts, images/
   lib/          pure helpers and UI hooks only
@@ -91,7 +91,7 @@ Naming:
 
 - Base URL `API_BASE_URL`, header `x-api-key` = `API_KEY` (in `.env.local`, never `NEXT_PUBLIC_`). **The key never reaches the browser.** Every call to the external API goes through a single `apiClient` (`src/services/api-client.ts`, `import 'server-only'`): base URL, auth header, error mapping (404 → not found), caching and timeouts live there; no other module calls `fetch` against the API. Responses are validated in `api-product-repository.ts` and deduped in the use cases. Client search goes through our Route Handler `/api/products`.
 - Endpoints: `GET /products` (`search`, `limit`, `offset`; default 24) and `GET /products/{id}`.
-- Duplicated ids in the list and in `similarProducts` → dedupe in the API layer. To show 20 unique products, request more than 20 and slice after deduping.
+- Duplicated ids in the list and in `similarProducts` → dedupe in the API layer. Without a search, show the first 20 unique products: request more than 20 and slice after deduping. With a search, never slice: every unique match is shown and counted. The catalog holds 24 entries (23 unique) and no `limit` returns more, so the same request of 40 brings every match.
 - Images come over `http://` and are inconsistent (2 of 62 with opaque white background, phone filling 60–100% of the picture). Ideally they would come right from the backend; since they do not, every image goes through `/api/images/[file]` (sharp: white background connected to the border → transparent, trim to the phone, then centre it in a transparent square at the Figma scale, 73.2%, resized to the requested width and never enlarged) to guarantee the quality standard. Results are kept in memory per width and served `immutable` (URLs carry `?v=`). `next/image` uses a custom loader (`src/lib/product-image-loader.ts`) that asks for one of `PRODUCT_IMAGE_WIDTHS` with `w=`; every image declares `sizes`. Next's optimizer stays off, since it would only add a second lossy pass. Known limit (documented in the README): some photos have an opaque floor reflection painted under the phone (e.g. Pixel 8a); it cannot be told apart from the device safely, so it is left as is — the right fix is the source asset.
 - `basePrice` may differ from the cheapest storage price (Galaxy S24 Ultra: base 1329 €, 256 GB 1229 €). Cards show `basePrice` (the brief's "precio base", the only price the list endpoint returns); the detail shows "From" + `lowestPrice`, then the chosen storage price.
 - Unknown id → 404 `{ "error": "NOT-FOUND", "message": "Product not found" }` → Next.js `not-found`.

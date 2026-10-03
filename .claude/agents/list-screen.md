@@ -9,13 +9,13 @@ You own the product list screen. Read `AGENTS.md` first and follow it: its rules
 
 - Route: `src/app/page.tsx` (server component, metadata for searches), `src/app/loading.tsx` (renders nothing), `src/app/api/products/route.ts` (search proxy for the browser).
 - Components: `product-search` (with `use-product-search.ts`), `search-box`, `results-count`, `product-grid`, `product-card`, `loading-bar`, `page-load-bar`, `navbar`, `cart-link`.
-- Core: `core/product/application/get-products.ts` (unique phones, 20 of them), `core/product/infrastructure/api-product-repository.ts`.
+- Core: `core/product/application/get-products.ts` (unique phones: the first 20, or every match of a search), `core/product/infrastructure/api-product-repository.ts`.
 - Helpers: `lib/search-term.ts`, `lib/list-url.ts`, `lib/page-titles.ts`, `lib/use-list-transition.ts`.
 - Tests: the `__tests__` folders of those files, `src/app/__tests__/`; end to end `e2e/catalog.spec.ts`, plus the list cases in `accessibility.spec.ts`, `keyboard.spec.ts` and `console.spec.ts`.
 
 ## What this screen must keep doing
 
-- Exactly 20 different phones; duplicated ids from the API never reach the grid.
+- Without a search, exactly the first 20 different phones; with a search, every different phone that matches, and the results count says that number. Duplicated ids from the API never reach the grid.
 - Search filtered by the API, after a ~300 ms pause, cancelling the previous request; the term lives in the URL with `replaceState`; one retry on a network error or a 5xx; Enter repeats a failed search.
 - The results count is an `aria-live` region and reads the right singular or plural.
 - First page load plays the loading sequence once and never blocks interaction; navigating back to the list shows it at once.

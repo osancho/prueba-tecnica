@@ -4,7 +4,7 @@
 
 Una tienda de smartphones hecha con Next.js 15 y React 19: recorrer y buscar en el catálogo, configurar un teléfono y guardar un carrito.
 
-- **Listado** (`/`): los 20 primeros teléfonos, búsqueda en tiempo real con el número de resultados y la búsqueda guardada en la URL.
+- **Listado** (`/`): los 20 primeros teléfonos, búsqueda en tiempo real que muestra todas las coincidencias con su número, y la búsqueda guardada en la URL.
 - **Detalle** (`/product/[id]`): foto por color, selectores de almacenamiento y color con el precio actualizándose al elegir, especificaciones y teléfonos similares.
 - **Carrito** (`/cart`): una línea por cada teléfono añadido, eliminación, total y estado vacío.
 
@@ -15,7 +15,7 @@ La demo y las capturas se publican con el despliegue.
 Cinco archivos, en este orden, enseñan todo el diseño:
 
 1. [`src/app/page.tsx`](src/app/page.tsx): una página de servidor, el punto de composición que entrega el adaptador real al caso de uso.
-2. [`src/core/product/application/get-products.ts`](src/core/product/application/get-products.ts): un caso de uso, el único sitio que sabe "20 teléfonos únicos".
+2. [`src/core/product/application/get-products.ts`](src/core/product/application/get-products.ts): un caso de uso, el único sitio que conoce la regla del listado: los 20 primeros teléfonos únicos, o todas las coincidencias únicas de una búsqueda.
 3. [`src/services/api-client.ts`](src/services/api-client.ts): la única puerta a la API, donde viven la key, los errores, la caché y los timeouts.
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
@@ -118,7 +118,7 @@ src/
   core/
     product/
       domain/           tipos de Product, el puerto ProductRepository, la regla del precio "From"
-      application/      casos de uso: get-products (teléfonos únicos, 20), get-product
+      application/      casos de uso: get-products (teléfonos únicos: los 20 primeros, o todas las coincidencias de una búsqueda), get-product
       infrastructure/   api-product-repository: llama a la API, valida y construye las URLs de imagen;
                         http-product-repository: la entrada del navegador, a través de nuestro Route Handler
     cart/
@@ -195,7 +195,7 @@ Solo el servidor habla con la API:
 
 | Problema                                                                                  | Cómo se resuelve                                                                                                                      |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Ids repetidos en el listado y en los similares                                            | Se piden 40, se quitan los duplicados y se recorta a 20.                                                                              |
+| Ids repetidos en el listado y en los similares                                            | Se piden 40 (la API tiene 24) y se quitan los duplicados; solo el listado sin búsqueda se recorta a 20.                               |
 | Imágenes servidas por `http` e irregulares                                                | Pasan por `/api/images` en nuestro dominio, que las normaliza.                                                                        |
 | `basePrice` distinto de los precios por almacenamiento                                    | Las tarjetas muestran `basePrice` y el detalle los precios por almacenamiento; ver [Datos y API](#datos-y-api).                       |
 | Un id desconocido responde 404 `NOT-FOUND`                                                | `apiClient` lanza `NotFoundError` y la página llama a `notFound()`.                                                                   |
