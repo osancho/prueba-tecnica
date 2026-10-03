@@ -186,7 +186,8 @@ Solo el servidor habla con la API:
 ### Rendimiento
 
 - **Fotos de producto normalizadas.** Las fotos de la API son irregulares: algunas tienen el fondo blanco opaco y el teléfono ocupa entre el 60 % y el 100 % del encuadre. Lo correcto sería que el backend las entregara ya estandarizadas; hasta entonces, `/api/images` las normaliza con sharp al encuadre de Figma (fondo transparente, teléfono al 73,2 % de un cuadrado).
-- **Las imágenes normalizadas se guardan en memoria** y se sirven como `immutable`, porque sus URLs llevan versión.
+- **Cada foto se descarga al tamaño que necesita su hueco.** `/api/images` redimensiona al normalizar, a uno de cinco anchos (360, 520, 648, 832 y 1260 px; el mayor es el detalle de escritorio, 630 px, a 2x); las fotos originales pequeñas nunca se amplían. `next/image` los pide con un loader propio y cada foto declara en `sizes` su tamaño en pantalla, así que el navegador elige la más pequeña que se ve nítida. Las 20 fotos del listado pasan de 1,16 MB a 203 kB a 1440 px en una pantalla 2x, y a 330 kB en un móvil 2x.
+- **Las imágenes normalizadas se guardan en memoria, una por ancho,** y se sirven como `immutable`, porque sus URLs llevan versión. Cualquier otro ancho se rechaza, así que la caché queda acotada por el catálogo (menos de 8 MB).
 - **El catálogo se cachea una hora; las búsquedas no**, para que cada término de búsqueda no se convierta en una entrada nueva de caché en disco.
 - **Sin prefetch en el enlace del carrito.** El prefetch de `/cart` precargaba su hoja de estilos en todas las páginas, y Chrome lo marcaba como precarga sin usar.
 
