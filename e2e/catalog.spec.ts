@@ -38,6 +38,32 @@ test('narrows the list as the user searches and keeps the search in the address'
   }
 });
 
+test('lists and counts every different phone a search finds, even beyond 20', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  // "a" matches more than 20 different phones in the live catalog.
+  await page
+    .getByRole('searchbox', { name: 'Search for a smartphone' })
+    .fill('a');
+
+  await expect(page).toHaveURL(/\?search=a$/);
+  const phones = page.getByRole('main').getByRole('listitem');
+  await expect(phones).not.toHaveCount(20);
+  const count = await phones.count();
+  expect(count).toBeGreaterThan(20);
+  const links = await phones
+    .getByRole('link')
+    .evaluateAll((anchors) =>
+      anchors.map((anchor) => anchor.getAttribute('href')),
+    );
+  expect(new Set(links).size).toBe(count);
+  await expect(
+    page.getByRole('main').getByText(`${count} results`),
+  ).toBeVisible();
+});
+
 test('shows the loading bar first and then the list, as in the prototype', async ({
   page,
 }) => {
