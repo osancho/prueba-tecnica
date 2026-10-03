@@ -3,6 +3,9 @@ import type { CartLine } from '@/core/cart/domain/cart-line';
 import { formatPrice } from '@/lib/format-price';
 import './cart-item.css';
 
+// The square photo covers the box, so it shows at the box height (--cart-image-width × ratio).
+const IMAGE_SIZES = '(min-width: 768px) 324px, 198px';
+
 interface CartItemProps {
   line: CartLine;
   onRemove: () => void;
@@ -21,6 +24,7 @@ export function CartItem({ line, onRemove }: CartItemProps) {
           src={imageUrl}
           alt={`${brand} ${name} in ${colorName}`}
           fill
+          sizes={IMAGE_SIZES}
         />
       </div>
       <div className="cart-item__details">
