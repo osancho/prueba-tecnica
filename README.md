@@ -20,7 +20,7 @@ Five files, in this order, show the whole design:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
 
-Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 8 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
+Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 9 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
 
 ## Beyond the brief, and why
 
@@ -149,7 +149,7 @@ Only the server talks to the API:
 
 - **The API key never reaches the browser.** Pages fetch on the server and the search goes through `/api/products`.
 - **Node 18 end to end**, production included: the app runs on its own VPS because Vercel no longer offers Node 18. Tools are held to Node 18 compatible majors, with exact versions where it matters (Next 15.5.27, Playwright 1.61.1, vitest-axe 0.1.0).
-- **Validated responses.** Type guards check the data at the boundary: a malformed phone is left out of a list, a malformed product shows the error page instead of a false "not found".
+- **Validated responses.** Type guards check the data at the boundary: a malformed phone is left out of a list, a malformed product shows the error page instead of a false "not found". A spec the API leaves out is not malformed data: the phone opens, and the specs table and the meta description leave that spec out.
 - **One API call per product page.** The page and its metadata share the request through React `cache()`, so a slow or failing API is waited for once.
 - **Prices follow the brief.** It asks for the "precio base" on each card, and for the "precio base y variaciones según almacenamiento" on the detail. Cards show `basePrice`, which is what the list endpoint returns. The detail opens with "From" and the cheapest storage price, as in Figma, then shows the price of the chosen storage. The two can differ: the API's `basePrice` is not always the cheapest storage (Galaxy S24 Ultra: 1329 EUR on the card, from 1229 EUR on the detail). Aligning them would take one detail request per card, so each view shows the price its endpoint provides.
 
@@ -192,14 +192,15 @@ Only the server talks to the API:
 
 ## API quirks
 
-| Problem                                                        | How it is handled                                                                                                     |
-| -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Repeated ids in the list and in similar products               | 40 items are requested, duplicates removed, and the list cut to 20.                                                   |
-| Images served over `http` and inconsistent                     | Proxied and normalized through `/api/images` on our domain.                                                           |
-| `basePrice` differs from the storage prices                    | Cards show `basePrice`, the detail the storage prices; see [Data and API](#data-and-api).                             |
-| Unknown id answers 404 `NOT-FOUND`                             | `apiClient` throws `NotFoundError`, and the page calls `notFound()`.                                                  |
-| Render free plan: the first request can take close to a minute | 60 s timeout, one automatic retry for the search, the prototype's loading states, and a warm-up before the E2E suite. |
-| Responses not shaped as documented                             | Type guards drop invalid items and turn an invalid product into an error.                                             |
+| Problem                                                                       | How it is handled                                                                                                     |
+| ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Repeated ids in the list and in similar products                              | 40 items are requested, duplicates removed, and the list cut to 20.                                                   |
+| Images served over `http` and inconsistent                                    | Proxied and normalized through `/api/images` on our domain.                                                           |
+| `basePrice` differs from the storage prices                                   | Cards show `basePrice`, the detail the storage prices; see [Data and API](#data-and-api).                             |
+| Unknown id answers 404 `NOT-FOUND`                                            | `apiClient` throws `NotFoundError`, and the page calls `notFound()`.                                                  |
+| Render free plan: the first request can take close to a minute                | 60 s timeout, one automatic retry for the search, the prototype's loading states, and a warm-up before the E2E suite. |
+| A product without one of its specs (the iPhone 13 has no `screenRefreshRate`) | Every spec is optional: the phone opens, and the specs table and the meta description leave that spec out.            |
+| Responses not shaped as documented                                            | Type guards drop invalid items and turn an invalid product into an error.                                             |
 
 ## Quality
 
@@ -207,6 +208,7 @@ Only the server talks to the API:
 - **Accessibility checks** with vitest-axe on every page. jsdom loads no CSS, so contrast is checked by the end-to-end axe audit.
 - **End-to-end tests** (Playwright, Chromium only) on the production build:
   - catalog and search, detail and add-to-cart, and the cart;
+  - every phone of the catalog opens its detail: the 20 of the list and the ones only "Similar items" links to, so a product the app cannot render fails the suite;
   - an axe audit (WCAG 2.2 AA and best practices, contrast included) of eight screens at 393, 834 and 1920 px;
   - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
   - the cart check against the catalog, with a clean console;

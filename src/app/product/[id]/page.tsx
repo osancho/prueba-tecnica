@@ -21,9 +21,19 @@ interface ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
+// en-GB joins the last item without a serial comma ("A, B and C").
+const highlightList = new Intl.ListFormat('en-GB', { type: 'conjunction' });
+
 function productDescription(product: Product): string {
   const { brand, name, specs } = product;
-  return `${brand} ${name} from ${formatPrice(lowestPrice(product))}: ${specs.screen} screen, ${specs.processor} and ${specs.battery} battery. Choose your storage and color.`;
+  const highlights = [
+    specs.screen && `${specs.screen} screen`,
+    specs.processor,
+    specs.battery && `${specs.battery} battery`,
+  ].filter((highlight): highlight is string => Boolean(highlight));
+  const summary =
+    highlights.length > 0 ? `: ${highlightList.format(highlights)}` : '';
+  return `${brand} ${name} from ${formatPrice(lowestPrice(product))}${summary}. Choose your storage and color.`;
 }
 
 export async function generateMetadata({

@@ -20,7 +20,7 @@ Cinco archivos, en este orden, enseñan todo el diseño:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
 
-Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 8 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
+Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 9 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
 
 ## Más allá del enunciado, y por qué
 
@@ -149,7 +149,7 @@ Solo el servidor habla con la API:
 
 - **La key de la API nunca llega al navegador.** Las páginas piden los datos en el servidor y la búsqueda pasa por `/api/products`.
 - **Node 18 de principio a fin**, también en producción: la app corre en un VPS propio porque Vercel ya no ofrece Node 18. Las herramientas se mantienen en versiones mayores compatibles con Node 18, con versiones exactas donde importa (Next 15.5.27, Playwright 1.61.1, vitest-axe 0.1.0).
-- **Respuestas validadas.** Los type guards comprueban los datos en la frontera: un teléfono mal formado se queda fuera del listado, y un producto mal formado muestra la página de error en lugar de un falso "no encontrado".
+- **Respuestas validadas.** Los type guards comprueban los datos en la frontera: un teléfono mal formado se queda fuera del listado, y un producto mal formado muestra la página de error en lugar de un falso "no encontrado". Una especificación que la API no envía no es un dato mal formado: el teléfono se abre, y la tabla de especificaciones y la meta descripción la omiten.
 - **Una sola llamada a la API por página de producto.** La página y sus metadatos comparten la petición con `cache()` de React, así que una API lenta o caída se espera una sola vez.
 - **Los precios siguen el enunciado.** Pide el "precio base" en cada tarjeta, y el "precio base y variaciones según almacenamiento" en el detalle. Las tarjetas muestran `basePrice`, que es lo que devuelve el endpoint del listado. El detalle empieza con "From" y el precio del almacenamiento más barato, como en Figma, y después muestra el precio del almacenamiento elegido. Pueden no coincidir: el `basePrice` de la API no siempre es el almacenamiento más barato (Galaxy S24 Ultra: 1329 EUR en la tarjeta, desde 1229 EUR en el detalle). Igualarlos costaría una petición de detalle por tarjeta, así que cada vista muestra el precio que da su endpoint.
 
@@ -192,14 +192,15 @@ Solo el servidor habla con la API:
 
 ## Peculiaridades de la API
 
-| Problema                                                                 | Cómo se resuelve                                                                                                                      |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Ids repetidos en el listado y en los similares                           | Se piden 40, se quitan los duplicados y se recorta a 20.                                                                              |
-| Imágenes servidas por `http` e irregulares                               | Pasan por `/api/images` en nuestro dominio, que las normaliza.                                                                        |
-| `basePrice` distinto de los precios por almacenamiento                   | Las tarjetas muestran `basePrice` y el detalle los precios por almacenamiento; ver [Datos y API](#datos-y-api).                       |
-| Un id desconocido responde 404 `NOT-FOUND`                               | `apiClient` lanza `NotFoundError` y la página llama a `notFound()`.                                                                   |
-| Plan gratuito de Render: la primera petición puede tardar casi un minuto | Timeout de 60 s, un reintento automático en la búsqueda, los estados de carga del prototipo y un calentamiento antes de la suite E2E. |
-| Respuestas que no tienen la forma documentada                            | Los type guards descartan los elementos no válidos y convierten un producto no válido en un error.                                    |
+| Problema                                                                                  | Cómo se resuelve                                                                                                                      |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Ids repetidos en el listado y en los similares                                            | Se piden 40, se quitan los duplicados y se recorta a 20.                                                                              |
+| Imágenes servidas por `http` e irregulares                                                | Pasan por `/api/images` en nuestro dominio, que las normaliza.                                                                        |
+| `basePrice` distinto de los precios por almacenamiento                                    | Las tarjetas muestran `basePrice` y el detalle los precios por almacenamiento; ver [Datos y API](#datos-y-api).                       |
+| Un id desconocido responde 404 `NOT-FOUND`                                                | `apiClient` lanza `NotFoundError` y la página llama a `notFound()`.                                                                   |
+| Plan gratuito de Render: la primera petición puede tardar casi un minuto                  | Timeout de 60 s, un reintento automático en la búsqueda, los estados de carga del prototipo y un calentamiento antes de la suite E2E. |
+| Un producto sin alguna de sus especificaciones (el iPhone 13 no trae `screenRefreshRate`) | Todas las especificaciones son opcionales: el teléfono se abre, y la tabla de especificaciones y la meta descripción la omiten.       |
+| Respuestas que no tienen la forma documentada                                             | Los type guards descartan los elementos no válidos y convierten un producto no válido en un error.                                    |
 
 ## Calidad
 
@@ -207,6 +208,7 @@ Solo el servidor habla con la API:
 - **Comprobaciones de accesibilidad** con vitest-axe en todas las páginas. jsdom no carga CSS, así que el contraste lo comprueba la auditoría axe end-to-end.
 - **Tests end-to-end** (Playwright, solo Chromium) sobre el build de producción:
   - catálogo y búsqueda, detalle y añadir al carrito, y el carrito;
+  - todos los teléfonos del catálogo abren su detalle: los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar hace fallar la suite;
   - una auditoría axe (WCAG 2.2 AA y buenas prácticas, contraste incluido) de ocho pantallas a 393, 834 y 1920 px;
   - el recorrido completo solo con teclado, desde la búsqueda hasta quitar el teléfono del carrito;
   - la comprobación del carrito contra el catálogo, con consola limpia;
