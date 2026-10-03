@@ -18,7 +18,7 @@ function specRows({ brand, name, description, specs }: Product) {
     ['Battery', specs.battery],
     ['OS', specs.os],
     ['Screen refresh rate', specs.screenRefreshRate],
-  ];
+  ].filter(([, value]) => value); // Figma has no design for a spec without a value.
 }
 
 export function ProductSpecs({ product }: ProductSpecsProps) {

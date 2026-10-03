@@ -143,11 +143,40 @@ describe('apiProductRepository.findById', () => {
     expect(product?.similarProducts.map(({ id }) => id)).toEqual(['S1']);
   });
 
+  it('opens a phone whose API data leaves out a spec', async () => {
+    apiClientMock.mockResolvedValue({
+      ...productDetail(),
+      // As the API sends the iPhone 13: no refresh rate, and a storage spec it does not document.
+      specs: {
+        screen: '6.1" OLED Super Retina XDR',
+        resolution: '2532 x 1170 pixels',
+        processor: 'Chip A15 Bionic',
+        mainCamera: '12 MP',
+        selfieCamera: '12 MP',
+        battery: 'No especificada',
+        os: 'iOS',
+        storage: '128 GB',
+      },
+    });
+
+    const product = await apiProductRepository.findById('MAIN');
+
+    expect(product?.specs.screen).toBe('6.1" OLED Super Retina XDR');
+    expect(product?.specs.screenRefreshRate).toBeUndefined();
+  });
+
   it.each([
+    ['no id', { id: undefined }],
+    ['no name', { name: undefined }],
     ['no storage options', { storageOptions: undefined }],
+    ['no color options', { colorOptions: undefined }],
     ['a price that is not a number', { basePrice: '1329' }],
     ['a color without picture', { colorOptions: [{ name: 'Black' }] }],
     ['missing specs', { specs: undefined }],
+    [
+      'a spec that is not text',
+      { specs: { ...productDetail().specs, battery: null } },
+    ],
   ])(
     'treats a product with %s as an error, not as "not found"',
     async (_, broken) => {
