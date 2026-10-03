@@ -58,7 +58,9 @@ function isStorageOption(value: unknown): value is StorageOption {
 function isSpecs(value: unknown): value is ProductSpecs {
   return (
     isObject(value) &&
-    SPEC_FIELDS.every((field) => typeof value[field] === 'string')
+    SPEC_FIELDS.every(
+      (field) => value[field] === undefined || typeof value[field] === 'string',
+    )
   );
 }
 

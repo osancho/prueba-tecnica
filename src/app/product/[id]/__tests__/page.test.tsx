@@ -41,6 +41,31 @@ describe('ProductPage', () => {
     });
   });
 
+  it.each([
+    [
+      'one key spec',
+      { processor: undefined },
+      'Samsung Galaxy S24 Ultra from 1229 EUR: 6.8" Dynamic AMOLED 2X screen and 5000 mAh battery. Choose your storage and color.',
+    ],
+    [
+      'every key spec',
+      { screen: undefined, processor: undefined, battery: undefined },
+      'Samsung Galaxy S24 Ultra from 1229 EUR. Choose your storage and color.',
+    ],
+  ])(
+    'describes a phone without %s using only what it has',
+    async (_, missing, description) => {
+      getProductMock.mockResolvedValue({
+        ...galaxy,
+        specs: { ...galaxy.specs, ...missing },
+      });
+
+      const metadata = await generateMetadata({ params: params('SMG-S24U') });
+
+      expect(metadata.description).toBe(description);
+    },
+  );
+
   it('has no accessibility violations', async () => {
     getProductMock.mockResolvedValue(galaxy);
 
