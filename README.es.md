@@ -10,6 +10,28 @@ Una tienda de smartphones hecha con Next.js 15 y React 19: recorrer y buscar en 
 
 La demo y las capturas se publican con el despliegue.
 
+## Revisarlo en 15 minutos
+
+Cinco archivos, en este orden, enseñan todo el diseño:
+
+1. [`src/app/page.tsx`](src/app/page.tsx): una página de servidor, el punto de composición que entrega el adaptador real al caso de uso.
+2. [`src/core/product/application/get-products.ts`](src/core/product/application/get-products.ts): un caso de uso, el único sitio que sabe "20 teléfonos únicos".
+3. [`src/services/api-client.ts`](src/services/api-client.ts): la única puerta a la API, donde viven la key, los errores, la caché y los timeouts.
+4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
+5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
+
+Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 8 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
+
+## Más allá del enunciado, y por qué
+
+Estas piezas cuestan tiempo de lectura, así que cada una está a propósito:
+
+- **Arquitectura hexagonal**: las reglas del catálogo y del carrito se prueban sin Next, y una API nueva o un carrito en servidor son un adaptador más. Ver [Arquitectura](#arquitectura).
+- **El carrito guardado se comprueba contra el catálogo**: un carrito puede pasar días en `localStorage` mientras los precios y el stock cambian en una API externa. Ver [Estado](#estado).
+- **Fotos de producto normalizadas**: las fotos de la API son irregulares (fondos blancos, el teléfono ocupando entre el 60 % y el 100 % del encuadre); `/api/images` las lleva al encuadre de Figma. Ver [Rendimiento](#rendimiento).
+- **Movimiento del prototipo de Figma**: sus springs y estados de carga, sin bloquear nunca la interacción y desactivados con `prefers-reduced-motion`. Ver [UI y movimiento](#ui-y-movimiento).
+- **Node 18 de principio a fin**: el enunciado pide Node 18, así que todas las herramientas y el servidor de producción lo usan. Ver [Datos y API](#datos-y-api).
+
 ## Cobertura del enunciado
 
 Cómo se cumple cada punto del enunciado.
@@ -37,7 +59,7 @@ Cómo se cumple cada punto del enunciado.
 
 ## Puesta en marcha
 
-Requisitos: **Node 18.20.8** (`.nvmrc`) y **pnpm 10.34.6**, la última versión mayor de pnpm que funciona con Node 18. `package.json` fija pnpm en `packageManager`, así que Corepack (incluido en Node) proporciona esa versión exacta sin instalar nada global. También declara `"engines": { "node": ">=18.18.0 <19" }`, y `.npmrc` activa `engine-strict=true`, así que la instalación falla con otra versión mayor de Node.
+Requisitos: **Node 18.20.8** (`.nvmrc`) y **pnpm 10.34.6**.
 
 ```bash
 nvm use
@@ -46,7 +68,14 @@ pnpm install --frozen-lockfile
 cp .env.example .env.local       # después, rellena API_KEY
 ```
 
+<details>
+<summary>Cómo se imponen las versiones</summary>
+
+pnpm 10.34.6 es la última versión mayor de pnpm que funciona con Node 18. `package.json` fija pnpm en `packageManager`, así que Corepack (incluido en Node) proporciona esa versión exacta sin instalar nada global. También declara `"engines": { "node": ">=18.18.0 <19" }`, y `.npmrc` activa `engine-strict=true`, así que la instalación falla con otra versión mayor de Node.
+
 pnpm 10 no ejecuta los scripts de instalación de las dependencias salvo que se permitan: `pnpm.onlyBuiltDependencies` incluye los tres que preparan binarios nativos (`esbuild`, `sharp`, `unrs-resolver`).
+
+</details>
 
 | Variable       | Para qué sirve                                                                                 |
 | -------------- | ---------------------------------------------------------------------------------------------- |
@@ -77,6 +106,8 @@ pnpm build && pnpm start  # producción: recursos concatenados y minificados en 
 ## Arquitectura
 
 Hexagonal: las reglas de negocio no saben nada de Next, de la API ni del navegador; cada mundo exterior se conecta a través de un puerto.
+
+El catálogo y el carrito cambian por motivos distintos que el framework, así que cada parte puede evolucionar por su cuenta: el navegador ya accede al catálogo con un segundo adaptador (`http-product-repository`), un carrito en servidor u otra API serían un adaptador más, y los casos de uso se prueban con dobles simples en lugar de un framework mockeado.
 
 ```
 src/
@@ -127,7 +158,7 @@ Solo el servidor habla con la API:
 - **Carrito con Context y `useReducer`.** Cuatro acciones (añadir, eliminar, restaurar y aplicar la comprobación del catálogo) no necesitan ninguna librería.
 - **Una línea por cada "Añadir"**, porque Figma no tiene control de cantidad. Un id de `crypto.randomUUID()` permite que "Eliminar" quite exactamente esa línea.
 - **El carrito guardado se lee después del montaje y se valida**, para que el servidor y el primer render del cliente coincidan y se ignoren datos editados o antiguos. El total se suma en céntimos.
-- **El carrito guardado se comprueba contra el catálogo al abrirlo.** Cada teléfono se pide una sola vez a `/api/products/[id]`: una línea cuyo teléfono, almacenamiento o color ya no se vende se quita, una línea cuyo almacenamiento ha cambiado de precio recibe el actual, y un mensaje breve lo cuenta. Un teléfono que no se puede comprobar (error de red, API caída) se deja como está, así que una petición fallida nunca vacía un carrito. Los cambios se aplican por línea, así que una línea eliminada mientras tanto sigue eliminada.
+- **El carrito guardado se comprueba contra el catálogo al abrirlo.** Puede llevar días en `localStorage`, mientras que el catálogo pertenece a una API externa que cambia por su cuenta; así, un teléfono que ya no se vende o un precio nuevo se ven antes de pagar, no después. Cada teléfono se pide una sola vez a `/api/products/[id]`: una línea cuyo teléfono, almacenamiento o color ya no se vende se quita, una línea cuyo almacenamiento ha cambiado de precio recibe el actual, y un mensaje breve lo cuenta. Un teléfono que no se puede comprobar (error de red, API caída) se deja como está, así que una petición fallida nunca vacía un carrito. Los cambios se aplican por línea, así que una línea eliminada mientras tanto sigue eliminada.
 - **Un teléfono que ya no está en el catálogo responde `null`, no 404**, desde `/api/products/[id]`: para el carrito es una respuesta esperada, y un 404 escribiría un error en la consola del navegador.
 - **El almacenamiento, el color y la búsqueda viven en la URL**, así que un teléfono configurado o una búsqueda se pueden compartir. `replaceState` evita que Atrás deshaga cada elección.
 - **La búsqueda se reintenta sin UI nueva.** Un error de red o un 5xx se reintenta una vez; pulsar Enter repite una búsqueda fallida. Figma no tiene botón de reintentar.
@@ -138,14 +169,19 @@ Solo el servidor habla con la API:
 - **Movimiento sacado del prototipo.** Sus springs se convierten en easings CSS `linear()` y tokens de duración, y se ejecutan con transiciones CSS y la Web Animations API sobre el DOM real. Nunca bloquean un clic, un hover ni una tecla, y `prefers-reduced-motion` las desactiva.
 - **Similares**: una lista con scroll nativo que se extiende hasta el borde derecho de la ventana, como el carrusel de Figma. Con el ratón se puede arrastrar la lista o su barra decorativa, como en el prototipo; en táctil se mantiene el scroll nativo.
 - **"Añadir" abre el carrito**, que aparece con un fundido con el spring "Slow" del prototipo.
-- **Puntos ambiguos de Figma**, resueltos:
-  - Las medidas salen de la página Design; la página Proto se usa para el comportamiento y el movimiento. Algunos frames de Proto están desplazados unos píxeles respecto a Design (el buscador a 51 px del header en lugar de 60; "Specifications" a 140 px del botón de añadir en lugar de 154): se usan los valores de Design.
-  - Los colores de las muestras y sus nombres vienen de la API (`hexCode`, `name`). Los frames de Figma usan colores de ejemplo y nombres de ejemplo en español ("Violeta Titanium") que no corresponden a ningún producto.
-  - Un carrito con varios teléfonos los apila en móvil y tablet, y usa columnas de 548 px (el cart item de Figma) en escritorio.
-  - La bolsa del header se oculta en la página del carrito, salvo en tablet con productos, como muestran los frames.
-  - "Continue shopping" lleva al listado completo, como en el prototipo.
-  - Primera carga: el prototipo pasa de "Unloaded" (solo el header) a "Loading" (la barra negra crece hasta el ancho completo) y después muestra el listado, con retardos fijos que simulan la red. La app mantiene el timing exacto del prototipo en CSS puro: en una carga de página del listado, el header aparece con la barra de carga llenándose debajo (un solo elemento en el layout, así que nunca vuelve a empezar); cuando llega el listado, la barra se mantiene 300 ms y da paso al listado con el spring de entrada. Volver al listado navegando dentro de la app lo muestra al instante.
-  - El prototipo hace un fundido cruzado directamente de una tarjeta al detalle. La app muestra la barra de carga solo mientras llega el producto y después el detalle entra con el spring del prototipo.
+
+<details>
+<summary>Puntos ambiguos de Figma, y cómo se resolvió cada uno</summary>
+
+- Las medidas salen de la página Design; la página Proto se usa para el comportamiento y el movimiento. Algunos frames de Proto están desplazados unos píxeles respecto a Design (el buscador a 51 px del header en lugar de 60; "Specifications" a 140 px del botón de añadir en lugar de 154): se usan los valores de Design.
+- Los colores de las muestras y sus nombres vienen de la API (`hexCode`, `name`). Los frames de Figma usan colores de ejemplo y nombres de ejemplo en español ("Violeta Titanium") que no corresponden a ningún producto.
+- Un carrito con varios teléfonos los apila en móvil y tablet, y usa columnas de 548 px (el cart item de Figma) en escritorio.
+- La bolsa del header se oculta en la página del carrito, salvo en tablet con productos, como muestran los frames.
+- "Continue shopping" lleva al listado completo, como en el prototipo.
+- Primera carga: el prototipo pasa de "Unloaded" (solo el header) a "Loading" (la barra negra crece hasta el ancho completo) y después muestra el listado, con retardos fijos que simulan la red. La app mantiene el timing exacto del prototipo en CSS puro: en una carga de página del listado, el header aparece con la barra de carga llenándose debajo (un solo elemento en el layout, así que nunca vuelve a empezar); cuando llega el listado, la barra se mantiene 300 ms y da paso al listado con el spring de entrada. Volver al listado navegando dentro de la app lo muestra al instante.
+- El prototipo hace un fundido cruzado directamente de una tarjeta al detalle. La app muestra la barra de carga solo mientras llega el producto y después el detalle entra con el spring del prototipo.
+
+</details>
 
 ### Rendimiento
 

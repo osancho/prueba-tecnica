@@ -10,6 +10,28 @@ A smartphone store built with Next.js 15 and React 19: browse and search the cat
 
 Live demo and screenshots are published with the deployment.
 
+## Reviewing in 15 minutes
+
+Five files, in this order, show the whole design:
+
+1. [`src/app/page.tsx`](src/app/page.tsx): a server page, the composition root that hands the real adapter to the use case.
+2. [`src/core/product/application/get-products.ts`](src/core/product/application/get-products.ts): a use case, the only place that knows "20 unique phones".
+3. [`src/services/api-client.ts`](src/services/api-client.ts): the single door to the API, where the key, errors, caching and timeouts live.
+4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
+5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
+
+Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 8 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
+
+## Beyond the brief, and why
+
+These pieces cost reading time, so each one is here on purpose:
+
+- **Hexagonal architecture**: catalog and cart rules are tested without Next, and a new API or a server-side cart is one more adapter. See [Architecture](#architecture).
+- **Saved cart checked against the catalog**: a cart can sit for days in `localStorage` while prices and stock change in an external API. See [State](#state).
+- **Normalized product photos**: the API's photos are inconsistent (white backgrounds, the phone filling 60% to 100% of the frame); `/api/images` brings them to the Figma framing. See [Performance](#performance).
+- **Motion from the Figma prototype**: its springs and loading states, never blocking input and off with `prefers-reduced-motion`. See [UI and motion](#ui-and-motion).
+- **Node 18 end to end**: the brief asks for Node 18, so every tool and the production server run on it. See [Data and API](#data-and-api).
+
 ## Brief coverage
 
 How each point of the brief is met.
@@ -37,7 +59,7 @@ How each point of the brief is met.
 
 ## Getting started
 
-Requirements: **Node 18.20.8** (`.nvmrc`) and **pnpm 10.34.6**, the last pnpm major that runs on Node 18. `package.json` pins pnpm in `packageManager`, so Corepack (bundled with Node) provides that exact version with no global install. It also declares `"engines": { "node": ">=18.18.0 <19" }`, and `.npmrc` sets `engine-strict=true`, so installing on another Node major fails.
+Requirements: **Node 18.20.8** (`.nvmrc`) and **pnpm 10.34.6**.
 
 ```bash
 nvm use
@@ -46,7 +68,14 @@ pnpm install --frozen-lockfile
 cp .env.example .env.local       # then set API_KEY
 ```
 
+<details>
+<summary>How the versions are enforced</summary>
+
+pnpm 10.34.6 is the last pnpm major that runs on Node 18. `package.json` pins pnpm in `packageManager`, so Corepack (bundled with Node) provides that exact version with no global install. It also declares `"engines": { "node": ">=18.18.0 <19" }`, and `.npmrc` sets `engine-strict=true`, so installing on another Node major fails.
+
 pnpm 10 skips dependency install scripts unless they are allowed: `pnpm.onlyBuiltDependencies` lists the three that prepare native binaries (`esbuild`, `sharp`, `unrs-resolver`).
+
+</details>
 
 | Variable       | Purpose                                                                           |
 | -------------- | --------------------------------------------------------------------------------- |
@@ -77,6 +106,8 @@ pnpm build && pnpm start  # production: concatenated and minified assets on port
 ## Architecture
 
 Hexagonal: the business rules know nothing about Next, the API or the browser; each outside world plugs in through a port.
+
+The catalog and the cart change for different reasons than the framework does, so each can evolve on its own: the browser already reaches the catalog through a second adapter (`http-product-repository`), a server-side cart or another API would be one more adapter, and the use cases are tested against plain fakes instead of a mocked framework.
 
 ```
 src/
@@ -127,7 +158,7 @@ Only the server talks to the API:
 - **Cart with Context and `useReducer`.** Four actions (add, remove, restore and apply the catalog check) need no library.
 - **One line per "Añadir"**, because Figma has no quantity control. A `crypto.randomUUID()` id lets "Eliminar" remove exactly that line.
 - **Stored cart read after mount and validated**, so server and first client render agree and edited or outdated data is ignored. The total is added in cents.
-- **The saved cart is checked against the catalog when it opens.** Each phone is asked once through `/api/products/[id]`: a line whose phone, storage or color is no longer sold is removed, a line whose storage changed price gets the current one, and a short message says so. A phone that cannot be checked (network error, API down) is left as it is, so a failed request never empties a cart. Changes apply by line, so a line removed meanwhile stays removed.
+- **The saved cart is checked against the catalog when it opens.** It can be days old in `localStorage`, while the catalog belongs to an external API that changes on its own; this way a phone that is no longer sold or a new price shows up before paying, not after. Each phone is asked once through `/api/products/[id]`: a line whose phone, storage or color is no longer sold is removed, a line whose storage changed price gets the current one, and a short message says so. A phone that cannot be checked (network error, API down) is left as it is, so a failed request never empties a cart. Changes apply by line, so a line removed meanwhile stays removed.
 - **A phone that left the catalog answers `null`, not 404**, from `/api/products/[id]`: it is an expected answer for the cart, and a 404 would print an error in the browser console.
 - **Storage, color and search live in the URL**, so a configured phone or a search can be shared. `replaceState` keeps Back from undoing each choice.
 - **Search retries without new UI.** A network error or a 5xx is retried once; pressing Enter repeats a failed search. Figma has no retry button.
@@ -138,14 +169,19 @@ Only the server talks to the API:
 - **Motion from the prototype.** Its springs become CSS `linear()` easings and duration tokens, run with CSS transitions and the Web Animations API on top of the live DOM. They never block a click, hover or keystroke, and `prefers-reduced-motion` turns them off.
 - **Similar items**: a natively scrollable list that runs out to the right edge of the window, as the Figma carousel does. A mouse can drag the list itself or its decorative thumb, as in the prototype; touch keeps native scrolling.
 - **"Añadir" opens the cart**, which dissolves in with the prototype's "Slow" spring.
-- **Ambiguous Figma points**, resolved:
-  - Sizes come from the Design page; the Proto page is used for behaviour and motion. Some Proto frames sit a few pixels off the Design ones (search 51 px under the header instead of 60; "Specifications" 140 px under the add button instead of 154): the Design values are used.
-  - The colour swatches and names come from the API (`hexCode`, `name`). The Figma frames use sample colours and Spanish sample names ("Violeta Titanium") that do not match any product.
-  - A cart with several phones stacks them on mobile and tablet, and uses 548 px columns (the Figma cart item) on desktop.
-  - The header bag is hidden on the cart page except on tablet with products in the cart, as the frames show.
-  - "Continue shopping" goes to the full list, as in the prototype.
-  - First load: the prototype goes from "Unloaded" (header only) to "Loading" (the black bar grows to full width), then reveals the list, with fixed delays standing in for the network. The app keeps the prototype's exact timing in pure CSS: on a page load of the list, the header shows with the loading bar filling under it (a single element in the layout, so it never starts over); when the list arrives, the bar holds 300 ms and hands over to the list with the reveal spring. Navigating back to the list inside the app shows it at once.
-  - The prototype cross-fades from a card straight into the detail. The app shows the loading bar only while the product is on its way, then the detail enters with the prototype's spring.
+
+<details>
+<summary>Ambiguous Figma points, and how each was resolved</summary>
+
+- Sizes come from the Design page; the Proto page is used for behaviour and motion. Some Proto frames sit a few pixels off the Design ones (search 51 px under the header instead of 60; "Specifications" 140 px under the add button instead of 154): the Design values are used.
+- The colour swatches and names come from the API (`hexCode`, `name`). The Figma frames use sample colours and Spanish sample names ("Violeta Titanium") that do not match any product.
+- A cart with several phones stacks them on mobile and tablet, and uses 548 px columns (the Figma cart item) on desktop.
+- The header bag is hidden on the cart page except on tablet with products in the cart, as the frames show.
+- "Continue shopping" goes to the full list, as in the prototype.
+- First load: the prototype goes from "Unloaded" (header only) to "Loading" (the black bar grows to full width), then reveals the list, with fixed delays standing in for the network. The app keeps the prototype's exact timing in pure CSS: on a page load of the list, the header shows with the loading bar filling under it (a single element in the layout, so it never starts over); when the list arrives, the bar holds 300 ms and hands over to the list with the reveal spring. Navigating back to the list inside the app shows it at once.
+- The prototype cross-fades from a card straight into the detail. The app shows the loading bar only while the product is on its way, then the detail enters with the prototype's spring.
+
+</details>
 
 ### Performance
 
