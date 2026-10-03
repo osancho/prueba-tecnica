@@ -4,7 +4,7 @@
 
 A smartphone store built with Next.js 15 and React 19: browse and search the catalog, configure a phone and keep a cart.
 
-- **List** (`/`): the first 20 phones, live search with the result count, and the search kept in the URL.
+- **List** (`/`): the first 20 phones, a live search that lists every match with its count, and the search kept in the URL.
 - **Detail** (`/product/[id]`): photo per color, storage and color selectors with the price updating as you choose, specs and similar phones.
 - **Cart** (`/cart`): one line per added phone, removal, total and an empty state.
 
@@ -15,7 +15,7 @@ Live demo and screenshots are published with the deployment.
 Five files, in this order, show the whole design:
 
 1. [`src/app/page.tsx`](src/app/page.tsx): a server page, the composition root that hands the real adapter to the use case.
-2. [`src/core/product/application/get-products.ts`](src/core/product/application/get-products.ts): a use case, the only place that knows "20 unique phones".
+2. [`src/core/product/application/get-products.ts`](src/core/product/application/get-products.ts): a use case, the only place that knows the list rule: the first 20 unique phones, or every unique match of a search.
 3. [`src/services/api-client.ts`](src/services/api-client.ts): the single door to the API, where the key, errors, caching and timeouts live.
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
@@ -118,7 +118,7 @@ src/
   core/
     product/
       domain/           Product types, the ProductRepository port, the "From" price rule
-      application/      use cases: get-products (unique phones, 20 of them), get-product
+      application/      use cases: get-products (unique phones: the first 20, or every match of a search), get-product
       infrastructure/   api-product-repository: calls the API, validates, builds image URLs;
                         http-product-repository: the browser's way in, through our Route Handler
     cart/
@@ -195,7 +195,7 @@ Only the server talks to the API:
 
 | Problem                                                                       | How it is handled                                                                                                     |
 | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Repeated ids in the list and in similar products                              | 40 items are requested, duplicates removed, and the list cut to 20.                                                   |
+| Repeated ids in the list and in similar products                              | 40 items are requested (the API holds 24) and duplicates removed; only the list without a search is cut to 20.        |
 | Images served over `http` and inconsistent                                    | Proxied and normalized through `/api/images` on our domain.                                                           |
 | `basePrice` differs from the storage prices                                   | Cards show `basePrice`, the detail the storage prices; see [Data and API](#data-and-api).                             |
 | Unknown id answers 404 `NOT-FOUND`                                            | `apiClient` throws `NotFoundError`, and the page calls `notFound()`.                                                  |
