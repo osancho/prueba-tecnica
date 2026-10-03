@@ -20,7 +20,7 @@ Cinco archivos, en este orden, enseñan todo el diseño:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
 
-Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 8 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
+Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 9 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
 
 ## Más allá del enunciado, y por qué
 
@@ -208,6 +208,7 @@ Solo el servidor habla con la API:
 - **Comprobaciones de accesibilidad** con vitest-axe en todas las páginas. jsdom no carga CSS, así que el contraste lo comprueba la auditoría axe end-to-end.
 - **Tests end-to-end** (Playwright, solo Chromium) sobre el build de producción:
   - catálogo y búsqueda, detalle y añadir al carrito, y el carrito;
+  - todos los teléfonos del catálogo abren su detalle: los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar hace fallar la suite;
   - una auditoría axe (WCAG 2.2 AA y buenas prácticas, contraste incluido) de ocho pantallas a 393, 834 y 1920 px;
   - el recorrido completo solo con teclado, desde la búsqueda hasta quitar el teléfono del carrito;
   - la comprobación del carrito contra el catálogo, con consola limpia;

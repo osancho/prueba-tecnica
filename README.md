@@ -20,7 +20,7 @@ Five files, in this order, show the whole design:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
 
-Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 8 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
+Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 9 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
 
 ## Beyond the brief, and why
 
@@ -208,6 +208,7 @@ Only the server talks to the API:
 - **Accessibility checks** with vitest-axe on every page. jsdom loads no CSS, so contrast is checked by the end-to-end axe audit.
 - **End-to-end tests** (Playwright, Chromium only) on the production build:
   - catalog and search, detail and add-to-cart, and the cart;
+  - every phone of the catalog opens its detail: the 20 of the list and the ones only "Similar items" links to, so a product the app cannot render fails the suite;
   - an axe audit (WCAG 2.2 AA and best practices, contrast included) of eight screens at 393, 834 and 1920 px;
   - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
   - the cart check against the catalog, with a clean console;
