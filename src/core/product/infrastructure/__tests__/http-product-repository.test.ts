@@ -27,6 +27,18 @@ describe('httpProductRepository.findById', () => {
     await expect(httpProductRepository.findById('NOPE')).resolves.toBeNull();
   });
 
+  it('accepts a phone whose API data leaves out a spec, so the cart can still check it', async () => {
+    const withoutRefreshRate = {
+      ...galaxy,
+      specs: { ...galaxy.specs, screenRefreshRate: undefined },
+    };
+    answer(200, withoutRefreshRate);
+
+    await expect(httpProductRepository.findById('SMG-S24U')).resolves.toEqual(
+      withoutRefreshRate,
+    );
+  });
+
   it('fails on any other error instead of reporting the phone as gone', async () => {
     answer(502, { error: 'BAD-GATEWAY', message: 'Down' });
 

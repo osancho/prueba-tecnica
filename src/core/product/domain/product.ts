@@ -17,15 +17,16 @@ export interface StorageOption {
   price: number;
 }
 
+/** The API leaves a spec out now and then (the iPhone 13 has no `screenRefreshRate`). */
 export interface ProductSpecs {
-  screen: string;
-  resolution: string;
-  processor: string;
-  mainCamera: string;
-  selfieCamera: string;
-  battery: string;
-  os: string;
-  screenRefreshRate: string;
+  screen?: string;
+  resolution?: string;
+  processor?: string;
+  mainCamera?: string;
+  selfieCamera?: string;
+  battery?: string;
+  os?: string;
+  screenRefreshRate?: string;
 }
 
 export interface Product {
