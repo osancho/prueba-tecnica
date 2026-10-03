@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { normalizeProductImage } from '../normalize-product-image';
 
 const PHONE = { width: 20, height: 40 };
+// Wider than any test picture, so only the framing applies.
+const ANY_WIDTH = 1260;
 const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };
 
 async function phonePicture(
@@ -41,6 +43,7 @@ describe('normalizeProductImage', () => {
     const result = await framing(
       await normalizeProductImage(
         await phonePicture(TRANSPARENT, { left: 40, top: 30 }),
+        ANY_WIDTH,
       ),
     );
 
@@ -61,6 +64,7 @@ describe('normalizeProductImage', () => {
         framing(
           await normalizeProductImage(
             await phonePicture(TRANSPARENT, position),
+            ANY_WIDTH,
           ),
         ),
       ),
@@ -74,8 +78,36 @@ describe('normalizeProductImage', () => {
   it('removes an opaque white background so no white box shows on hover', async () => {
     const onWhite = await phonePicture('#ffffff', { left: 30, top: 25 });
 
-    const result = await framing(await normalizeProductImage(onWhite));
+    const result = await framing(
+      await normalizeProductImage(onWhite, ANY_WIDTH),
+    );
 
     expect(result.phone).toEqual(PHONE);
+  });
+
+  it('shrinks a large photo to the width the page asks for, at the same scale', async () => {
+    const result = await framing(
+      await normalizeProductImage(
+        await phonePicture(TRANSPARENT, { left: 40, top: 30 }),
+        44,
+      ),
+    );
+
+    expect(result).toEqual({
+      picture: { width: 44, height: 44 },
+      phone: { width: 16, height: 32 },
+      phoneTop: 6,
+    });
+  });
+
+  it('never enlarges a photo smaller than the width asked, which would only blur it', async () => {
+    const result = await framing(
+      await normalizeProductImage(
+        await phonePicture(TRANSPARENT, { left: 40, top: 30 }),
+        100,
+      ),
+    );
+
+    expect(result.picture).toEqual({ width: 55, height: 55 });
   });
 });

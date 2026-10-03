@@ -186,7 +186,8 @@ Only the server talks to the API:
 ### Performance
 
 - **Normalized product photos.** The API's photos are inconsistent: some have an opaque white background and the phone fills 60% to 100% of the frame. The right fix is a standardized source from the backend; until then `/api/images` normalizes them with sharp to the Figma framing (transparent background, phone at 73.2% of a square).
-- **Normalized images are kept in memory** and sent as `immutable`, since their URLs carry a version.
+- **Each photo is downloaded at the size its slot needs.** `/api/images` resizes as it normalizes, to one of five widths (360, 520, 648, 832 and 1260 px, the largest being the 630 px desktop detail at 2x); small source photos are never enlarged. `next/image` asks for them through a custom loader, and each photo declares its on-screen size in `sizes`, so the browser picks the smallest sharp one. The 20 list photos went from 1.16 MB to 203 kB at 1440 px on a 2x screen, 330 kB on a 2x phone.
+- **Normalized images are kept in memory, one per width,** and sent as `immutable`, since their URLs carry a version. Any other width is rejected, so the cache stays bounded by the catalog (under 8 MB).
 - **The catalog is cached for an hour; searches are not**, so each search term does not become a new cache entry on disk.
 - **No prefetch on the cart link.** Prefetching `/cart` preloaded its stylesheet on every page, which Chrome reported as an unused preload.
 

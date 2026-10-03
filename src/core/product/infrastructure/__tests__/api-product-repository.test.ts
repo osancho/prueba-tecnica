@@ -53,7 +53,7 @@ describe('apiProductRepository.list', () => {
 
     const [product] = await apiProductRepository.list({ limit: 40 });
 
-    expect(product.imageUrl).toBe('/api/images/P1.webp?v=2');
+    expect(product.imageUrl).toBe('/api/images/P1.webp?v=3');
   });
 
   it('leaves out a malformed phone instead of failing the whole catalog', async () => {
@@ -124,10 +124,10 @@ describe('apiProductRepository.findById', () => {
     const product = await apiProductRepository.findById('MAIN');
 
     expect(product?.similarProducts[0].imageUrl).toBe(
-      '/api/images/S1.webp?v=2',
+      '/api/images/S1.webp?v=3',
     );
     expect(product?.colorOptions[0].imageUrl).toBe(
-      '/api/images/MAIN-black.webp?v=2',
+      '/api/images/MAIN-black.webp?v=3',
     );
   });
 
