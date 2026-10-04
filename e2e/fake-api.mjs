@@ -1,6 +1,9 @@
 import { createServer } from 'node:http';
 
 const hits = new Map();
+// Answers to searches starting with "hold-" wait until the test releases them.
+const held = new Map();
+const released = new Set();
 
 function sendJson(response, status, body) {
   response.writeHead(status, { 'Content-Type': 'application/json' });
@@ -28,13 +31,30 @@ function phoneWithChangingPrice(id, price) {
 // The empty catalog answers, so Playwright can tell when the app has started, and so do the
 // PRICE-* phones; everything else is down.
 createServer((request, response) => {
-  const { pathname } = new URL(request.url, `http://${request.headers.host}`);
+  const { pathname, searchParams } = new URL(
+    request.url,
+    `http://${request.headers.host}`,
+  );
+  const search = searchParams.get('search') ?? '';
 
   if (pathname === '/__hits') {
     return sendJson(response, 200, Object.fromEntries(hits));
   }
+  if (pathname === '/__release') {
+    released.add(search);
+    held.get(search)?.();
+    return sendJson(response, 200, {});
+  }
 
   hits.set(pathname, (hits.get(pathname) ?? 0) + 1);
+  if (
+    pathname === '/products' &&
+    search.startsWith('hold-') &&
+    !released.has(search)
+  ) {
+    held.set(search, () => sendJson(response, 200, []));
+    return;
+  }
   if (pathname === '/products') return sendJson(response, 200, []);
   if (pathname.startsWith('/products/PRICE-')) {
     const id = pathname.slice('/products/'.length);

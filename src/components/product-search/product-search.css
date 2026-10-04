@@ -10,13 +10,6 @@
   }
 }
 
-/* Figma "Loading" → "Smartphones list" on a page load: the layout's bar fills and holds, then
-   hands over to the list. Pure CSS, so the timing is exact and does not wait for the script. */
-.product-search--first-load {
-  animation-delay: var(--first-load-reveal-delay);
-  animation-fill-mode: both;
-}
-
 /* Fixed under the header in the prototype. */
 .product-search__bar {
   position: sticky;
