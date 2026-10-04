@@ -24,5 +24,5 @@ You own the product detail screen. Read `AGENTS.md` first and follow it: its rul
 ## Before you hand back
 
 - Compare the screen with the design at the mobile, tablet and desktop widths, empty and with storage and color chosen, including hover and selected states, and list any difference.
-- Run `pnpm lint`, `pnpm typecheck` and `pnpm test`; run `pnpm test:e2e` only when no dev server is running, since both write to `.next`.
+- Run `pnpm lint`, `pnpm typecheck` and `pnpm test`; run `pnpm test:e2e` (the fake API with a fixed catalog; take phones, prices and counts from `e2e/fixtures/catalog.ts`) only when no dev server is running, since both write to `.next`. `pnpm test:e2e:contract` checks the real API and is only needed when the way the app reads the API changes.
 - Report what changed, how it was checked and the branch name and Conventional Commits you propose.

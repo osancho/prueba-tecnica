@@ -1,15 +1,5 @@
 import { expect, test } from '@playwright/test';
-
-const savedLine = (lineId: string) => ({
-  lineId,
-  id: 'SMG-S24U',
-  brand: 'Samsung',
-  name: 'Galaxy S24 Ultra',
-  imageUrl: '/api/images/SMG-S24U-titanium-black.webp?v=2',
-  colorName: 'Titanium Black',
-  capacity: '512 GB',
-  price: 1329,
-});
+import { SAVED_LINE } from './fixtures/catalog';
 
 test('never shows a cart count other than the saved one', async ({ page }) => {
   await page.addInitScript(
@@ -30,7 +20,10 @@ test('never shows a cart count other than the saved one', async ({ page }) => {
         attributes: true,
       });
     },
-    [savedLine('a'), savedLine('b')],
+    [
+      { ...SAVED_LINE, lineId: 'a' },
+      { ...SAVED_LINE, lineId: 'b' },
+    ],
   );
 
   await page.goto('/');

@@ -1,68 +1,79 @@
 import { expect, test, type Page } from '@playwright/test';
-import { FAKE_API_APP_URL, FAKE_API_URL } from './servers';
+import { LIST_SIZE, SEARCHES } from './fixtures/catalog';
+import { FAKE_API_URL } from './servers';
 
-test('lists 20 different smartphones', async ({ page }) => {
-  await page.goto('/');
-
-  const phones = page.getByRole('main').getByRole('listitem');
-  await expect(phones).toHaveCount(20);
-  const links = await phones
+function hrefsOf(page: Page): Promise<(string | null)[]> {
+  return page
+    .getByRole('main')
+    .getByRole('listitem')
     .getByRole('link')
     .evaluateAll((anchors) =>
       anchors.map((anchor) => anchor.getAttribute('href')),
     );
-  expect(new Set(links).size).toBe(20);
-  await expect(page.getByRole('main').getByText('20 results')).toBeVisible();
+}
+
+test('lists 20 different smartphones', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(
+    LIST_SIZE,
+  );
+  expect(new Set(await hrefsOf(page)).size).toBe(LIST_SIZE);
+  await expect(
+    page.getByRole('main').getByText(`${LIST_SIZE} results`),
+  ).toBeVisible();
 });
 
 test('narrows the list as the user searches and keeps the search in the address', async ({
   page,
 }) => {
+  const { term, matches } = SEARCHES.brand;
   await page.goto('/');
 
   await page
     .getByRole('searchbox', { name: 'Search for a smartphone' })
-    .fill('samsung');
+    .fill(term);
 
-  await expect(page).toHaveURL(/\?search=samsung$/);
+  await expect(page).toHaveURL(new RegExp(`\\?search=${term}$`));
   const phones = page.getByRole('main').getByRole('listitem');
-  await expect(phones).not.toHaveCount(20);
-  const count = await phones.count();
-  expect(count).toBeGreaterThan(0);
+  await expect(phones).toHaveCount(matches);
   await expect(
-    page
-      .getByRole('main')
-      .getByText(`${count} ${count === 1 ? 'result' : 'results'}`),
+    page.getByRole('main').getByText(`${matches} results`),
   ).toBeVisible();
   for (const phone of await phones.all()) {
-    await expect(phone).toContainText(/samsung/i);
+    await expect(phone).toContainText(new RegExp(term, 'i'));
   }
 });
 
 test('lists and counts every different phone a search finds, even beyond 20', async ({
   page,
 }) => {
+  const { term, matches } = SEARCHES.beyondList;
   await page.goto('/');
 
-  // "a" matches more than 20 different phones in the live catalog.
   await page
     .getByRole('searchbox', { name: 'Search for a smartphone' })
-    .fill('a');
+    .fill(term);
 
-  await expect(page).toHaveURL(/\?search=a$/);
-  const phones = page.getByRole('main').getByRole('listitem');
-  await expect(phones).not.toHaveCount(20);
-  const count = await phones.count();
-  expect(count).toBeGreaterThan(20);
-  const links = await phones
-    .getByRole('link')
-    .evaluateAll((anchors) =>
-      anchors.map((anchor) => anchor.getAttribute('href')),
-    );
-  expect(new Set(links).size).toBe(count);
+  await expect(page).toHaveURL(new RegExp(`\\?search=${term}$`));
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(
+    matches,
+  );
+  expect(new Set(await hrefsOf(page)).size).toBe(matches);
   await expect(
-    page.getByRole('main').getByText(`${count} results`),
+    page.getByRole('main').getByText(`${matches} results`),
   ).toBeVisible();
+});
+
+test('says so when a search finds no phone', async ({ page }) => {
+  await page.goto('/');
+
+  await page
+    .getByRole('searchbox', { name: 'Search for a smartphone' })
+    .fill(SEARCHES.none.term);
+
+  await expect(page.getByRole('main').getByText('0 results')).toBeVisible();
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(0);
 });
 
 /** Records, on every frame, the width of the loading bar on screen and how opaque the list is. */
@@ -108,9 +119,7 @@ function recordedFrames(page: Page): Promise<Frame[]> {
 async function openListWhileApiHolds(page: Page) {
   const search = `hold-${Date.now()}-${test.info().parallelIndex}`;
   await page.addInitScript(recordFrames);
-  await page.goto(`${FAKE_API_APP_URL}/?search=${search}`, {
-    waitUntil: 'commit',
-  });
+  await page.goto(`/?search=${search}`, { waitUntil: 'commit' });
   return () => page.request.get(`${FAKE_API_URL}/__release?search=${search}`);
 }
 

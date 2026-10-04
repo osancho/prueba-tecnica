@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import { PHONE } from './fixtures/catalog';
 
 /** Presses Tab until the target has focus, failing if it is not reachable. */
 async function tabTo(page: Page, target: Locator) {
@@ -19,19 +20,21 @@ test('finds, configures, adds and removes a phone with the keyboard alone', asyn
     name: 'Search for a smartphone',
   });
   await tabTo(page, search);
-  await page.keyboard.type('Galaxy S24 Ultra');
-  await expect(page).toHaveURL(/\?search=Galaxy/);
+  await page.keyboard.type(PHONE.name);
+  await expect(page).toHaveURL(
+    (url) => url.searchParams.get('search') === PHONE.name,
+  );
 
-  const card = page.getByRole('link', { name: /Galaxy S24 Ultra/ }).first();
+  const card = page.getByRole('link', { name: new RegExp(PHONE.name) }).first();
   await tabTo(page, card);
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/\/product\/SMG-S24U$/);
+  await expect(page).toHaveURL(new RegExp(`${PHONE.path}$`));
 
-  const firstStorage = page.getByRole('radio', { name: '256 GB' });
+  const firstStorage = page.getByRole('radio', { name: PHONE.firstStorage });
   await tabTo(page, firstStorage);
   await page.keyboard.press('Space');
   await page.keyboard.press('ArrowRight');
-  const chosenStorage = page.getByRole('radio', { name: '512 GB' });
+  const chosenStorage = page.getByRole('radio', { name: PHONE.storage });
   await expect(chosenStorage).toBeChecked();
   await expect(chosenStorage).toBeFocused();
 
@@ -47,7 +50,7 @@ test('finds, configures, adds and removes a phone with the keyboard alone', asyn
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/cart$/);
   await expect(page.getByRole('listitem')).toContainText(
-    `512 GB | ${colorName}`,
+    `${PHONE.storage} | ${colorName}`,
   );
 
   await tabTo(page, page.getByRole('button', { name: /Eliminar/ }));
