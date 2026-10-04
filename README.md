@@ -95,7 +95,10 @@ pnpm 10 skips dependency install scripts unless they are allowed: `pnpm.onlyBuil
 ```bash
 pnpm dev                  # development: unminified assets, fast refresh
 pnpm build && pnpm start  # production: concatenated and minified assets on port 3000
+pnpm warm-up [url]        # after start: loads the catalog and prepares every list photo
 ```
+
+Normalized photos are kept in the server's memory, so after a deploy the first visitor would wait for about 20 of them at once. `pnpm warm-up` (default `http://localhost:3000`) requests the list and each of its photos at every width its `srcset` offers, one at a time, and exits with an error if any request fails.
 
 ## Scripts
 
@@ -104,6 +107,7 @@ pnpm build && pnpm start  # production: concatenated and minified assets on port
 | `pnpm dev`                     | Development server.                                                            |
 | `pnpm build`                   | Production build.                                                              |
 | `pnpm start`                   | Serves the production build.                                                   |
+| `pnpm warm-up [url]`           | Loads the catalog and prepares every list photo on a server just started.      |
 | `pnpm lint`                    | ESLint (Next core web vitals, TypeScript, Prettier compatibility).             |
 | `pnpm typecheck`               | `tsc --noEmit`.                                                                |
 | `pnpm format` / `format:check` | Prettier, writing or only checking.                                            |
@@ -266,7 +270,7 @@ Only the server talks to the API:
 - A product that does not exist shows the "not found" page with HTTP 200 and `noindex`: the route has a loading state, so Next has already sent the 200 when `notFound()` runs. Unknown routes return 404.
 - Some source photos have an opaque floor reflection under the phone (the Pixel 8a, for example) that cannot be told apart from the device safely. It is left as is; the fix belongs in the source image.
 - The end-to-end suite runs on a recording of the catalog (4 October 2026) with drawn pictures. A change in the real API or in its photos is only seen by the contract specs, which depend on the real API being reachable.
-- The normalized image cache lives in the server process and empties on restart.
+- The normalized image cache lives in the server process and empties on restart; `pnpm warm-up` refills it for the list.
 - There is no design for the 404, error and failed-search states, nor for the message about cart changes: they use the existing tokens with minimal styling.
 - Accepted security advisories:
   - 2 moderate in Vitest 3 (GHSA-82fw-gwwq-j7x9): development only; fixed in Vitest 4.1.11, which requires Node 20.

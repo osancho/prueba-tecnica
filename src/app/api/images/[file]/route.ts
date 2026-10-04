@@ -15,8 +15,53 @@ const BROWSER_CACHE_CONTROL = 'public, max-age=31536000, immutable';
 // sharp is the expensive part and there is no CDN in front of the VPS. Only images the API
 // actually has get stored, at the few widths the app serves, so the catalogue bounds the map
 // (about 60 images × 5 widths, under 8 MB). It lives in the process and empties on restart;
-// a much larger catalogue would need disk.
-const normalizedImages = new Map<string, Uint8Array<ArrayBuffer>>();
+// a much larger catalogue would need disk. It holds the promise, not the bytes, so the burst of
+// requests a list sends right after a restart shares one normalization per file and width.
+const normalizedImages = new Map<string, Promise<Uint8Array<ArrayBuffer>>>();
+
+class OriginalImageError extends Error {
+  constructor(readonly status: number) {
+    super(`Original image request failed: ${status}`);
+  }
+}
+
+async function normalizeOriginal(
+  file: string,
+  width: number,
+): Promise<Uint8Array<ArrayBuffer>> {
+  const original = await fetch(originalImageUrl(file), {
+    next: { revalidate: CACHE_SECONDS },
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+  });
+  if (!original.ok) throw new OriginalImageError(original.status);
+
+  return new Uint8Array(
+    await normalizeProductImage(
+      Buffer.from(await original.arrayBuffer()),
+      width,
+    ),
+  );
+}
+
+function normalizedImage(
+  file: string,
+  width: number,
+): Promise<Uint8Array<ArrayBuffer>> {
+  const cacheKey = `${file}@${width}`;
+  const known = normalizedImages.get(cacheKey);
+  if (known) return known;
+
+  const image = normalizeOriginal(file, width);
+  normalizedImages.set(cacheKey, image);
+  // A failure is shared by the requests already waiting, never by the next ones.
+  image.catch((error: unknown) => {
+    normalizedImages.delete(cacheKey);
+    if (!(error instanceof OriginalImageError)) {
+      console.error('Product image normalization failed', file, error);
+    }
+  });
+  return image;
+}
 
 function imageResponse(image: Uint8Array<ArrayBuffer>): Response {
   return new Response(image, {
@@ -38,31 +83,10 @@ export async function GET(request: Request, { params }: ImageRouteContext) {
     return new Response(null, { status: 400 });
   }
 
-  const cacheKey = `${file}@${width}`;
-  const cached = normalizedImages.get(cacheKey);
-  if (cached) return imageResponse(cached);
-
   try {
-    const original = await fetch(originalImageUrl(file), {
-      next: { revalidate: CACHE_SECONDS },
-      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
-    });
-    if (!original.ok) {
-      return new Response(null, {
-        status: original.status === 404 ? 404 : 502,
-      });
-    }
-
-    const image = new Uint8Array(
-      await normalizeProductImage(
-        Buffer.from(await original.arrayBuffer()),
-        width,
-      ),
-    );
-    normalizedImages.set(cacheKey, image);
-    return imageResponse(image);
+    return imageResponse(await normalizedImage(file, width));
   } catch (error) {
-    console.error('Product image normalization failed', file, error);
-    return new Response(null, { status: 502 });
+    const missing = error instanceof OriginalImageError && error.status === 404;
+    return new Response(null, { status: missing ? 404 : 502 });
   }
 }
