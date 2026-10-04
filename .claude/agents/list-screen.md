@@ -9,8 +9,8 @@ You own the product list screen. Read `AGENTS.md` first and follow it: its rules
 
 - Route: `src/app/page.tsx` (server component, metadata for searches), `src/app/loading.tsx` (renders nothing), `src/app/api/products/route.ts` (search proxy for the browser).
 - Components: `product-search` (with `use-product-search.ts`), `search-box`, `results-count`, `product-grid`, `product-card`, `loading-bar`, `page-load-bar`, `navbar`, `cart-link`.
-- Core: `core/product/application/get-products.ts` (unique phones: the first 20, or every match of a search), `core/product/infrastructure/api-product-repository.ts`.
-- Helpers: `lib/search-term.ts`, `lib/list-url.ts`, `lib/page-titles.ts`, `lib/use-list-transition.ts`.
+- Core: `core/product/application/get-products.ts` (unique phones: the first 20, or every match of a search), `core/product/infrastructure/api-product-repository.ts`, `core/product/domain/search-term.ts`.
+- Helpers: `lib/list-url.ts`, `lib/page-titles.ts`, `lib/use-list-transition.ts`.
 - Tests: the `__tests__` folders of those files, `src/app/__tests__/`; end to end `e2e/catalog.spec.ts`, plus the list cases in `accessibility.spec.ts`, `keyboard.spec.ts` and `console.spec.ts`.
 
 ## What this screen must keep doing
