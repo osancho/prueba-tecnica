@@ -31,6 +31,13 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
+// crypto.randomUUID only exists on HTTPS and localhost; getRandomValues works on plain HTTP too.
+function newLineId(): string {
+  return Array.from(crypto.getRandomValues(new Uint8Array(16)), (byte) =>
+    byte.toString(16).padStart(2, '0'),
+  ).join('');
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, dispatch] = useReducer(cartReducer, []);
   // Read after mount so the server and the first client render agree on an empty cart.
@@ -54,7 +61,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       add: (line) =>
         dispatch({
           type: 'add',
-          line: { ...line, lineId: crypto.randomUUID() },
+          line: { ...line, lineId: newLineId() },
         }),
       remove: (lineId) => dispatch({ type: 'remove', lineId }),
       applyChanges: (changes) => dispatch({ type: 'apply-changes', changes }),

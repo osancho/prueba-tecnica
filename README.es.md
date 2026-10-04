@@ -156,7 +156,7 @@ Solo el servidor habla con la API:
 ### Estado
 
 - **Carrito con Context y `useReducer`.** Cuatro acciones (añadir, eliminar, restaurar y aplicar la comprobación del catálogo) no necesitan ninguna librería.
-- **Una línea por cada "Añadir"**, porque Figma no tiene control de cantidad. Un id de `crypto.randomUUID()` permite que "Eliminar" quite exactamente esa línea.
+- **Una línea por cada "Añadir"**, porque Figma no tiene control de cantidad. Un id aleatorio de `crypto.getRandomValues()`, que también funciona por HTTP sin cifrar, permite que "Eliminar" quite exactamente esa línea.
 - **El carrito guardado se lee después del montaje y se valida**, para que el servidor y el primer render del cliente coincidan y se ignoren datos editados o antiguos. El total se suma en céntimos.
 - **El carrito guardado se comprueba contra el catálogo al abrirlo.** Puede llevar días en `localStorage`, mientras que el catálogo pertenece a una API externa que cambia por su cuenta; así, un teléfono que ya no se vende o un precio nuevo se ven antes de pagar, no después. Cada teléfono se pide una sola vez a `/api/products/[id]`: una línea cuyo teléfono, almacenamiento o color ya no se vende se quita, una línea cuyo almacenamiento ha cambiado de precio recibe el actual, y un mensaje breve lo cuenta. Un teléfono que no se puede comprobar (error de red, API caída) se deja como está, así que una petición fallida nunca vacía un carrito. Los cambios se aplican por línea, así que una línea eliminada mientras tanto sigue eliminada.
 - **Un teléfono que ya no está en el catálogo responde `null`, no 404**, desde `/api/products/[id]`: para el carrito es una respuesta esperada, y un 404 escribiría un error en la consola del navegador.
@@ -242,7 +242,6 @@ Solo el servidor habla con la API:
 ## Limitaciones conocidas
 
 - Un producto que no existe muestra la página "no encontrado" con HTTP 200 y `noindex`: la ruta tiene estado de carga, así que Next ya ha enviado el 200 cuando se ejecuta `notFound()`. Las rutas desconocidas devuelven 404.
-- `crypto.randomUUID()` solo existe en contextos seguros, así que la app se sirve por HTTPS (o en `localhost`).
 - Algunas fotos originales tienen un reflejo opaco en el suelo bajo el teléfono (por ejemplo, el Pixel 8a) que no se puede separar del dispositivo con seguridad. Se deja tal cual; la corrección corresponde a la imagen original.
 - La suite E2E depende de que la API real esté accesible.
 - La caché de imágenes normalizadas vive en el proceso del servidor y se vacía al reiniciarlo.

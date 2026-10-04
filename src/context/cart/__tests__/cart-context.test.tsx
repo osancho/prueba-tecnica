@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CartLinkContainer } from '@/components/cart-link-container/cart-link-container';
 import type { NewCartLine } from '@/core/cart/domain/cart-line';
 import { CartProvider, useCart } from '../cart-context';
@@ -16,10 +16,11 @@ const pixel: NewCartLine = {
 };
 
 function AddPixel() {
-  const { add, total } = useCart();
+  const { add, remove, lines, total } = useCart();
   return (
     <>
       <button onClick={() => add(pixel)}>Add Pixel</button>
+      <button onClick={() => remove(lines[0].lineId)}>Remove first</button>
       <output aria-label="Total">{total}</output>
     </>
   );
@@ -45,6 +46,21 @@ describe('CartProvider', () => {
 
     expect(
       screen.getByRole('link', { name: '2 products in the cart' }),
+    ).toBeInTheDocument();
+  });
+
+  it('adds and removes phones where the browser offers no randomUUID (plain HTTP)', async () => {
+    vi.stubGlobal('crypto', {
+      getRandomValues: crypto.getRandomValues.bind(crypto),
+    });
+    renderCart();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Add Pixel' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Add Pixel' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Remove first' }));
+
+    expect(
+      screen.getByRole('link', { name: '1 product in the cart' }),
     ).toBeInTheDocument();
   });
 
