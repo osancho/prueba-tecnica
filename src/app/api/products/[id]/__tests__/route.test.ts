@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { describe, expect, it, vi } from 'vitest';
 import { getProduct } from '@/core/product/application/get-product';
 import { galaxy } from '@/core/product/domain/__mocks__/product-fixture';
-import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
+import { liveApiProductRepository } from '@/core/product/infrastructure/api-product-repository';
 import { GET } from '../route';
 
 vi.mock('@/core/product/application/get-product', () => ({
@@ -19,13 +19,13 @@ function requestProduct(id: string) {
 }
 
 describe('GET /api/products/[id]', () => {
-  it('returns the phone as the catalog serves it', async () => {
+  it('returns the phone as the live catalog serves it, not the cached copy', async () => {
     getProductMock.mockResolvedValue(galaxy);
 
     const response = await requestProduct('SMG-S24U');
 
     expect(getProductMock).toHaveBeenCalledWith(
-      apiProductRepository,
+      liveApiProductRepository,
       'SMG-S24U',
     );
     expect(response.status).toBe(200);
@@ -46,5 +46,17 @@ describe('GET /api/products/[id]', () => {
     getProductMock.mockRejectedValue(new Error('timeout'));
 
     expect((await requestProduct('SMG-S24U')).status).toBe(502);
+  });
+
+  it('tells browsers and proxies never to keep the answer', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    getProductMock.mockResolvedValueOnce(galaxy);
+    getProductMock.mockRejectedValueOnce(new Error('timeout'));
+
+    const found = await requestProduct('SMG-S24U');
+    const failed = await requestProduct('SMG-S24U');
+
+    expect(found.headers.get('Cache-Control')).toBe('no-store');
+    expect(failed.headers.get('Cache-Control')).toBe('no-store');
   });
 });

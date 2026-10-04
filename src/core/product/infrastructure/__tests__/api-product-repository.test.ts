@@ -3,7 +3,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { apiClient } from '@/services/api-client';
 import { InvalidApiResponseError, NotFoundError } from '@/services/api-errors';
 import type { Product, ProductListItem } from '../../domain/product';
-import { apiProductRepository } from '../api-product-repository';
+import {
+  apiProductRepository,
+  liveApiProductRepository,
+} from '../api-product-repository';
 
 vi.mock('@/services/api-client', () => ({ apiClient: vi.fn() }));
 
@@ -207,6 +210,30 @@ describe('apiProductRepository.findById', () => {
 
     await apiProductRepository.findById('../admin');
 
-    expect(apiClientMock).toHaveBeenCalledWith('/products/..%2Fadmin');
+    expect(apiClientMock).toHaveBeenCalledWith(
+      '/products/..%2Fadmin',
+      {},
+      expect.anything(),
+    );
+  });
+});
+
+describe('liveApiProductRepository', () => {
+  it('reads a phone past the shared cache, while pages keep reading the cached copy', async () => {
+    apiClientMock.mockResolvedValue(productDetail());
+
+    await liveApiProductRepository.findById('MAIN');
+    await apiProductRepository.findById('MAIN');
+
+    expect(apiClientMock.mock.calls[0][2]).toEqual({ cacheable: false });
+    expect(apiClientMock.mock.calls[1][2]).toEqual({ cacheable: true });
+  });
+
+  it('never caches the catalog either', async () => {
+    apiClientMock.mockResolvedValue([]);
+
+    await liveApiProductRepository.list({ limit: 40 });
+
+    expect(apiClientMock.mock.calls[0][2]).toEqual({ cacheable: false });
   });
 });
