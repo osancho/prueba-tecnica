@@ -3,12 +3,8 @@ import Link from 'next/link';
 import { useId } from 'react';
 import type { ProductListItem } from '@/core/product/domain/product';
 import { formatPrice } from '@/lib/format-price';
+import { GRID_IMAGE_SIZES } from '@/lib/product-image-sizes';
 import './product-card.css';
-
-// Side of the square photo on screen with the list's tokens: the card height (344px, 377px,
-// or its width on desktop: (100vw - 200px) / 5) minus padding, gap and the info line (87px).
-const GRID_IMAGE_SIZES =
-  '(min-width: 1280px) calc(20vw - 127px), (min-width: 768px) 290px, 257px';
 
 interface ProductCardProps {
   product: ProductListItem;

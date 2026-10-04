@@ -15,21 +15,23 @@
   --font-family-base: Helvetica, Arial, sans-serif;
   --font-weight-light: 300;
   --font-weight-regular: 400;
-  --font-size-2xs: 10px;
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 20px;
-  --font-size-xl: 24px;
+  /* Figma's pixel sizes written in rem (16px = 1rem), so text follows the reader's browser
+     font size; with the default setting every size is exactly Figma's. */
+  --font-size-2xs: 0.625rem;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
   /* Rendered text box heights in Figma for each font size */
-  --line-height-2xs: 12px;
-  --line-height-xs: 15px;
-  --line-height-sm: 17px;
-  --line-height-md: 19px;
-  --line-height-lg: 24px;
-  --line-height-xl: 29px;
-  --line-height-button: 16px;
-  --line-height-cart-count: 16px;
+  --line-height-2xs: 0.75rem;
+  --line-height-xs: 0.9375rem;
+  --line-height-sm: 1.0625rem;
+  --line-height-md: 1.1875rem;
+  --line-height-lg: 1.5rem;
+  --line-height-xl: 1.8125rem;
+  --line-height-button: 1rem;
+  --line-height-cart-count: 1rem;
   --letter-spacing-button: 0.08em;
 
   --font-size-page-title: var(--font-size-lg);
