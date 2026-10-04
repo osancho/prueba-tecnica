@@ -29,7 +29,7 @@ export function ProductCard({
     // Named by the visible text only, so the picture's alt (shown if it fails to load) is not
     // read a second time.
     <Link
-      href={`/product/${id}`}
+      href={`/product/${encodeURIComponent(id)}`}
       className="product-card"
       aria-labelledby={infoId}
     >
