@@ -80,7 +80,8 @@ function phoneWithChangingPrice(id, price) {
 
 // Stands in for the products API with the catalog recorded in fixtures/catalog.json, and counts
 // what the app asks. On top of the catalog: DOWN-* phones answer as an API that is down,
-// PRICE-* phones change price on every request and "hold-" searches wait for the test.
+// PRICE-* phones change price on every request, "down-" searches fail as the API down and
+// "hold-" searches wait for the test.
 createServer((request, response) => {
   const { pathname, searchParams } = new URL(
     request.url,
@@ -99,6 +100,9 @@ createServer((request, response) => {
 
   hits.set(pathname, (hits.get(pathname) ?? 0) + 1);
   if (pathname === '/products') {
+    if (search.startsWith('down-')) {
+      return sendJson(response, 503, { error: 'DOWN', message: 'Waking up' });
+    }
     const answer = () => sendJson(response, 200, searchCatalog(searchParams));
     if (search.startsWith('hold-') && !released.has(search)) {
       held.set(search, answer);
