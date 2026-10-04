@@ -17,7 +17,7 @@ export async function generateMetadata({
   searchParams,
 }: HomePageProps): Promise<Metadata> {
   const search = await readSearch(searchParams);
-  if (!search) return {};
+  if (!search) return { alternates: { canonical: '/' } };
 
   return {
     title: { absolute: listDocumentTitle(search) },

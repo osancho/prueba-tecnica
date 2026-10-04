@@ -35,10 +35,27 @@ describe('ProductPage', () => {
 
     await expect(
       generateMetadata({ params: params('SMG-S24U') }),
-    ).resolves.toEqual({
+    ).resolves.toMatchObject({
       title: 'Samsung Galaxy S24 Ultra',
       description:
         'Samsung Galaxy S24 Ultra from 1229 EUR: 6.8" Dynamic AMOLED 2X screen, Snapdragon 8 Gen 3 and 5000 mAh battery. Choose your storage and color.',
+    });
+  });
+
+  it('gives a shared link the photo of the phone and one address whatever was chosen', async () => {
+    findById.mockResolvedValue(galaxy);
+
+    const metadata = await generateMetadata({ params: params('SMG-S24U') });
+
+    expect(metadata.alternates).toEqual({ canonical: '/product/SMG-S24U' });
+    expect(metadata.openGraph).toMatchObject({
+      url: '/product/SMG-S24U',
+      images: [
+        {
+          url: '/api/images/SMG-S24U-titanium-violet.webp?w=1260',
+          alt: 'Samsung Galaxy S24 Ultra in Titanium Violet',
+        },
+      ],
     });
   });
 

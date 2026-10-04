@@ -9,6 +9,10 @@ import { lowestPrice } from '@/core/product/domain/lowest-price';
 import type { Product } from '@/core/product/domain/product';
 import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
 import { formatPrice } from '@/lib/format-price';
+import { SITE_NAME } from '@/lib/page-titles';
+import productImageLoader, {
+  PRODUCT_IMAGE_WIDTHS,
+} from '@/lib/product-image-loader';
 import './page.css';
 
 // The page and its metadata both ask for the product. Next merges the two calls only when the
@@ -41,9 +45,32 @@ export async function generateMetadata({
   const product = await findProduct((await params).id);
   if (!product) return { title: 'Smartphone not found' };
 
+  const title = `${product.brand} ${product.name}`;
+  // A link shared with ?storage= and ?color= is still this one page.
+  const url = `/product/${encodeURIComponent(product.id)}`;
+  const [photo] = product.colorOptions;
+
   return {
-    title: `${product.brand} ${product.name}`,
+    title,
     description: productDescription(product),
+    alternates: { canonical: url },
+    // Replaces the layout's Open Graph data as a whole, so the shared fields are repeated.
+    openGraph: {
+      type: 'website',
+      siteName: SITE_NAME,
+      locale: 'en',
+      url,
+      images: photo && [
+        {
+          url: productImageLoader({
+            src: photo.imageUrl,
+            width: PRODUCT_IMAGE_WIDTHS.at(-1)!,
+          }),
+          alt: `${title} in ${photo.name}`,
+        },
+      ],
+    },
+    twitter: { card: 'summary_large_image' },
   };
 }
 
