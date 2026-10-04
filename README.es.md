@@ -92,22 +92,26 @@ pnpm 10 no ejecuta los scripts de instalación de las dependencias salvo que se 
 ```bash
 pnpm dev                  # desarrollo: recursos sin minificar, fast refresh
 pnpm build && pnpm start  # producción: recursos concatenados y minificados en el puerto 3000
+pnpm warm-up [url]        # tras arrancar: carga el catálogo y prepara todas las fotos de la lista
 ```
+
+Las fotos normalizadas se guardan en la memoria del servidor, así que tras un despliegue el primer visitante esperaría a unas 20 a la vez. `pnpm warm-up` (por defecto `http://localhost:3000`) pide la lista y cada una de sus fotos en todos los anchos de su `srcset`, de una en una, y termina con error si alguna petición falla.
 
 ## Scripts
 
-| Script                         | Qué hace                                                                               |
-| ------------------------------ | -------------------------------------------------------------------------------------- |
-| `pnpm dev`                     | Servidor de desarrollo.                                                                |
-| `pnpm build`                   | Build de producción.                                                                   |
-| `pnpm start`                   | Sirve el build de producción.                                                          |
-| `pnpm lint`                    | ESLint (Next core web vitals, TypeScript, compatibilidad con Prettier).                |
-| `pnpm typecheck`               | `tsc --noEmit`.                                                                        |
-| `pnpm format` / `format:check` | Prettier, escribiendo o solo comprobando.                                              |
-| `pnpm test`                    | Tests unitarios y de componentes con Vitest.                                           |
-| `pnpm test:coverage`           | Lo mismo con cobertura V8 en `coverage/`.                                              |
-| `pnpm test:e2e`                | Tests end-to-end de Playwright sobre el build de producción (ver [Calidad](#calidad)). |
-| `pnpm test:e2e:contract`       | Los specs de Playwright que comprueban la app contra la API real.                      |
+| Script                         | Qué hace                                                                                 |
+| ------------------------------ | ---------------------------------------------------------------------------------------- |
+| `pnpm dev`                     | Servidor de desarrollo.                                                                  |
+| `pnpm build`                   | Build de producción.                                                                     |
+| `pnpm start`                   | Sirve el build de producción.                                                            |
+| `pnpm warm-up [url]`           | Carga el catálogo y prepara todas las fotos de la lista en un servidor recién arrancado. |
+| `pnpm lint`                    | ESLint (Next core web vitals, TypeScript, compatibilidad con Prettier).                  |
+| `pnpm typecheck`               | `tsc --noEmit`.                                                                          |
+| `pnpm format` / `format:check` | Prettier, escribiendo o solo comprobando.                                                |
+| `pnpm test`                    | Tests unitarios y de componentes con Vitest.                                             |
+| `pnpm test:coverage`           | Lo mismo con cobertura V8 en `coverage/`.                                                |
+| `pnpm test:e2e`                | Tests end-to-end de Playwright sobre el build de producción (ver [Calidad](#calidad)).   |
+| `pnpm test:e2e:contract`       | Los specs de Playwright que comprueban la app contra la API real.                        |
 
 ## Arquitectura
 
@@ -259,7 +263,7 @@ Puntos ambiguos de Figma, y cómo se resolvió cada uno
 - Un producto que no existe muestra la página "no encontrado" con HTTP 200 y `noindex`: la ruta tiene estado de carga, así que Next ya ha enviado el 200 cuando se ejecuta `notFound()`. Las rutas desconocidas devuelven 404.
 - Algunas fotos originales tienen un reflejo opaco en el suelo bajo el teléfono (por ejemplo, el Pixel 8a) que no se puede separar del dispositivo con seguridad. Se deja tal cual; la corrección corresponde a la imagen original.
 - La suite end-to-end corre sobre una grabación del catálogo (4 de octubre de 2026) con fotos dibujadas. Un cambio en la API real o en sus fotos solo lo ven los specs de contrato, que dependen de que la API real esté accesible.
-- La caché de imágenes normalizadas vive en el proceso del servidor y se vacía al reiniciarlo.
+- La caché de imágenes normalizadas vive en el proceso del servidor y se vacía al reiniciarlo; `pnpm warm-up` la vuelve a llenar para la lista.
 - No hay diseño para los estados de 404, error y búsqueda fallida, ni para el mensaje de cambios del carrito: usan los tokens existentes con estilos mínimos.
 - Avisos de seguridad aceptados:
   - 2 moderados en Vitest 3 (GHSA-82fw-gwwq-j7x9): solo en desarrollo; corregidos en Vitest 4.1.11, que requiere Node 20.

@@ -40,6 +40,7 @@ pnpm install
 pnpm dev          # development (not minified)
 pnpm build        # production build (minified, concatenated)
 pnpm start        # serve production build
+pnpm warm-up      # after pnpm start: load the catalog and prepare every list photo
 pnpm lint
 pnpm typecheck
 pnpm format       # format:check in CI
@@ -71,6 +72,7 @@ src/
   styles/       variables.css (Figma tokens), globals.css
 e2e/            Playwright specs, fake API (fake-api.mjs) and its fixed catalog (fixtures/); contract/ holds the
                 specs against the real API and its warm-up; servers.ts holds the ports
+scripts/        warm-up.mjs, run by the deploy after `pnpm start`
 ```
 
 Dependency rule, enforced by `import/no-restricted-paths` in `eslint.config.mjs`: `domain` imports only `domain`; `application` only `domain` and `application`; `infrastructure` only `core` and `services`; neither `domain` nor `application` imports a package; `services` never imports `core`; nothing outside `src/app` and `core` imports `infrastructure`. Components and context receive their repositories, and their tests pass fakes (`core/cart/domain/__mocks__/in-memory-cart-repository.ts`) instead of mocking module paths.
