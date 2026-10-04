@@ -8,19 +8,26 @@ Una tienda de smartphones hecha con Next.js 15 y React 19: recorrer y buscar en 
 - **Detalle** (`/product/[id]`): foto por color, selectores de almacenamiento y color con el precio actualizándose al elegir, especificaciones y teléfonos similares.
 - **Carrito** (`/cart`): una línea por cada teléfono añadido, eliminación, total y estado vacío.
 
-La demo y las capturas se publican con el despliegue.
+**Demo:** [https://zara.oscarsancho.dev](https://zara.oscarsancho.dev)
+
+| Listado                                                                  | Detalle                                                                      | Carrito                                                     |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| ![Listado de teléfonos en escritorio](docs/screenshots/list-desktop.png) | ![Detalle de un teléfono en escritorio](docs/screenshots/detail-desktop.png) | ![Carrito en escritorio](docs/screenshots/cart-desktop.png) |
+| ![Listado de teléfonos en móvil](docs/screenshots/list-mobile.png)       | ![Detalle de un teléfono en móvil](docs/screenshots/detail-mobile.png)       | ![Carrito en móvil](docs/screenshots/cart-mobile.png)       |
+
+Resultados de búsqueda: [escritorio](docs/screenshots/search-desktop.png), [móvil](docs/screenshots/search-mobile.png).
 
 ## Revisarlo en 15 minutos
 
 Cinco archivos, en este orden, enseñan todo el diseño:
 
-1. [`src/app/page.tsx`](src/app/page.tsx): una página de servidor, el punto de composición que entrega el adaptador real al caso de uso.
-2. [`src/core/product/application/get-products.ts`](src/core/product/application/get-products.ts): un caso de uso, el único sitio que conoce la regla del listado: los 20 primeros teléfonos únicos, o todas las coincidencias únicas de una búsqueda.
-3. [`src/services/api-client.ts`](src/services/api-client.ts): la única puerta a la API, donde viven la key, los errores, la caché y los timeouts.
-4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
-5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
+1. `[src/app/page.tsx](src/app/page.tsx)`: una página de servidor, el punto de composición que entrega el adaptador real al caso de uso.
+2. `[src/core/product/application/get-products.ts](src/core/product/application/get-products.ts)`: un caso de uso, el único sitio que conoce la regla del listado: los 20 primeros teléfonos únicos, o todas las coincidencias únicas de una búsqueda.
+3. `[src/services/api-client.ts](src/services/api-client.ts)`: la única puerta a la API, donde viven la key, los errores, la caché y los timeouts.
+4. `[src/core/cart/domain/cart-reducer.ts](src/core/cart/domain/cart-reducer.ts)`: las reglas del carrito, funciones puras sin React ni navegador.
+5. `[src/components/product-detail/product-detail.tsx](src/components/product-detail/product-detail.tsx)`: una vista montada con piezas probadas.
 
-Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 10 specs de Playwright sobre el build de producción contra un catálogo fijo (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia), un spec de contrato contra la API real, y CI en cada pull request.
+Después, `[e2e/keyboard.spec.ts](e2e/keyboard.spec.ts)` recorre el viaje completo solo con teclado. La calidad de un vistazo: 42 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 10 specs de Playwright sobre el build de producción contra un catálogo fijo (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia), un spec de contrato contra la API real, y CI en cada pull request.
 
 ## Más allá del enunciado, y por qué
 
@@ -55,7 +62,7 @@ Cómo se cumple cada punto del enunciado.
 | React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                         | React 19.1, CSS plano, Node 18.20.8, `CartContext`, `src/services/api-client.ts`                                               |
 | Tests, accesibilidad, linters y formateadores, consola limpia                              | [Calidad](#calidad), [Accesibilidad](#accesibilidad)                                                                           |
 | Opcional: SSR con Next.js y variables CSS                                                  | Server components en el listado y el detalle; tokens en `variables.css`                                                        |
-| Opcional: despliegue                                                                       | VPS propio con Node 18 (enlace arriba cuando esté publicado)                                                                   |
+| Opcional: despliegue                                                                       | VPS propio con Node 18: [https://zara.oscarsancho.dev](https://zara.oscarsancho.dev)                                           |
 
 ## Puesta en marcha
 
@@ -68,19 +75,17 @@ pnpm install --frozen-lockfile
 cp .env.example .env.local       # después, rellena API_KEY
 ```
 
-<details>
-<summary>Cómo se imponen las versiones</summary>
+Cómo se imponen las versiones
 
 pnpm 10.34.6 es la última versión mayor de pnpm que funciona con Node 18. `package.json` fija pnpm en `packageManager`, así que Corepack (incluido en Node) proporciona esa versión exacta sin instalar nada global. También declara `"engines": { "node": ">=18.18.0 <19" }`, y `.npmrc` activa `engine-strict=true`, así que la instalación falla con otra versión mayor de Node.
 
 pnpm 10 no ejecuta los scripts de instalación de las dependencias salvo que se permitan: `pnpm.onlyBuiltDependencies` incluye los tres que preparan binarios nativos (`esbuild`, `sharp`, `unrs-resolver`).
 
-</details>
-
 | Variable       | Para qué sirve                                                                                 |
 | -------------- | ---------------------------------------------------------------------------------------------- |
 | `API_BASE_URL` | URL base de la API de productos, ya definida en `.env.example`.                                |
 | `API_KEY`      | Se envía en la cabecera `x-api-key`. Solo en el servidor: nunca con el prefijo `NEXT_PUBLIC_`. |
+| `SITE_URL`     | Dirección pública del sitio desplegado, definida antes de `pnpm build`. Vacía en local.        |
 
 ## Desarrollo y producción
 
@@ -160,13 +165,13 @@ Solo el servidor habla con la API:
 
 ### Estado
 
-- **Carrito con Context y `useReducer`.** Cuatro acciones (añadir, eliminar, restaurar y aplicar la comprobación del catálogo) no necesitan ninguna librería.
+- **Carrito con Context y** `useReducer`**.** Cuatro acciones (añadir, eliminar, restaurar y aplicar la comprobación del catálogo) no necesitan ninguna librería.
 - **Una línea por cada "Añadir"**, porque Figma no tiene control de cantidad. Un id aleatorio de `crypto.getRandomValues()`, que también funciona por HTTP sin cifrar, permite que "Eliminar" quite exactamente esa línea.
 - **El carrito guardado se lee después del montaje y se valida**, para que el servidor y el primer render del cliente coincidan y se ignoren datos editados o antiguos. El total se suma en céntimos.
 - **Sin contador del carrito antes de leer el carrito guardado.** Hasta entonces la cantidad es desconocida, así que el header no muestra la bolsa en lugar de un "0" que sería falso para un carrito con productos, un estado que Figma nunca dibuja. El HTML del servidor tampoco lleva contador.
 - **Un solo carrito entre pestañas.** Cada cambio se aplica al carrito tal como está guardado en ese momento, no a la copia que una pestaña leyó antes, así que dos pestañas nunca se pisan; las pestañas abiertas siguen al carrito guardado, también cuando una página vuelve de la caché de atrás/adelante. Solo dos escrituras separadas por menos de un milisegundo podrían chocar. Si el navegador bloquea el almacenamiento, el carrito vive en memoria durante la visita.
 - **El carrito guardado se comprueba contra el catálogo al abrirlo.** Puede llevar días en `localStorage`, mientras que el catálogo pertenece a una API externa que cambia por su cuenta; así, un teléfono que ya no se vende o un precio nuevo se ven antes de pagar, no después. Cada teléfono se pide una sola vez a `/api/products/[id]`, que lee el catálogo sin pasar por la caché de una hora y envía su respuesta con `no-store`, así que la comprobación ve el precio de hoy: una línea cuyo teléfono, almacenamiento o color ya no se vende se quita, una línea cuyo almacenamiento ha cambiado de precio recibe el actual, y un mensaje breve lo cuenta. Un teléfono que no se puede comprobar (error de red, API caída) se deja como está, así que una petición fallida nunca vacía un carrito. Los cambios se aplican por línea, así que una línea eliminada mientras tanto sigue eliminada.
-- **Un teléfono que ya no está en el catálogo responde `null`, no 404**, desde `/api/products/[id]`: para el carrito es una respuesta esperada, y un 404 escribiría un error en la consola del navegador.
+- **Un teléfono que ya no está en el catálogo responde** `null`**, no 404**, desde `/api/products/[id]`: para el carrito es una respuesta esperada, y un 404 escribiría un error en la consola del navegador.
 - **El almacenamiento, el color y la búsqueda viven en la URL**, así que un teléfono configurado o una búsqueda se pueden compartir. `replaceState` evita que Atrás deshaga cada elección.
 - **La búsqueda se reintenta sin UI nueva.** Un error de red o un 5xx se reintenta una vez; pulsar Enter repite una búsqueda fallida. Figma no tiene botón de reintentar.
 
@@ -177,8 +182,7 @@ Solo el servidor habla con la API:
 - **Similares**: una lista con scroll nativo que se extiende hasta el borde derecho de la ventana, como el carrusel de Figma. Con el ratón se puede arrastrar la lista o su barra decorativa, como en el prototipo; en táctil se mantiene el scroll nativo.
 - **"Añadir" abre el carrito**, que aparece con un fundido con el spring "Slow" del prototipo.
 
-<details>
-<summary>Puntos ambiguos de Figma, y cómo se resolvió cada uno</summary>
+Puntos ambiguos de Figma, y cómo se resolvió cada uno
 
 - Las medidas salen de la página Design; la página Proto se usa para el comportamiento y el movimiento. Algunos frames de Proto están desplazados unos píxeles respecto a Design (el buscador a 51 px del header en lugar de 60; "Specifications" a 140 px del botón de añadir en lugar de 154): se usan los valores de Design.
 - Los colores de las muestras y sus nombres vienen de la API (`hexCode`, `name`). Los frames de Figma usan colores de ejemplo y nombres de ejemplo en español ("Violeta Titanium") que no corresponden a ningún producto.
@@ -187,8 +191,6 @@ Solo el servidor habla con la API:
 - "Continue shopping" lleva al listado completo, como en el prototipo.
 - Primera carga: el prototipo pasa de "Unloaded" (solo el header) a "Loading" (la barra negra crece hasta el ancho completo) y después muestra el listado, con retardos fijos que simulan la red. La app conserva los estados y los springs, pero no los retardos, porque la espera real la pone la red: en una carga de página del listado, el header aparece con la barra de carga llenándose debajo (un solo elemento en el layout, así que nunca vuelve a empezar) mientras el servidor prepara el listado, y en cuanto el listado está en la página entra con el spring de entrada mientras la barra se desvanece con él. Con el catálogo en caché el listado llega unas decenas de milisegundos después del header, así que la barra apenas ha empezado cuando se desvanece; un listado que llega con el primer pintado no muestra barra alguna. Es una desviación deliberada del timing del prototipo: reproducir su pausa de 300 ms y el llenado completo de la barra mantendría oculto entre 0,7 s y 0,9 s un listado que ya ha llegado. Volver al listado navegando dentro de la app lo muestra al instante.
 - El prototipo hace un fundido cruzado directamente de una tarjeta al detalle. La app muestra la barra de carga solo mientras llega el producto y después el detalle entra con el spring del prototipo.
-
-</details>
 
 ### Rendimiento
 
@@ -227,7 +229,7 @@ Solo el servidor habla con la API:
 - **Specs de contrato** (`pnpm test:e2e:contract`) sobre el build de producción contra la API real, sin ningún teléfono, precio o recuento escrito en ellos: todos los teléfonos del catálogo abren su detalle con su foto (los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar falla aquí), una búsqueda por marca encuentra teléfonos de esa marca y un id desconocido muestra la página de no encontrado. Necesitan `.env.local` y el puerto 3150, y despiertan la API antes de empezar.
 - **Pre-commit**: Husky ejecuta lint-staged (ESLint y Prettier sobre los archivos preparados).
 - **CI** (GitHub Actions, cada acción fijada a un SHA de commit): comprobación de formato, lint, typecheck, tests con cobertura, build y SonarCloud; después, dos jobs independientes que suben el informe de Playwright si fallan: la suite end-to-end, sin secretos, y los specs de contrato, con los secretos de la API. Una API lenta o que haya cambiado solo puede hacer fallar el segundo.
-- **Flujo de Git**: una rama por cambio, Conventional Commits, y cada cambio fusionado mediante una [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) revisada.
+- **Flujo de Git**: una rama por cambio, Conventional Commits, y cada cambio fusionado mediante una [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) cuando pasa la CI.
 
 ## Accesibilidad
 
@@ -246,7 +248,11 @@ Solo el servidor habla con la API:
 - Cada página de producto construye su título con la marca y el nombre, y su descripción con el precio "From", la pantalla, el procesador y la batería (`generateMetadata`).
 - Una búsqueda tiene su propio título ("Results for “galaxy” | MBST"); las páginas de búsqueda y el carrito son `noindex, follow`.
 - Un `h1` por página (oculto visualmente en el listado, donde Figma no muestra título), encabezados en orden, `lang="en"`.
-- `robots.txt`, el sitemap, `metadataBase` y la imagen de Open Graph llegan con el despliegue, cuando se conozca el dominio.
+- Cada página indexable indica su dirección canónica: un producto compartido con `?storage=` y `?color=` apunta a `/product/[id]`.
+- Los enlaces compartidos llevan datos de Open Graph y de Twitter card; un producto añade su foto.
+- `robots.txt` deja abiertas las páginas y las fotos y mantiene a los rastreadores fuera del proxy de búsqueda; `sitemap.xml` lista la página del catálogo y todos los teléfonos, leídos de la API en cada petición.
+- Las direcciones absolutas salen de `SITE_URL`, definida solo en el servidor desplegado, así que una ejecución local o la CI nunca se atribuyen el dominio público.
+- La cabecera `X-Powered-By` está desactivada.
 
 ## Limitaciones conocidas
 
@@ -257,8 +263,4 @@ Solo el servidor habla con la API:
 - No hay diseño para los estados de 404, error y búsqueda fallida, ni para el mensaje de cambios del carrito: usan los tokens existentes con estilos mínimos.
 - Avisos de seguridad aceptados:
   - 2 moderados en Vitest 3 (GHSA-82fw-gwwq-j7x9): solo en desarrollo; corregidos en Vitest 4.1.11, que requiere Node 20.
-  - Alto en la libvips que incluye sharp: la app solo procesa imágenes del host de la API.
-
-## Cómo se ha hecho
-
-He construido este proyecto con ayuda de IA (Claude Code), trabajando con reglas explícitas versionadas en [`AGENTS.md`](AGENTS.md): Node 18 de principio a fin, Figma como fuente de verdad, accesibilidad, tests con nombres que describen comportamiento y una única fuente de verdad para cada valor. Revisé cada cambio en una pull request y contrasté cada decisión de diseño con el archivo de Figma.
+  - 2 altos en las libvips y libheif que incluye sharp (GHSA-f88m-g3jw-g9cj, GHSA-rgj7-g3m4-5g8c): la app solo procesa imágenes del host de la API, y sharp 0.35.4, que corrige los dos, necesita Node 20.
