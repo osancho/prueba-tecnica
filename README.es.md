@@ -20,7 +20,7 @@ Cinco archivos, en este orden, enseñan todo el diseño:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
 
-Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 11 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
+Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 10 specs de Playwright sobre el build de producción contra un catálogo fijo (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia), un spec de contrato contra la API real, y CI en cada pull request.
 
 ## Más allá del enunciado, y por qué
 
@@ -102,6 +102,7 @@ pnpm build && pnpm start  # producción: recursos concatenados y minificados en 
 | `pnpm test`                    | Tests unitarios y de componentes con Vitest.                                           |
 | `pnpm test:coverage`           | Lo mismo con cobertura V8 en `coverage/`.                                              |
 | `pnpm test:e2e`                | Tests end-to-end de Playwright sobre el build de producción (ver [Calidad](#calidad)). |
+| `pnpm test:e2e:contract`       | Los specs de Playwright que comprueban la app contra la API real.                      |
 
 ## Arquitectura
 
@@ -130,7 +131,8 @@ src/
   context/cart/         contexto de React que conecta el carrito con su repositorio
   components/           una carpeta en kebab-case por componente: component.tsx, .css, __tests__/
   styles/               variables.css (tokens de diseño) y globals.css
-e2e/                    specs de Playwright, calentamiento de la API y la API falsa que usa un test
+e2e/                    specs de Playwright, la API falsa y su catálogo fijo (fixtures/), y los
+                        specs contra la API real (contract/)
 ```
 
 Los tests viven en `__tests__/`, junto al código que cubren, y los fixtures compartidos en `__mocks__/`. Los casos de uso se prueban con un repositorio en memoria; los adaptadores, con un cliente de API simulado.
@@ -195,33 +197,33 @@ Solo el servidor habla con la API:
 
 ## Peculiaridades de la API
 
-| Problema                                                                                  | Cómo se resuelve                                                                                                                      |
-| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Ids repetidos en el listado y en los similares                                            | Se piden 40 (la API tiene 24) y se quitan los duplicados; solo el listado sin búsqueda se recorta a 20.                               |
-| Imágenes servidas por `http` e irregulares                                                | Pasan por `/api/images` en nuestro dominio, que las normaliza.                                                                        |
-| `basePrice` distinto de los precios por almacenamiento                                    | Las tarjetas muestran `basePrice` y el detalle los precios por almacenamiento; ver [Datos y API](#datos-y-api).                       |
-| Un id desconocido responde 404 `NOT-FOUND`                                                | `apiClient` lanza `NotFoundError` y la página llama a `notFound()`.                                                                   |
-| Plan gratuito de Render: la primera petición puede tardar casi un minuto                  | Timeout de 60 s, un reintento automático en la búsqueda, los estados de carga del prototipo y un calentamiento antes de la suite E2E. |
-| Un producto sin alguna de sus especificaciones (el iPhone 13 no trae `screenRefreshRate`) | Todas las especificaciones son opcionales: el teléfono se abre, y la tabla de especificaciones y la meta descripción la omiten.       |
-| Respuestas que no tienen la forma documentada                                             | Los type guards descartan los elementos no válidos y convierten un producto no válido en un error.                                    |
+| Problema                                                                                  | Cómo se resuelve                                                                                                                               |
+| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ids repetidos en el listado y en los similares                                            | Se piden 40 (la API tiene 24) y se quitan los duplicados; solo el listado sin búsqueda se recorta a 20.                                        |
+| Imágenes servidas por `http` e irregulares                                                | Pasan por `/api/images` en nuestro dominio, que las normaliza.                                                                                 |
+| `basePrice` distinto de los precios por almacenamiento                                    | Las tarjetas muestran `basePrice` y el detalle los precios por almacenamiento; ver [Datos y API](#datos-y-api).                                |
+| Un id desconocido responde 404 `NOT-FOUND`                                                | `apiClient` lanza `NotFoundError` y la página llama a `notFound()`.                                                                            |
+| Plan gratuito de Render: la primera petición puede tardar casi un minuto                  | Timeout de 60 s, un reintento automático en la búsqueda, los estados de carga del prototipo y un calentamiento antes de los specs de contrato. |
+| Un producto sin alguna de sus especificaciones (el iPhone 13 no trae `screenRefreshRate`) | Todas las especificaciones son opcionales: el teléfono se abre, y la tabla de especificaciones y la meta descripción la omiten.                |
+| Respuestas que no tienen la forma documentada                                             | Los type guards descartan los elementos no válidos y convierten un producto no válido en un error.                                             |
 
 ## Calidad
 
 - **Tests unitarios y de componentes** (Vitest, Testing Library), con nombres que describen lo que vive el usuario.
 - **Comprobaciones de accesibilidad** con vitest-axe en todas las páginas. jsdom no carga CSS, así que el contraste lo comprueba la auditoría axe end-to-end.
-- **Tests end-to-end** (Playwright, solo Chromium) sobre el build de producción:
+- **Tests end-to-end** (Playwright, solo Chromium) sobre el build de producción, contra una API falsa con un catálogo fijo (`e2e/fake-api.mjs`), así que una ejecución nunca depende de la red y da siempre el mismo resultado. El catálogo es una grabación del real (`e2e/fixtures/catalog.json`): 24 entradas con un id repetido, una búsqueda que encuentra más de 20 teléfonos, un teléfono al que le falta una especificación y precios de almacenamiento por debajo de `basePrice`. La API falsa dibuja las fotos, con el fondo blanco opaco incluido, así que el normalizador de imágenes hace su trabajo real:
   - catálogo y búsqueda, detalle y añadir al carrito, y el carrito;
   - el carrito compartido entre dos pestañas, antes y después de recargar;
   - un header que nunca muestra un contador distinto del guardado, y ninguno sin JavaScript;
-  - todos los teléfonos del catálogo abren su detalle: los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar hace fallar la suite;
   - una auditoría axe (WCAG 2.2 AA y buenas prácticas, contraste incluido) de ocho pantallas a 393, 834 y 1920 px;
   - el recorrido completo solo con teclado, desde la búsqueda hasta quitar el teléfono del carrito;
   - la comprobación del carrito contra el catálogo, con consola limpia;
   - una comprobación que falla ante cualquier aviso o error en consola, o cualquier precarga de estilos sin usar, en el listado, un producto, el carrito y un 404;
-  - un segundo servidor apuntando a una API falsa caída, que demuestra que una página de producto pide la API una sola vez, y cuyo precio cambia en cada petición, que demuestra que la comprobación del carrito lee el catálogo en vivo.
-  - La primera vez: `pnpm exec playwright install chromium`. Usan la API real, así que `.env.local` tiene que estar configurado y los puertos 3150, 3151 y 3199 libres.
+  - un teléfono para el que la API falsa está caída, que demuestra que una página de producto pide la API una sola vez, y otro cuyo precio cambia en cada petición, que demuestra que la comprobación del carrito lee el catálogo en vivo.
+  - La primera vez: `pnpm exec playwright install chromium`. Los puertos 3151 y 3199 tienen que estar libres; no hace falta `.env.local`.
+- **Specs de contrato** (`pnpm test:e2e:contract`) sobre el build de producción contra la API real, sin ningún teléfono, precio o recuento escrito en ellos: todos los teléfonos del catálogo abren su detalle con su foto (los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar falla aquí), una búsqueda por marca encuentra teléfonos de esa marca y un id desconocido muestra la página de no encontrado. Necesitan `.env.local` y el puerto 3150, y despiertan la API antes de empezar.
 - **Pre-commit**: Husky ejecuta lint-staged (ESLint y Prettier sobre los archivos preparados).
-- **CI** (GitHub Actions, cada acción fijada a un SHA de commit): comprobación de formato, lint, typecheck, tests con cobertura, build y SonarCloud; después, el job E2E, que sube el informe de Playwright si falla.
+- **CI** (GitHub Actions, cada acción fijada a un SHA de commit): comprobación de formato, lint, typecheck, tests con cobertura, build y SonarCloud; después, dos jobs independientes que suben el informe de Playwright si fallan: la suite end-to-end, sin secretos, y los specs de contrato, con los secretos de la API. Una API lenta o que haya cambiado solo puede hacer fallar el segundo.
 - **Flujo de Git**: una rama por cambio, Conventional Commits, y cada cambio fusionado mediante una [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) revisada.
 
 ## Accesibilidad
@@ -247,7 +249,7 @@ Solo el servidor habla con la API:
 
 - Un producto que no existe muestra la página "no encontrado" con HTTP 200 y `noindex`: la ruta tiene estado de carga, así que Next ya ha enviado el 200 cuando se ejecuta `notFound()`. Las rutas desconocidas devuelven 404.
 - Algunas fotos originales tienen un reflejo opaco en el suelo bajo el teléfono (por ejemplo, el Pixel 8a) que no se puede separar del dispositivo con seguridad. Se deja tal cual; la corrección corresponde a la imagen original.
-- La suite E2E depende de que la API real esté accesible.
+- La suite end-to-end corre sobre una grabación del catálogo (4 de octubre de 2026) con fotos dibujadas. Un cambio en la API real o en sus fotos solo lo ven los specs de contrato, que dependen de que la API real esté accesible.
 - La caché de imágenes normalizadas vive en el proceso del servidor y se vacía al reiniciarlo.
 - No hay diseño para los estados de 404, error y búsqueda fallida, ni para el mensaje de cambios del carrito: usan los tokens existentes con estilos mínimos.
 - Avisos de seguridad aceptados:
