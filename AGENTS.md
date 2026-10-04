@@ -53,19 +53,25 @@ Hexagonal architecture, so the core evolves independently of the framework, the 
 
 ```
 src/
-  app/          routes and composition root: pages and route handlers pass the real adapters to the use cases
+  app/          routes and the composition roots, the only code that names an adapter: pages and route handlers on the server,
+                providers.tsx in the browser (hands the cart its two repositories)
                 (page.tsx list, product/[id], cart, api/products search proxy, api/images image normalizer)
   core/<context>/
-    domain/          types, ports (product-repository.ts, cart-repository.ts) and business rules (lowest-price, cart-line, cart-reducer)
-    application/     use cases that receive a port: get-products (dedupe; the first 20, or every match of a search), get-product
-    infrastructure/  adapters: api-product-repository (validation, image URLs), local-storage-cart-repository
-  services/     what talks to the outside: api-client.ts (server-only, single entry point to the API), api-errors.ts, server-config.ts, images/
-  lib/          pure helpers and UI hooks only
-  context/cart/ React adapter: wires the cart reducer to its repository
+    domain/          types, ports (product-repository.ts, cart-repository.ts) and business rules (lowest-price, search-term, cart-line, cart-reducer)
+    application/     use cases that receive a port, one per business rule: get-products (the first 20, or every match of a search),
+                     revalidate-cart. Where there is no rule (one phone by id) the composition root calls the port
+    infrastructure/  adapters, one per port and source: api-product-repository (validation, unique ids, image URLs),
+                     http-product-repository (the browser's way in), local-storage-cart-repository
+  services/     technical clients that implement no port and never import core: api-client.ts (server-only, single entry point
+                to the API), api-errors.ts, server-config.ts, images/
+  lib/          pure helpers and UI hooks for the React side; core never imports it
+  context/cart/ React adapter: wires the cart reducer to the repositories it receives as props
   components/   <component-name>/component-name.tsx + component-name.css
   styles/       variables.css (Figma tokens), globals.css
 e2e/            Playwright specs, API warm-up, fake API (servers.ts holds the ports)
 ```
+
+Dependency rule, enforced by `import/no-restricted-paths` in `eslint.config.mjs`: `domain` imports only `domain`; `application` only `domain` and `application`; `infrastructure` only `core` and `services`; neither `domain` nor `application` imports a package; `services` never imports `core`; nothing outside `src/app` and `core` imports `infrastructure`. Components and context receive their repositories, and their tests pass fakes (`core/cart/domain/__mocks__/in-memory-cart-repository.ts`) instead of mocking module paths.
 
 Naming:
 
@@ -89,9 +95,9 @@ Naming:
 
 ## API
 
-- Base URL `API_BASE_URL`, header `x-api-key` = `API_KEY` (in `.env.local`, never `NEXT_PUBLIC_`). **The key never reaches the browser.** Every call to the external API goes through a single `apiClient` (`src/services/api-client.ts`, `import 'server-only'`): base URL, auth header, error mapping (404 → not found), caching and timeouts live there; no other module calls `fetch` against the API. Responses are validated in `api-product-repository.ts` and deduped in the use cases. Client search goes through our Route Handler `/api/products`.
+- Base URL `API_BASE_URL`, header `x-api-key` = `API_KEY` (in `.env.local`, never `NEXT_PUBLIC_`). **The key never reaches the browser.** Every call to the external API goes through a single `apiClient` (`src/services/api-client.ts`, `import 'server-only'`): base URL, auth header, error mapping (404 → not found), caching and timeouts live there; no other module calls `fetch` against the API. Responses are validated and deduped in `api-product-repository.ts`: the `ProductRepository` port promises well-formed phones, each id once. Client search goes through our Route Handler `/api/products`.
 - Endpoints: `GET /products` (`search`, `limit`, `offset`; default 24) and `GET /products/{id}`.
-- Duplicated ids in the list and in `similarProducts` → dedupe in the API layer. Without a search, show the first 20 unique products: request more than 20 and slice after deduping. With a search, never slice: every unique match is shown and counted. The catalog holds 24 entries (23 unique) and no `limit` returns more, so the same request of 40 brings every match.
+- Duplicated ids in the list and in `similarProducts` → dedupe in the API adapter, which always requests 40 so the list still fills after deduping. The use case holds only the rule: without a search, the first 20 products; with a search, every match is shown and counted. The catalog holds 24 entries (23 unique) and no `limit` returns more, so the same request of 40 brings every match.
 - Images come over `http://` and are inconsistent (2 of 62 with opaque white background, phone filling 60–100% of the picture). Ideally they would come right from the backend; since they do not, every image goes through `/api/images/[file]` (sharp: white background connected to the border → transparent, trim to the phone, then centre it in a transparent square at the Figma scale, 73.2%, resized to the requested width and never enlarged) to guarantee the quality standard. Results are kept in memory per width and served `immutable` (URLs carry `?v=`). `next/image` uses a custom loader (`src/lib/product-image-loader.ts`) that asks for one of `PRODUCT_IMAGE_WIDTHS` with `w=`; every image declares `sizes`. Next's optimizer stays off, since it would only add a second lossy pass. Known limit (documented in the README): some photos have an opaque floor reflection painted under the phone (e.g. Pixel 8a); it cannot be told apart from the device safely, so it is left as is — the right fix is the source asset.
 - `basePrice` may differ from the cheapest storage price (Galaxy S24 Ultra: base 1329 €, 256 GB 1229 €). Cards show `basePrice` (the brief's "precio base", the only price the list endpoint returns); the detail shows "From" + `lowestPrice`, then the chosen storage price.
 - Unknown id → 404 `{ "error": "NOT-FOUND", "message": "Product not found" }` → Next.js `not-found`.

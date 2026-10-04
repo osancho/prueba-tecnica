@@ -9,7 +9,7 @@ You own the product detail screen. Read `AGENTS.md` first and follow it: its rul
 
 - Route: `src/app/product/[id]/page.tsx` (server component, `generateMetadata`, one API call per render through `cache()`), `loading.tsx` (the loading bar), `page.css`; `src/app/not-found.tsx` for unknown ids.
 - Components: `product-detail` (with `use-selection-in-url.ts`), `storage-selector`, `color-selector`, `option-group`, `button`, `cross-fade`, `product-specs`, `similar-products`, `back-link`.
-- Core: `core/product/application/get-product.ts`, `core/product/domain/lowest-price.ts`, `core/product/infrastructure/api-product-repository.ts`; adding to the cart goes through `context/cart`.
+- Core: `core/product/domain/lowest-price.ts`, `core/product/infrastructure/api-product-repository.ts`; adding to the cart goes through `context/cart`.
 - Helpers: `lib/format-price.ts`, `lib/use-drag-scroll.ts`, `lib/motion.ts`.
 - Tests: the `__tests__` folders of those files, `src/app/product/[id]/__tests__/`; end to end `e2e/product-detail.spec.ts` and `product-requests.spec.ts`, plus the detail cases in `accessibility.spec.ts` and `keyboard.spec.ts`.
 

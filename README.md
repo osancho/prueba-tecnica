@@ -107,38 +107,41 @@ pnpm build && pnpm start  # production: concatenated and minified assets on port
 
 Hexagonal: the business rules know nothing about Next, the API or the browser; each outside world plugs in through a port.
 
-The catalog and the cart change for different reasons than the framework does, so each can evolve on its own: the browser already reaches the catalog through a second adapter (`http-product-repository`), a server-side cart or another API would be one more adapter, and the use cases are tested against plain fakes instead of a mocked framework.
+The catalog and the cart change for different reasons than the framework does, so each can evolve on its own: the browser already reaches the catalog through a second adapter (`http-product-repository`), a server-side cart or another API would be one more adapter, and both the use cases and the React layer are tested against plain fakes passed in as arguments or props, not against mocked module paths.
+
+The dependency rule is checked by ESLint (`import/no-restricted-paths`), so a wrong import fails `pnpm lint`: the domain imports only the domain, the use cases only the domain, adapters only the core and `services`, and no component, hook or context imports an adapter.
 
 ```
 src/
-  app/                  routes, and the composition root: they hand the real adapters to the use cases
+  app/                  routes, and the composition roots: the only code that names an adapter
+    providers.tsx       the browser's composition root: hands the cart its storage and its catalog
     api/products        Route Handler for the client-side search
     api/products/[id]   one phone for the cart check, so the API key stays on the server
     api/images          image proxy that normalizes product photos
   core/
     product/
-      domain/           Product types, the ProductRepository port, the "From" price rule
-      application/      use cases: get-products (unique phones: the first 20, or every match of a search), get-product
-      infrastructure/   api-product-repository: calls the API, validates, builds image URLs;
+      domain/           Product types, the ProductRepository port (well-formed phones, each id once), the "From" price rule
+      application/      get-products: the first 20 phones, or every match of a search
+      infrastructure/   api-product-repository: calls the API, validates, removes repeated ids, builds image URLs;
                         http-product-repository: the browser's way in, through our Route Handler
     cart/
       domain/           cart lines, total, reducer, the changes a catalog check can bring, CartRepository port
       application/      revalidate-cart: checks saved lines against the catalog
       infrastructure/   local-storage-cart-repository
-  services/             API client and errors, server config, image normalization
-  lib/                  pure helpers and UI hooks
-  context/cart/         React context that wires the cart to its repository
+  services/             technical clients that implement no port: API client and errors, server config, image normalization
+  lib/                  pure helpers and UI hooks for the React side; the core never imports it
+  context/cart/         React context that wires the cart to the repositories it receives as props
   components/           one kebab-case folder per component: component.tsx, .css, __tests__/
   styles/               variables.css (design tokens) and globals.css
 e2e/                    Playwright specs, API warm-up and the fake API used by one test
 ```
 
-Tests live in `__tests__/` next to the code they cover, and shared fixtures in `__mocks__/`. Use cases are tested with an in-memory repository, adapters with a stubbed API client.
+Tests live in `__tests__/` next to the code they cover, and shared fixtures in `__mocks__/`. Use cases, components and the cart context are tested with in-memory repositories, adapters with a stubbed API client or `fetch`, and the browser's composition root with the real `localStorage`.
 
 Only the server talks to the API:
 
-1. The list and detail pages are server components that run the `get-products` and `get-product` use cases with `apiProductRepository`. The cart lives in the browser and needs no API call.
-2. The use cases remove duplicated phones; the repository validates the API data and points images to our domain.
+1. The list and detail pages are server components that hold `apiProductRepository`: the list runs the `get-products` use case with it, and the detail, which has no rule of its own, asks it for the phone. The cart lives in the browser and needs no API call to be shown.
+2. The repository validates the API data, removes repeated ids and points images to our domain; a use case exists only where there is a business rule.
 3. `apiClient` (`import 'server-only'`) is the one place that knows the API URL and key. It maps a 404 to "not found" and sets caching and timeouts.
 4. In the browser, the search calls our Route Handler `/api/products`, which runs the same use case.
 5. Product photos load from `/api/images/[file]`, which fetches the original from the API host and normalizes it.
