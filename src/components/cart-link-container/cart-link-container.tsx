@@ -6,10 +6,11 @@ import { useCart } from '@/context/cart/cart-context';
 import './cart-link-container.css';
 
 export function CartLinkContainer() {
-  const { count } = useCart();
+  const { count, isRestored } = useCart();
   const isCartPage = usePathname() === '/cart';
 
-  if (isCartPage && count === 0) return null;
+  // The count is unknown until the saved cart is read: no bag beats a wrong number.
+  if (!isRestored) return null;
   return (
     <div className={isCartPage ? 'cart-link-container--cart-page' : undefined}>
       <CartLink count={count} />
