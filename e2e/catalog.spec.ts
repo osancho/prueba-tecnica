@@ -65,6 +65,39 @@ test('lists and counts every different phone a search finds, even beyond 20', as
   ).toBeVisible();
 });
 
+test('shows the full list again when the user goes home after searching', async ({
+  page,
+}) => {
+  const { term, matches } = SEARCHES.brand;
+  await page.goto('/');
+  const searchBox = page.getByRole('searchbox', {
+    name: 'Search for a smartphone',
+  });
+  await searchBox.fill(term);
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(
+    matches,
+  );
+
+  await page.getByRole('link', { name: 'MBST home' }).click();
+
+  await expect(page).toHaveURL(/\/$/);
+  await expect(searchBox).toHaveValue('');
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(
+    LIST_SIZE,
+  );
+  await expect(
+    page.getByRole('main').getByText(`${LIST_SIZE} results`),
+  ).toBeVisible();
+
+  await page.goBack();
+
+  await expect(page).toHaveURL(new RegExp(`\\?search=${term}$`));
+  await expect(searchBox).toHaveValue(term);
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(
+    matches,
+  );
+});
+
 test('says so when a search finds no phone', async ({ page }) => {
   await page.goto('/');
 

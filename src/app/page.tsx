@@ -33,8 +33,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <main>
       {/* Figma shows no page title; the heading still names the page for screen readers and search engines. */}
       <h1 className="visually-hidden">Smartphones</h1>
+      {/* A new key per server render: a search typed on the page only reaches the URL through
+          replaceState, so the server's `search` alone cannot tell the home link apart from it. */}
       <ProductSearch
-        key={search}
+        key={Date.now()}
         initialSearch={search}
         initialProducts={products}
       />
