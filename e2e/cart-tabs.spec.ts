@@ -11,11 +11,13 @@ async function addGalaxy(page: Page) {
 
 async function addPixel(page: Page) {
   await page.goto('/product/GPX-8A');
-  // The first storage and the first color, whatever the catalog offers today.
-  const [storage, color] = await page
+  // The first storage and the first color, whatever the catalog offers today. `all()` does not
+  // wait, so the two groups are awaited first: the detail streams in after its loading state.
+  const groups = page
     .getByRole('group')
-    .filter({ has: page.getByRole('radio') })
-    .all();
+    .filter({ has: page.getByRole('radio') });
+  await expect(groups).toHaveCount(2);
+  const [storage, color] = await groups.all();
   await storage.locator('label').first().click();
   await color.locator('label').first().click();
   await page.getByRole('button', { name: 'Añadir' }).click();
