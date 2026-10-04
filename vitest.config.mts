@@ -25,6 +25,8 @@ export default defineConfig({
       reporter: ['text', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.test.{ts,tsx}', 'src/**/__mocks__/**'],
+      // Just below the current figures, so a change that drops coverage fails CI.
+      thresholds: { statements: 94, branches: 96, functions: 95, lines: 94 },
     },
   },
 });
