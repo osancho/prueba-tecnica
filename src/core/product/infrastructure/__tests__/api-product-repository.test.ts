@@ -26,7 +26,6 @@ function productDetail(overrides: Partial<Product> = {}): Product {
   return {
     ...phone('MAIN'),
     description: 'Description',
-    rating: 4,
     specs: {
       screen: '',
       resolution: '',
@@ -71,6 +70,28 @@ describe('apiProductRepository.list', () => {
     const products = await apiProductRepository.list({ limit: 40 });
 
     expect(products.map(({ id }) => id)).toEqual(['P1', 'P4']);
+  });
+
+  it('returns each phone once when the API repeats an id', async () => {
+    apiClientMock.mockResolvedValue([phone('P1'), phone('P2'), phone('P1')]);
+
+    const products = await apiProductRepository.list({});
+
+    expect(products.map(({ id }) => id)).toEqual(['P1', 'P2']);
+  });
+
+  it('asks for more phones than the limit, so repeated ids never leave the list short', async () => {
+    const ids = Array.from({ length: 24 }, (_, index) => `P${index}`);
+    apiClientMock.mockResolvedValue([phone('P0'), ...ids.map(phone)]);
+
+    const products = await apiProductRepository.list({ limit: 20 });
+
+    expect(apiClientMock).toHaveBeenCalledWith(
+      '/products',
+      expect.objectContaining({ limit: '40' }),
+      expect.anything(),
+    );
+    expect(products.map(({ id }) => id)).toEqual(ids.slice(0, 20));
   });
 
   it('fails when the API does not answer with a list', async () => {
@@ -134,6 +155,18 @@ describe('apiProductRepository.findById', () => {
     );
   });
 
+  it('lists each similar product once when the API repeats an id', async () => {
+    apiClientMock.mockResolvedValue(
+      productDetail({
+        similarProducts: [phone('S1'), phone('S2'), phone('S1')],
+      }),
+    );
+
+    const product = await apiProductRepository.findById('MAIN');
+
+    expect(product?.similarProducts.map(({ id }) => id)).toEqual(['S1', 'S2']);
+  });
+
   it('leaves out malformed similar products', async () => {
     apiClientMock.mockResolvedValue(
       productDetail({
@@ -171,6 +204,7 @@ describe('apiProductRepository.findById', () => {
   it.each([
     ['no id', { id: undefined }],
     ['no name', { name: undefined }],
+    ['no description', { description: undefined }],
     ['no storage options', { storageOptions: undefined }],
     ['no color options', { colorOptions: undefined }],
     ['a price that is not a number', { basePrice: '1329' }],

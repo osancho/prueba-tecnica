@@ -14,6 +14,7 @@ function phoneWithChangingPrice(id, price) {
     id,
     brand: 'Test',
     name: 'Changing price',
+    description: 'A phone for tests.',
     basePrice: price,
     specs: {},
     colorOptions: [
