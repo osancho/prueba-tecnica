@@ -1,4 +1,10 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CartProvider } from '@/context/cart/cart-context';
@@ -182,5 +188,25 @@ describe('Cart', () => {
     await waitFor(() => expect(findById).toHaveBeenCalled());
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
     expect(screen.getAllByRole('listitem')).toHaveLength(1);
+  });
+
+  it('shows a phone added in another tab, without moving the focus or checking the catalog again', async () => {
+    renderCartWith([violetGalaxy]);
+    const remove = await screen.findByRole('button', {
+      name: /Eliminar Galaxy S24 Ultra/,
+    });
+    await waitFor(() => expect(findById).toHaveBeenCalledTimes(1));
+    remove.focus();
+
+    localStorage.setItem('mbst-cart', JSON.stringify([violetGalaxy, pixel]));
+    fireEvent(window, new StorageEvent('storage', { key: 'mbst-cart' }));
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Cart (2)' }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    expect(remove).toHaveFocus();
+    expect(findById).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 });

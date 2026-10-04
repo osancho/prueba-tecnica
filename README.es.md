@@ -20,7 +20,7 @@ Cinco archivos, en este orden, enseñan todo el diseño:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
 
-Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 9 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
+Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 10 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
 
 ## Más allá del enunciado, y por qué
 
@@ -158,6 +158,7 @@ Solo el servidor habla con la API:
 - **Carrito con Context y `useReducer`.** Cuatro acciones (añadir, eliminar, restaurar y aplicar la comprobación del catálogo) no necesitan ninguna librería.
 - **Una línea por cada "Añadir"**, porque Figma no tiene control de cantidad. Un id aleatorio de `crypto.getRandomValues()`, que también funciona por HTTP sin cifrar, permite que "Eliminar" quite exactamente esa línea.
 - **El carrito guardado se lee después del montaje y se valida**, para que el servidor y el primer render del cliente coincidan y se ignoren datos editados o antiguos. El total se suma en céntimos.
+- **Un solo carrito entre pestañas.** Cada cambio se aplica al carrito tal como está guardado en ese momento, no a la copia que una pestaña leyó antes, así que dos pestañas nunca se pisan; las pestañas abiertas siguen al carrito guardado, también cuando una página vuelve de la caché de atrás/adelante. Solo dos escrituras separadas por menos de un milisegundo podrían chocar. Si el navegador bloquea el almacenamiento, el carrito vive en memoria durante la visita.
 - **El carrito guardado se comprueba contra el catálogo al abrirlo.** Puede llevar días en `localStorage`, mientras que el catálogo pertenece a una API externa que cambia por su cuenta; así, un teléfono que ya no se vende o un precio nuevo se ven antes de pagar, no después. Cada teléfono se pide una sola vez a `/api/products/[id]`: una línea cuyo teléfono, almacenamiento o color ya no se vende se quita, una línea cuyo almacenamiento ha cambiado de precio recibe el actual, y un mensaje breve lo cuenta. Un teléfono que no se puede comprobar (error de red, API caída) se deja como está, así que una petición fallida nunca vacía un carrito. Los cambios se aplican por línea, así que una línea eliminada mientras tanto sigue eliminada.
 - **Un teléfono que ya no está en el catálogo responde `null`, no 404**, desde `/api/products/[id]`: para el carrito es una respuesta esperada, y un 404 escribiría un error en la consola del navegador.
 - **El almacenamiento, el color y la búsqueda viven en la URL**, así que un teléfono configurado o una búsqueda se pueden compartir. `replaceState` evita que Atrás deshaga cada elección.
@@ -209,6 +210,7 @@ Solo el servidor habla con la API:
 - **Comprobaciones de accesibilidad** con vitest-axe en todas las páginas. jsdom no carga CSS, así que el contraste lo comprueba la auditoría axe end-to-end.
 - **Tests end-to-end** (Playwright, solo Chromium) sobre el build de producción:
   - catálogo y búsqueda, detalle y añadir al carrito, y el carrito;
+  - el carrito compartido entre dos pestañas, antes y después de recargar;
   - todos los teléfonos del catálogo abren su detalle: los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar hace fallar la suite;
   - una auditoría axe (WCAG 2.2 AA y buenas prácticas, contraste incluido) de ocho pantallas a 393, 834 y 1920 px;
   - el recorrido completo solo con teclado, desde la búsqueda hasta quitar el teléfono del carrito;

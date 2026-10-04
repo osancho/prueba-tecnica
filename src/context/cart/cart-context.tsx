@@ -15,7 +15,7 @@ import {
   type CartLine,
   type NewCartLine,
 } from '@/core/cart/domain/cart-line';
-import { cartReducer } from '@/core/cart/domain/cart-reducer';
+import { cartReducer, type CartAction } from '@/core/cart/domain/cart-reducer';
 import { localStorageCartRepository as cartRepository } from '@/core/cart/infrastructure/local-storage-cart-repository';
 
 interface CartContextValue {
@@ -38,6 +38,14 @@ function newLineId(): string {
   ).join('');
 }
 
+// Another tab may have changed the saved cart since this one last read it, so each change is
+// applied to the saved lines and this tab shows the result. Without storage, the change is
+// applied to the lines in memory, which then hold the cart for this visit.
+function applyToSavedCart(action: CartAction): CartAction {
+  const saved = cartRepository.update((stored) => cartReducer(stored, action));
+  return saved ? { type: 'restore', lines: saved } : action;
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, dispatch] = useReducer(cartReducer, []);
   // Read after mount so the server and the first client render agree on an empty cart.
@@ -46,11 +54,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     dispatch({ type: 'restore', lines: cartRepository.load() });
     setIsRestored(true);
+    return cartRepository.subscribe((saved) =>
+      dispatch({ type: 'restore', lines: saved }),
+    );
   }, []);
-
-  useEffect(() => {
-    if (isRestored) cartRepository.save(lines);
-  }, [lines, isRestored]);
 
   const value = useMemo<CartContextValue>(
     () => ({
@@ -59,12 +66,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
       count: lines.length,
       total: cartTotal(lines),
       add: (line) =>
-        dispatch({
-          type: 'add',
-          line: { ...line, lineId: newLineId() },
-        }),
-      remove: (lineId) => dispatch({ type: 'remove', lineId }),
-      applyChanges: (changes) => dispatch({ type: 'apply-changes', changes }),
+        dispatch(
+          applyToSavedCart({
+            type: 'add',
+            line: { ...line, lineId: newLineId() },
+          }),
+        ),
+      remove: (lineId) =>
+        dispatch(applyToSavedCart({ type: 'remove', lineId })),
+      applyChanges: (changes) =>
+        dispatch(applyToSavedCart({ type: 'apply-changes', changes })),
     }),
     [lines, isRestored],
   );
