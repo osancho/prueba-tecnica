@@ -230,7 +230,7 @@
     --cart-total-justify: flex-start;
     --continue-shopping-width: 200px;
     --pay-width: 260px;
-    /* Only the tablet frames show the bag on the cart page, and only with products in it */
+    /* Only the tablet frames show the bag on the cart page, with or without products */
     --cart-page-bag-display: flex;
   }
 }
