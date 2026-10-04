@@ -3,12 +3,9 @@
 import { useRef, type PointerEvent } from 'react';
 import { ProductCard } from '@/components/product-card/product-card';
 import type { ProductListItem } from '@/core/product/domain/product';
+import { SIMILAR_IMAGE_SIZES } from '@/lib/product-image-sizes';
 import { useDragScroll } from '@/lib/use-drag-scroll';
 import './similar-products.css';
-
-// --similar-card-size (344px, 377px, 344px) minus the card's padding, gap and info line.
-const SIMILAR_IMAGE_SIZES =
-  '(min-width: 1280px) 257px, (min-width: 768px) 290px, 257px';
 
 interface SimilarProductsProps {
   products: ProductListItem[];
