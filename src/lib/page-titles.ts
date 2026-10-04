@@ -1,5 +1,6 @@
-export const DEFAULT_TITLE = 'Smartphones | MBST';
-export const TITLE_TEMPLATE = '%s | MBST';
+export const SITE_NAME = 'MBST';
+export const DEFAULT_TITLE = `Smartphones | ${SITE_NAME}`;
+export const TITLE_TEMPLATE = `%s | ${SITE_NAME}`;
 
 /** Full title of the list; the layout template does not reach pages in its own segment. */
 export function listDocumentTitle(search: string): string {
