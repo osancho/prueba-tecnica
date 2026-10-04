@@ -20,7 +20,7 @@ Five files, in this order, show the whole design:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
 
-Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 9 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
+Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 10 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
 
 ## Beyond the brief, and why
 
@@ -158,6 +158,7 @@ Only the server talks to the API:
 - **Cart with Context and `useReducer`.** Four actions (add, remove, restore and apply the catalog check) need no library.
 - **One line per "Añadir"**, because Figma has no quantity control. A random id from `crypto.getRandomValues()`, which also works over plain HTTP, lets "Eliminar" remove exactly that line.
 - **Stored cart read after mount and validated**, so server and first client render agree and edited or outdated data is ignored. The total is added in cents.
+- **One cart across tabs.** Every change is applied to the cart as saved at that moment, not to the copy a tab read earlier, so two tabs never overwrite each other; open tabs follow the saved cart, also when a page comes back from the back/forward cache. Only two writes within about a millisecond of each other could still collide. If the browser blocks storage, the cart lives in memory for the visit.
 - **The saved cart is checked against the catalog when it opens.** It can be days old in `localStorage`, while the catalog belongs to an external API that changes on its own; this way a phone that is no longer sold or a new price shows up before paying, not after. Each phone is asked once through `/api/products/[id]`: a line whose phone, storage or color is no longer sold is removed, a line whose storage changed price gets the current one, and a short message says so. A phone that cannot be checked (network error, API down) is left as it is, so a failed request never empties a cart. Changes apply by line, so a line removed meanwhile stays removed.
 - **A phone that left the catalog answers `null`, not 404**, from `/api/products/[id]`: it is an expected answer for the cart, and a 404 would print an error in the browser console.
 - **Storage, color and search live in the URL**, so a configured phone or a search can be shared. `replaceState` keeps Back from undoing each choice.
@@ -209,6 +210,7 @@ Only the server talks to the API:
 - **Accessibility checks** with vitest-axe on every page. jsdom loads no CSS, so contrast is checked by the end-to-end axe audit.
 - **End-to-end tests** (Playwright, Chromium only) on the production build:
   - catalog and search, detail and add-to-cart, and the cart;
+  - the cart shared between two tabs, before and after a reload;
   - every phone of the catalog opens its detail: the 20 of the list and the ones only "Similar items" links to, so a product the app cannot render fails the suite;
   - an axe audit (WCAG 2.2 AA and best practices, contrast included) of eight screens at 393, 834 and 1920 px;
   - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
