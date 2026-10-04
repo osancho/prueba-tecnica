@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CartProvider } from '@/context/cart/cart-context';
+import { inMemoryCartRepository } from '@/core/cart/domain/__mocks__/in-memory-cart-repository';
+import type { CartLine } from '@/core/cart/domain/cart-line';
 import { CartLinkContainer } from '../cart-link-container';
 
 const pathname = vi.hoisted(() => ({ current: '/' }));
@@ -18,28 +20,28 @@ const pixelLine = {
   price: 459,
 };
 
-const cartLink = (
-  <CartProvider>
+const cartLinkWith = (lines: CartLine[]) => (
+  <CartProvider
+    cartRepository={inMemoryCartRepository(lines)}
+    productRepository={{ findById: vi.fn() }}
+  >
     <CartLinkContainer />
   </CartProvider>
 );
 
 describe('CartLinkContainer', () => {
   afterEach(() => {
-    localStorage.clear();
     pathname.current = '/';
   });
 
   it('shows no count before the saved cart is read, so the page never says a wrong number', () => {
-    localStorage.setItem('mbst-cart', JSON.stringify([pixelLine]));
-
-    expect(renderToString(cartLink)).not.toContain('in the cart');
+    expect(renderToString(cartLinkWith([pixelLine]))).not.toContain(
+      'in the cart',
+    );
   });
 
   it('shows the saved count once the cart is read', async () => {
-    localStorage.setItem('mbst-cart', JSON.stringify([pixelLine]));
-
-    render(cartLink);
+    render(cartLinkWith([pixelLine]));
 
     expect(
       await screen.findByRole('link', { name: '1 product in the cart' }),
@@ -50,7 +52,7 @@ describe('CartLinkContainer', () => {
   it('keeps the bag on the cart page even with an empty cart', async () => {
     pathname.current = '/cart';
 
-    render(cartLink);
+    render(cartLinkWith([]));
 
     expect(
       await screen.findByRole('link', { name: '0 products in the cart' }),
