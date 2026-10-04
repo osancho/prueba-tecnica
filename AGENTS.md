@@ -2,7 +2,7 @@
 
 Instructions for every coding agent working on this repository.
 
-Technical test for a senior frontend role (Inditex / Zara): smartphone catalog with list, detail and cart views. Quality is what is evaluated: Figma fidelity, accessibility, tests, clean architecture, tidy Git history. Never invent anything that is not in the requirements or in the design.
+Technical test for a senior frontend role (Inditex / Zara): smartphone catalog with list, detail and cart views. Never invent anything that is not in the requirements or in the design.
 
 ## Git — hard rule
 
@@ -121,4 +121,4 @@ Naming:
 - Precise and complete wording in everything written (copy, alt texts, metadata, commits, docs).
 - Minimal by default: native platform and stdlib first, no speculative abstractions, smallest diff that fully meets the requirements. Never trade away accessibility, security or required features.
 - Tests describe what the end user experiences (named by outcome), not implementation details; pure helpers are covered through the behaviour that uses them. Server modules use `// @vitest-environment node`. Mocks/stubs are reset globally in `vitest.config.mts` — no per-file reset boilerplate.
-- Minimum tests: cart reducer, search, detail add-to-cart disabled state. Playwright 1.61.1 E2E (`e2e/`, Chromium only, `pnpm test:e2e`) runs the user journeys, the axe audit and a clean-console check on the production build against the fake API, with no network: specs take phones, prices and counts from `e2e/fixtures/catalog.ts`, never from literals, and anything new the journeys need from the API is added to the fake. `pnpm test:e2e:contract` (`playwright.contract.config.ts`, `e2e/contract/`) checks the app against the real API with no catalog value written in the specs; CI runs it as its own job with the `API_BASE_URL` and `API_KEY` secrets. No retries and no fixed waits in either.
+- Minimum tests: cart reducer, search, detail add-to-cart disabled state. Playwright 1.61.1 E2E (`e2e/`, Chromium only, `pnpm test:e2e`) runs the user journeys, the axe audit and a clean-console check on the production build against the fake API, with no network: specs take phones, prices and counts from `e2e/fixtures/catalog.ts`, never from literals, and anything new the journeys need from the API is added to the fake. `pnpm test:e2e:contract` (`playwright.contract.config.ts`, `e2e/contract/`) checks the app against the real API with no catalog value written in the specs; CI runs it as its own job with the `API_BASE_URL` and `API_KEY` secrets. No retries and no fixed waits in either, with one exception: the console spec waits a few seconds after `load`, because Chrome reports some warnings (unused preloads) on its own timer and exposes no event to wait for.

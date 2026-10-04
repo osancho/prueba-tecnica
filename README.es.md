@@ -27,7 +27,7 @@ Cinco archivos, en este orden, enseñan todo el diseño:
 4. `[src/core/cart/domain/cart-reducer.ts](src/core/cart/domain/cart-reducer.ts)`: las reglas del carrito, funciones puras sin React ni navegador.
 5. `[src/components/product-detail/product-detail.tsx](src/components/product-detail/product-detail.tsx)`: una vista montada con piezas probadas.
 
-Después, `[e2e/keyboard.spec.ts](e2e/keyboard.spec.ts)` recorre el viaje completo solo con teclado. La calidad de un vistazo: 42 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 10 specs de Playwright sobre el build de producción contra un catálogo fijo (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia), un spec de contrato contra la API real, y CI en cada pull request.
+Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 43 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 11 specs de Playwright sobre el build de producción contra un catálogo fijo (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia), un spec de contrato contra la API real, y CI en cada pull request.
 
 ## Más allá del enunciado, y por qué
 
@@ -222,19 +222,20 @@ Puntos ambiguos de Figma, y cómo se resolvió cada uno
 - **Tests unitarios y de componentes** (Vitest, Testing Library), con nombres que describen lo que vive el usuario.
 - **Comprobaciones de accesibilidad** con vitest-axe en todas las páginas. jsdom no carga CSS, así que el contraste lo comprueba la auditoría axe end-to-end.
 - **Tests end-to-end** (Playwright, solo Chromium) sobre el build de producción, contra una API falsa con un catálogo fijo (`e2e/fake-api.mjs`), así que una ejecución nunca depende de la red y da siempre el mismo resultado. El catálogo es una grabación del real (`e2e/fixtures/catalog.json`): 24 entradas con un id repetido, una búsqueda que encuentra más de 20 teléfonos, un teléfono al que le falta una especificación y precios de almacenamiento por debajo de `basePrice`. La API falsa dibuja las fotos, con el fondo blanco opaco incluido, así que el normalizador de imágenes hace su trabajo real:
-  - catálogo y búsqueda, detalle y añadir al carrito, y el carrito;
+  - catálogo y búsqueda, una búsqueda que falla en segundos cuando la API está caída, detalle y añadir al carrito, y el carrito;
   - el carrito compartido entre dos pestañas, antes y después de recargar;
   - un header que nunca muestra un contador distinto del guardado, y ninguno sin JavaScript;
   - una auditoría axe (WCAG 2.2 AA y buenas prácticas, contraste incluido) de ocho pantallas a 393, 834 y 1920 px;
   - el recorrido completo solo con teclado, desde la búsqueda hasta quitar el teléfono del carrito;
   - la comprobación del carrito contra el catálogo, con consola limpia;
+  - las cabeceras de seguridad en las páginas y en el proxy de búsqueda;
   - una comprobación que falla ante cualquier aviso o error en consola, o cualquier precarga de estilos sin usar, en el listado, un producto, el carrito y un 404;
   - un teléfono para el que la API falsa está caída, que demuestra que una página de producto pide la API una sola vez, y otro cuyo precio cambia en cada petición, que demuestra que la comprobación del carrito lee el catálogo en vivo.
   - La primera vez: `pnpm exec playwright install chromium`. Los puertos 3151 y 3199 tienen que estar libres; no hace falta `.env.local`.
 - **Specs de contrato** (`pnpm test:e2e:contract`) sobre el build de producción contra la API real, sin ningún teléfono, precio o recuento escrito en ellos: todos los teléfonos del catálogo abren su detalle con su foto (los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar falla aquí), una búsqueda por marca encuentra teléfonos de esa marca y un id desconocido muestra la página de no encontrado. Necesitan `.env.local` y el puerto 3150, y despiertan la API antes de empezar.
 - **Pre-commit**: Husky ejecuta lint-staged (ESLint y Prettier sobre los archivos preparados).
 - **CI** (GitHub Actions, cada acción fijada a un SHA de commit): comprobación de formato, lint, typecheck, tests con cobertura, build y SonarCloud; después, dos jobs independientes que suben el informe de Playwright si fallan: la suite end-to-end, sin secretos, y los specs de contrato, con los secretos de la API. Una API lenta o que haya cambiado solo puede hacer fallar el segundo.
-- **Flujo de Git**: una rama por cambio, Conventional Commits, y cada cambio fusionado mediante una [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) cuando pasa la CI.
+- **Flujo de Git**: una rama por cambio, Conventional Commits, y cada cambio fusionado mediante una [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) cuando pasa la CI. El repositorio se recreó el 3 de octubre de 2026; las fusiones #1 a #32 corresponden a pull requests de la copia anterior.
 
 ## Accesibilidad
 
@@ -266,6 +267,7 @@ Puntos ambiguos de Figma, y cómo se resolvió cada uno
 - La suite end-to-end corre sobre una grabación del catálogo (4 de octubre de 2026) con fotos dibujadas. Un cambio en la API real o en sus fotos solo lo ven los specs de contrato, que dependen de que la API real esté accesible.
 - La caché de imágenes normalizadas vive en el proceso del servidor y se vacía al reiniciarlo; `pnpm warm-up` la vuelve a llenar para la lista.
 - No hay diseño para los estados de 404, error y búsqueda fallida, ni para el mensaje de cambios del carrito: usan los tokens existentes con estilos mínimos.
-- Avisos de seguridad aceptados:
-  - 2 moderados en Vitest 3 (GHSA-82fw-gwwq-j7x9): solo en desarrollo; corregidos en Vitest 4.1.11, que requiere Node 20.
-  - 2 altos en las libvips y libheif que incluye sharp (GHSA-f88m-g3jw-g9cj, GHSA-rgj7-g3m4-5g8c): la app solo procesa imágenes del host de la API, y sharp 0.35.4, que corrige los dos, necesita Node 20.
+- Avisos de seguridad aceptados, todos los que informa `pnpm audit` (3 altos, 2 moderados):
+  - Altos, `sharp` (GHSA-f88m-g3jw-g9cj, libvips; GHSA-rgj7-g3m4-5g8c, libheif): la app solo procesa imágenes del host de la API (los usuarios no pueden subir ninguna), y sharp 0.35.4, que corrige los dos, necesita Node 20.
+  - Alto, `braces` (GHSA-vfj7-8cjw-p6xm, patrones muy anidados): solo en desarrollo, a través de `eslint-config-next` → `fast-glob` → `micromatch`; solo expande los globs de lint de este repositorio y no existe versión corregida.
+  - Moderados, `vitest` y `@vitest/mocker` (un mismo aviso, GHSA-82fw-gwwq-j7x9): solo en desarrollo, en el runner de tests; corregido en Vitest 4.1.11, que requiere Node 20.
