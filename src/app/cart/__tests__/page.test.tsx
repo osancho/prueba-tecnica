@@ -1,31 +1,28 @@
 import { render, screen } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { axe } from 'vitest-axe';
 import { CartProvider } from '@/context/cart/cart-context';
-import { httpProductRepository } from '@/core/product/infrastructure/http-product-repository';
+import { inMemoryCartRepository } from '@/core/cart/domain/__mocks__/in-memory-cart-repository';
+import type { CartLine } from '@/core/cart/domain/cart-line';
 import CartPage, { metadata } from '../page';
 
-vi.mock('@/core/product/infrastructure/http-product-repository', () => ({
-  httpProductRepository: { findById: vi.fn() },
-}));
+// Offline: the saved cart is shown as it was.
+const offlineCatalog = {
+  findById: () => Promise.reject(new Error('offline')),
+};
 
-function renderCartPage() {
+function renderCartPage(lines: CartLine[] = []) {
   return render(
-    <CartProvider>
+    <CartProvider
+      cartRepository={inMemoryCartRepository(lines)}
+      productRepository={offlineCatalog}
+    >
       <CartPage />
     </CartProvider>,
   );
 }
 
 describe('CartPage', () => {
-  // Offline: the saved cart is shown as it was.
-  beforeEach(() => {
-    vi.mocked(httpProductRepository.findById).mockRejectedValue(
-      new Error('offline'),
-    );
-  });
-  afterEach(() => localStorage.clear());
-
   it('shows the cart under its own title', async () => {
     renderCartPage();
 
@@ -39,7 +36,7 @@ describe('CartPage', () => {
     expect(metadata.robots).toEqual({ index: false, follow: true });
   });
 
-  it.each([
+  it.each<[string, CartLine[]]>([
     ['empty', []],
     [
       'with phones',
@@ -57,8 +54,7 @@ describe('CartPage', () => {
       ],
     ],
   ])('has no accessibility violations %s', async (_, lines) => {
-    localStorage.setItem('mbst-cart', JSON.stringify(lines));
-    const { container } = renderCartPage();
+    const { container } = renderCartPage(lines);
     await screen.findByRole('heading', { level: 1 });
 
     expect(await axe(container)).toHaveNoViolations();

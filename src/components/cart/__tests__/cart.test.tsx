@@ -1,23 +1,14 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CartProvider } from '@/context/cart/cart-context';
+import { inMemoryCartRepository } from '@/core/cart/domain/__mocks__/in-memory-cart-repository';
 import type { CartLine } from '@/core/cart/domain/cart-line';
 import { galaxy } from '@/core/product/domain/__mocks__/product-fixture';
-import { httpProductRepository } from '@/core/product/infrastructure/http-product-repository';
+import type { ProductRepository } from '@/core/product/domain/product-repository';
 import { Cart } from '../cart';
 
-vi.mock('@/core/product/infrastructure/http-product-repository', () => ({
-  httpProductRepository: { findById: vi.fn() },
-}));
-
-const findById = vi.mocked(httpProductRepository.findById);
+const findById = vi.fn<ProductRepository['findById']>();
 
 const violetGalaxy: CartLine = {
   lineId: 'line-1',
@@ -56,12 +47,16 @@ function stubAnimations() {
 const fadeOut = [{ opacity: 1 }, { opacity: 0 }];
 
 function renderCartWith(lines: CartLine[]) {
-  localStorage.setItem('mbst-cart', JSON.stringify(lines));
+  const cartRepository = inMemoryCartRepository(lines);
   render(
-    <CartProvider>
+    <CartProvider
+      cartRepository={cartRepository}
+      productRepository={{ findById }}
+    >
       <Cart />
     </CartProvider>,
   );
+  return cartRepository;
 }
 
 describe('Cart', () => {
@@ -69,7 +64,6 @@ describe('Cart', () => {
   beforeEach(() => {
     findById.mockRejectedValue(new Error('offline'));
   });
-  afterEach(() => localStorage.clear());
 
   it('lists every phone with its storage, color and price, and the total', async () => {
     renderCartWith([violetGalaxy, pixel]);
@@ -191,15 +185,14 @@ describe('Cart', () => {
   });
 
   it('shows a phone added in another tab, without moving the focus or checking the catalog again', async () => {
-    renderCartWith([violetGalaxy]);
+    const cartRepository = renderCartWith([violetGalaxy]);
     const remove = await screen.findByRole('button', {
       name: /Eliminar Galaxy S24 Ultra/,
     });
     await waitFor(() => expect(findById).toHaveBeenCalledTimes(1));
     remove.focus();
 
-    localStorage.setItem('mbst-cart', JSON.stringify([violetGalaxy, pixel]));
-    fireEvent(window, new StorageEvent('storage', { key: 'mbst-cart' }));
+    act(() => cartRepository.changeFromOutside([violetGalaxy, pixel]));
 
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Cart (2)' }),

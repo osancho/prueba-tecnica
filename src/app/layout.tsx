@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { CartLinkContainer } from '@/components/cart-link-container/cart-link-container';
 import { Navbar } from '@/components/navbar/navbar';
 import { PageLoadBar } from '@/components/page-load-bar/page-load-bar';
-import { CartProvider } from '@/context/cart/cart-context';
 import { DEFAULT_TITLE, TITLE_TEMPLATE } from '@/lib/page-titles';
+import { Providers } from './providers';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -23,13 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartProvider>
+        <Providers>
           <Navbar>
             <CartLinkContainer />
           </Navbar>
           <PageLoadBar />
           {children}
-        </CartProvider>
+        </Providers>
       </body>
     </html>
   );
