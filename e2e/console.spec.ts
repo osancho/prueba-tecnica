@@ -1,7 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 import { PHONE, UNKNOWN_PATH } from './fixtures/catalog';
 
-// Chrome reports some warnings, such as unused preloads, a few seconds after `load`.
+// The only fixed wait in the suites: Chrome reports some warnings, such as unused preloads, on
+// its own timer about three seconds after `load`, and exposes no event to wait for instead.
 const LATE_WARNINGS_DELAY = 5_500;
 
 /** Every warning and error the user would see in DevTools, browser-generated ones included. */
