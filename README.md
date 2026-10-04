@@ -8,7 +8,14 @@ A smartphone store built with Next.js 15 and React 19: browse and search the cat
 - **Detail** (`/product/[id]`): photo per color, storage and color selectors with the price updating as you choose, specs and similar phones.
 - **Cart** (`/cart`): one line per added phone, removal, total and an empty state.
 
-Live demo and screenshots are published with the deployment.
+**Live demo:** <https://zara.oscarsancho.dev>
+
+| List                                                        | Detail                                                          | Cart                                                  |
+| ----------------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
+| ![Phone list on desktop](docs/screenshots/list-desktop.png) | ![Phone detail on desktop](docs/screenshots/detail-desktop.png) | ![Cart on desktop](docs/screenshots/cart-desktop.png) |
+| ![Phone list on mobile](docs/screenshots/list-mobile.png)   | ![Phone detail on mobile](docs/screenshots/detail-mobile.png)   | ![Cart on mobile](docs/screenshots/cart-mobile.png)   |
+
+Search results: [desktop](docs/screenshots/search-desktop.png), [mobile](docs/screenshots/search-mobile.png).
 
 ## Reviewing in 15 minutes
 
@@ -20,7 +27,7 @@ Five files, in this order, show the whole design:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
 
-Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 10 Playwright specs on the production build against a fixed catalog (WCAG 2.2 AA audit at three widths, keyboard journey, clean console), a contract spec against the real API, and CI on every pull request.
+Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 42 unit and component test files with an axe check on every page, 10 Playwright specs on the production build against a fixed catalog (WCAG 2.2 AA audit at three widths, keyboard journey, clean console), a contract spec against the real API, and CI on every pull request.
 
 ## Beyond the brief, and why
 
@@ -55,7 +62,7 @@ How each point of the brief is met.
 | React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                  | React 19.1, plain CSS, Node 18.20.8, `CartContext`, `src/services/api-client.ts`                             |
 | Tests, accessibility, linters and formatters, clean console                         | [Quality](#quality), [Accessibility](#accessibility)                                                         |
 | Optional: SSR with Next.js and CSS variables                                        | Server components for the list and detail; tokens in `variables.css`                                         |
-| Optional: deployment                                                                | Own VPS on Node 18 (link above once published)                                                               |
+| Optional: deployment                                                                | Own VPS on Node 18: <https://zara.oscarsancho.dev>                                                           |
 
 ## Getting started
 
@@ -77,10 +84,11 @@ pnpm 10 skips dependency install scripts unless they are allowed: `pnpm.onlyBuil
 
 </details>
 
-| Variable       | Purpose                                                                           |
-| -------------- | --------------------------------------------------------------------------------- |
-| `API_BASE_URL` | Products API base URL, already set in `.env.example`.                             |
-| `API_KEY`      | Sent as the `x-api-key` header. Server only: never prefix it with `NEXT_PUBLIC_`. |
+| Variable       | Purpose                                                                             |
+| -------------- | ----------------------------------------------------------------------------------- |
+| `API_BASE_URL` | Products API base URL, already set in `.env.example`.                               |
+| `API_KEY`      | Sent as the `x-api-key` header. Server only: never prefix it with `NEXT_PUBLIC_`.   |
+| `SITE_URL`     | Public address of the deployed site, set before `pnpm build`. Empty for local runs. |
 
 ## Development and production
 
@@ -227,7 +235,7 @@ Only the server talks to the API:
 - **Contract specs** (`pnpm test:e2e:contract`) on the production build against the real API, with no phone, price or count written in them: every phone of the catalog opens its detail with its photo (the 20 of the list and the ones only "Similar items" links to, so a product the app cannot render fails here), a search by brand finds phones of that brand, and an unknown id shows the not-found page. They need `.env.local` and port 3150, and wake the API up first.
 - **Pre-commit**: Husky runs lint-staged (ESLint and Prettier on staged files).
 - **CI** (GitHub Actions, each action pinned to a commit SHA): format check, lint, typecheck, tests with coverage, build and SonarCloud, then two independent jobs that upload the Playwright report if they fail: the end-to-end suite, with no secrets, and the contract specs, with the API secrets. A slow or changed API can only fail the second.
-- **Git flow**: one branch per change, Conventional Commits, and every change merged through a reviewed [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr).
+- **Git flow**: one branch per change, Conventional Commits, and every change merged through a [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) once CI passes.
 
 ## Accessibility
 
@@ -246,7 +254,11 @@ Only the server talks to the API:
 - Each product page builds its title from brand and name, and its description from the "From" price, screen, processor and battery (`generateMetadata`).
 - A search has its own title ("Results for “galaxy” | MBST"); search pages and the cart are `noindex, follow`.
 - One `h1` per page (visually hidden on the list, where Figma shows no title), headings in order, `lang="en"`.
-- `robots.txt`, the sitemap, `metadataBase` and the Open Graph image come with the deployment, once the domain is known.
+- Every indexable page names its canonical address: a product shared with `?storage=` and `?color=` points to `/product/[id]`.
+- Shared links carry Open Graph and Twitter card data; a product adds its photo.
+- `robots.txt` leaves the pages and the photos open and keeps crawlers out of the search proxy; `sitemap.xml` lists the catalog page and every phone, read from the API on request.
+- Absolute addresses come from `SITE_URL`, set only on the deployed server, so a local run or CI never claims the public domain.
+- The `X-Powered-By` header is off.
 
 ## Known limitations
 
@@ -257,8 +269,8 @@ Only the server talks to the API:
 - There is no design for the 404, error and failed-search states, nor for the message about cart changes: they use the existing tokens with minimal styling.
 - Accepted security advisories:
   - 2 moderate in Vitest 3 (GHSA-82fw-gwwq-j7x9): development only; fixed in Vitest 4.1.11, which requires Node 20.
-  - High in the libvips bundled with sharp: the app only processes images from the API host.
+  - 2 high in the libvips and libheif bundled with sharp (GHSA-f88m-g3jw-g9cj, GHSA-rgj7-g3m4-5g8c): the app only processes images from the API host, and sharp 0.35.4, which fixes both, requires Node 20.
 
 ## How this was built
 
-I built this project with AI assistance (Claude Code), working under explicit rules versioned in [`AGENTS.md`](AGENTS.md): Node 18 end to end, Figma as the source of truth, accessibility, tests named after behaviour and a single source of truth for every value. I reviewed every change in a pull request, and checked every design decision against the Figma file.
+I built this project with AI assistance (Claude Code), working under explicit rules versioned in [`AGENTS.md`](AGENTS.md): Node 18 end to end, Figma as the source of truth, accessibility, tests named after behaviour and a single source of truth for every value. I read every change before merging its pull request, and checked every design decision against the Figma file.
