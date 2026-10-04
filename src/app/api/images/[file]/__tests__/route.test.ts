@@ -59,6 +59,56 @@ describe('GET /api/images/[file]', () => {
     );
   });
 
+  it('prepares a picture once however many requests ask for it at the same time', async () => {
+    let answerOriginal = () => {};
+    fetchMock.mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          answerOriginal = () => resolve(new Response(new Uint8Array([1])));
+        }),
+    );
+    normalizeMock.mockResolvedValue(Buffer.from([4, 4]));
+
+    const requests = Array.from({ length: 20 }, () =>
+      requestImage('APL-IP15-negro.webp'),
+    );
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    answerOriginal();
+    const responses = await Promise.all(requests);
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(normalizeMock).toHaveBeenCalledOnce();
+    expect(responses.map((response) => response.status)).toEqual(
+      Array(20).fill(200),
+    );
+  });
+
+  it('fails every request waiting on a picture together, then tries again for the next one', async () => {
+    let failOriginal = () => {};
+    fetchMock
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((resolve) => {
+            failOriginal = () => resolve(new Response(null, { status: 500 }));
+          }),
+      )
+      .mockResolvedValueOnce(new Response(new Uint8Array([1])));
+    normalizeMock.mockResolvedValue(Buffer.from([4]));
+
+    const waiting = [
+      requestImage('APL-IP15-rosa.webp'),
+      requestImage('APL-IP15-rosa.webp'),
+    ];
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    failOriginal();
+
+    expect(
+      (await Promise.all(waiting)).map((response) => response.status),
+    ).toEqual([502, 502]);
+    expect((await requestImage('APL-IP15-rosa.webp')).status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it('prepares each width once, so every slot gets its own size', async () => {
     fetchMock.mockImplementation(
       async () => new Response(new Uint8Array([1, 2, 3])),
