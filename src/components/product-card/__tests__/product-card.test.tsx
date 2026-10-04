@@ -21,6 +21,15 @@ describe('ProductCard', () => {
     );
   });
 
+  it('keeps the link on the right phone whatever characters its id has', () => {
+    render(<ProductCard product={{ ...galaxy, id: 'SMG/S24U?#' }} />);
+
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      '/product/SMG%2FS24U%3F%23',
+    );
+  });
+
   it('announces brand, name and price, with the price formatted as in the design', () => {
     render(<ProductCard product={galaxy} />);
 
