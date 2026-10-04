@@ -162,6 +162,7 @@ Solo el servidor habla con la API:
 ### Datos y API
 
 - **La key de la API nunca llega al navegador.** Las páginas piden los datos en el servidor y la búsqueda pasa por `/api/products`.
+- **Cabeceras de seguridad** en todas las respuestas: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin` y `Content-Security-Policy: frame-ancestors 'none'`. Se deja fuera una CSP completa porque los scripts inline de Next necesitarían `'unsafe-inline'`, que anula su protección, o un nonce por petición, que renderiza todas las páginas en dinámico y renuncia al catálogo en caché. HSTS lo pone el proxy HTTPS que hay delante de la app.
 - **Node 18 de principio a fin**, también en producción: la app corre en un VPS propio porque Vercel ya no ofrece Node 18. Las herramientas se mantienen en versiones mayores compatibles con Node 18, con versiones exactas donde importa (Next 15.5.27, Playwright 1.61.1, vitest-axe 0.1.0).
 - **Respuestas validadas.** Los type guards comprueban los datos en la frontera: un teléfono mal formado se queda fuera del listado, y un producto mal formado muestra la página de error en lugar de un falso "no encontrado". Una especificación que la API no envía no es un dato mal formado: el teléfono se abre, y la tabla de especificaciones y la meta descripción la omiten.
 - **Una sola llamada a la API por página de producto.** La página y sus metadatos comparten la petición con `cache()` de React, así que una API lenta o caída se espera una sola vez.
