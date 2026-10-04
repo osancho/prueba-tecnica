@@ -20,7 +20,7 @@ Cinco archivos, en este orden, enseñan todo el diseño:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): las reglas del carrito, funciones puras sin React ni navegador.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): una vista montada con piezas probadas.
 
-Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 10 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
+Después, [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) recorre el viaje completo solo con teclado. La calidad de un vistazo: 40 archivos de tests unitarios y de componentes con una comprobación axe en cada página, 11 specs de Playwright sobre el build de producción (auditoría WCAG 2.2 AA en tres anchos, recorrido con teclado, consola limpia) y CI en cada pull request.
 
 ## Más allá del enunciado, y por qué
 
@@ -158,6 +158,7 @@ Solo el servidor habla con la API:
 - **Carrito con Context y `useReducer`.** Cuatro acciones (añadir, eliminar, restaurar y aplicar la comprobación del catálogo) no necesitan ninguna librería.
 - **Una línea por cada "Añadir"**, porque Figma no tiene control de cantidad. Un id aleatorio de `crypto.getRandomValues()`, que también funciona por HTTP sin cifrar, permite que "Eliminar" quite exactamente esa línea.
 - **El carrito guardado se lee después del montaje y se valida**, para que el servidor y el primer render del cliente coincidan y se ignoren datos editados o antiguos. El total se suma en céntimos.
+- **Sin contador del carrito antes de leer el carrito guardado.** Hasta entonces la cantidad es desconocida, así que el header no muestra la bolsa en lugar de un "0" que sería falso para un carrito con productos, un estado que Figma nunca dibuja. El HTML del servidor tampoco lleva contador.
 - **Un solo carrito entre pestañas.** Cada cambio se aplica al carrito tal como está guardado en ese momento, no a la copia que una pestaña leyó antes, así que dos pestañas nunca se pisan; las pestañas abiertas siguen al carrito guardado, también cuando una página vuelve de la caché de atrás/adelante. Solo dos escrituras separadas por menos de un milisegundo podrían chocar. Si el navegador bloquea el almacenamiento, el carrito vive en memoria durante la visita.
 - **El carrito guardado se comprueba contra el catálogo al abrirlo.** Puede llevar días en `localStorage`, mientras que el catálogo pertenece a una API externa que cambia por su cuenta; así, un teléfono que ya no se vende o un precio nuevo se ven antes de pagar, no después. Cada teléfono se pide una sola vez a `/api/products/[id]`: una línea cuyo teléfono, almacenamiento o color ya no se vende se quita, una línea cuyo almacenamiento ha cambiado de precio recibe el actual, y un mensaje breve lo cuenta. Un teléfono que no se puede comprobar (error de red, API caída) se deja como está, así que una petición fallida nunca vacía un carrito. Los cambios se aplican por línea, así que una línea eliminada mientras tanto sigue eliminada.
 - **Un teléfono que ya no está en el catálogo responde `null`, no 404**, desde `/api/products/[id]`: para el carrito es una respuesta esperada, y un 404 escribiría un error en la consola del navegador.
@@ -177,7 +178,7 @@ Solo el servidor habla con la API:
 - Las medidas salen de la página Design; la página Proto se usa para el comportamiento y el movimiento. Algunos frames de Proto están desplazados unos píxeles respecto a Design (el buscador a 51 px del header en lugar de 60; "Specifications" a 140 px del botón de añadir en lugar de 154): se usan los valores de Design.
 - Los colores de las muestras y sus nombres vienen de la API (`hexCode`, `name`). Los frames de Figma usan colores de ejemplo y nombres de ejemplo en español ("Violeta Titanium") que no corresponden a ningún producto.
 - Un carrito con varios teléfonos los apila en móvil y tablet, y usa columnas de 548 px (el cart item de Figma) en escritorio.
-- La bolsa del header se oculta en la página del carrito, salvo en tablet con productos, como muestran los frames.
+- La bolsa del header se oculta en la página del carrito, salvo en tablet, donde los frames la muestran con o sin productos (bolsa vacía y "0" cuando el carrito está vacío).
 - "Continue shopping" lleva al listado completo, como en el prototipo.
 - Primera carga: el prototipo pasa de "Unloaded" (solo el header) a "Loading" (la barra negra crece hasta el ancho completo) y después muestra el listado, con retardos fijos que simulan la red. La app mantiene el timing exacto del prototipo en CSS puro: en una carga de página del listado, el header aparece con la barra de carga llenándose debajo (un solo elemento en el layout, así que nunca vuelve a empezar); cuando llega el listado, la barra se mantiene 300 ms y da paso al listado con el spring de entrada. Volver al listado navegando dentro de la app lo muestra al instante.
 - El prototipo hace un fundido cruzado directamente de una tarjeta al detalle. La app muestra la barra de carga solo mientras llega el producto y después el detalle entra con el spring del prototipo.
@@ -211,6 +212,7 @@ Solo el servidor habla con la API:
 - **Tests end-to-end** (Playwright, solo Chromium) sobre el build de producción:
   - catálogo y búsqueda, detalle y añadir al carrito, y el carrito;
   - el carrito compartido entre dos pestañas, antes y después de recargar;
+  - un header que nunca muestra un contador distinto del guardado, y ninguno sin JavaScript;
   - todos los teléfonos del catálogo abren su detalle: los 20 del listado y los que solo enlaza "Similar items", así que un producto que la app no sabe mostrar hace fallar la suite;
   - una auditoría axe (WCAG 2.2 AA y buenas prácticas, contraste incluido) de ocho pantallas a 393, 834 y 1920 px;
   - el recorrido completo solo con teclado, desde la búsqueda hasta quitar el teléfono del carrito;

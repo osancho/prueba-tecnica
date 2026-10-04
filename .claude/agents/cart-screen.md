@@ -20,7 +20,7 @@ You own the cart screen. Read `AGENTS.md` first and follow it: its rules on Git,
 - The cart is read from `localStorage` after mount, validated, and nothing about it leaves the browser except the catalog check.
 - Open tabs share one cart: every change is applied to the cart as saved at that moment, tabs follow it (also after a back/forward restore) without moving focus or checking the catalog again, and without storage the cart works in memory for the visit.
 - Opening the cart checks each phone once: lines no longer sold are removed, changed prices are updated, a `role="status"` message says so, and a failed check never changes the cart. A phone that left the catalog answers `null`, never a 404 that would print a console error.
-- The cart count in the header reads "N products in the cart".
+- The cart count in the header reads "N products in the cart", and the bag shows only once the saved cart is read, so no page ever shows a wrong count; on `/cart` it shows only on tablet, whatever the count.
 
 ## Before you hand back
 

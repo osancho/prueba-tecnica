@@ -20,7 +20,7 @@ Five files, in this order, show the whole design:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
 
-Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 10 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
+Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 40 unit and component test files with an axe check on every page, 11 Playwright specs on the production build (WCAG 2.2 AA audit at three widths, keyboard journey, clean console) and CI on every pull request.
 
 ## Beyond the brief, and why
 
@@ -158,6 +158,7 @@ Only the server talks to the API:
 - **Cart with Context and `useReducer`.** Four actions (add, remove, restore and apply the catalog check) need no library.
 - **One line per "Añadir"**, because Figma has no quantity control. A random id from `crypto.getRandomValues()`, which also works over plain HTTP, lets "Eliminar" remove exactly that line.
 - **Stored cart read after mount and validated**, so server and first client render agree and edited or outdated data is ignored. The total is added in cents.
+- **No cart count before the saved cart is read.** Until then the count is unknown, so the header shows no bag rather than a "0" that would be wrong for a cart with products, a state Figma never draws. The server HTML carries no count either.
 - **One cart across tabs.** Every change is applied to the cart as saved at that moment, not to the copy a tab read earlier, so two tabs never overwrite each other; open tabs follow the saved cart, also when a page comes back from the back/forward cache. Only two writes within about a millisecond of each other could still collide. If the browser blocks storage, the cart lives in memory for the visit.
 - **The saved cart is checked against the catalog when it opens.** It can be days old in `localStorage`, while the catalog belongs to an external API that changes on its own; this way a phone that is no longer sold or a new price shows up before paying, not after. Each phone is asked once through `/api/products/[id]`: a line whose phone, storage or color is no longer sold is removed, a line whose storage changed price gets the current one, and a short message says so. A phone that cannot be checked (network error, API down) is left as it is, so a failed request never empties a cart. Changes apply by line, so a line removed meanwhile stays removed.
 - **A phone that left the catalog answers `null`, not 404**, from `/api/products/[id]`: it is an expected answer for the cart, and a 404 would print an error in the browser console.
@@ -177,7 +178,7 @@ Only the server talks to the API:
 - Sizes come from the Design page; the Proto page is used for behaviour and motion. Some Proto frames sit a few pixels off the Design ones (search 51 px under the header instead of 60; "Specifications" 140 px under the add button instead of 154): the Design values are used.
 - The colour swatches and names come from the API (`hexCode`, `name`). The Figma frames use sample colours and Spanish sample names ("Violeta Titanium") that do not match any product.
 - A cart with several phones stacks them on mobile and tablet, and uses 548 px columns (the Figma cart item) on desktop.
-- The header bag is hidden on the cart page except on tablet with products in the cart, as the frames show.
+- The header bag is hidden on the cart page except on tablet, where the frames show it with or without products (an outline bag and "0" when the cart is empty).
 - "Continue shopping" goes to the full list, as in the prototype.
 - First load: the prototype goes from "Unloaded" (header only) to "Loading" (the black bar grows to full width), then reveals the list, with fixed delays standing in for the network. The app keeps the prototype's exact timing in pure CSS: on a page load of the list, the header shows with the loading bar filling under it (a single element in the layout, so it never starts over); when the list arrives, the bar holds 300 ms and hands over to the list with the reveal spring. Navigating back to the list inside the app shows it at once.
 - The prototype cross-fades from a card straight into the detail. The app shows the loading bar only while the product is on its way, then the detail enters with the prototype's spring.
@@ -211,6 +212,7 @@ Only the server talks to the API:
 - **End-to-end tests** (Playwright, Chromium only) on the production build:
   - catalog and search, detail and add-to-cart, and the cart;
   - the cart shared between two tabs, before and after a reload;
+  - a header that never shows a cart count other than the saved one, and none without JavaScript;
   - every phone of the catalog opens its detail: the 20 of the list and the ones only "Similar items" links to, so a product the app cannot render fails the suite;
   - an axe audit (WCAG 2.2 AA and best practices, contrast included) of eight screens at 393, 834 and 1920 px;
   - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
