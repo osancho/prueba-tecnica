@@ -16,7 +16,7 @@ You own the product list screen. Read `AGENTS.md` first and follow it: its rules
 ## What this screen must keep doing
 
 - Without a search, exactly the first 20 different phones; with a search, every different phone that matches, and the results count says that number. Duplicated ids from the API never reach the grid.
-- Search filtered by the API, after a ~300 ms pause, cancelling the previous request; the term lives in the URL with `replaceState`; one retry on a network error or a 5xx; Enter repeats a failed search.
+- Search filtered by the API, after a ~300 ms pause, cancelling the previous request; the term lives in the URL with `replaceState`; one retry on a network error or a 5xx, each attempt bounded by `SEARCH_TIMEOUT_MS` so a failed search shows its message within seconds; Enter repeats a failed search.
 - The results count is an `aria-live` region and reads the right singular or plural.
 - On a page load, the loading bar shows only while the server prepares the list and fills once; the list is revealed the moment it arrives and nothing blocks interaction; navigating back to the list shows it at once.
 - The card link takes its name from the visible text; the picture keeps a descriptive `alt`.

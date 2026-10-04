@@ -208,15 +208,15 @@ Only the server talks to the API:
 
 ## API quirks
 
-| Problem                                                                       | How it is handled                                                                                                          |
-| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Repeated ids in the list and in similar products                              | 40 items are requested (the API holds 24) and duplicates removed; only the list without a search is cut to 20.             |
-| Images served over `http` and inconsistent                                    | Proxied and normalized through `/api/images` on our domain.                                                                |
-| `basePrice` differs from the storage prices                                   | Cards show `basePrice`, the detail the storage prices; see [Data and API](#data-and-api).                                  |
-| Unknown id answers 404 `NOT-FOUND`                                            | `apiClient` throws `NotFoundError`, and the page calls `notFound()`.                                                       |
-| Render free plan: the first request can take close to a minute                | 60 s timeout, one automatic retry for the search, the prototype's loading states, and a warm-up before the contract specs. |
-| A product without one of its specs (the iPhone 13 has no `screenRefreshRate`) | Every spec is optional: the phone opens, and the specs table and the meta description leave that spec out.                 |
-| Responses not shaped as documented                                            | Type guards drop invalid items and turn an invalid product into an error.                                                  |
+| Problem                                                                       | How it is handled                                                                                                                                                              |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Repeated ids in the list and in similar products                              | 40 items are requested (the API holds 24) and duplicates removed; only the list without a search is cut to 20.                                                                 |
+| Images served over `http` and inconsistent                                    | Proxied and normalized through `/api/images` on our domain.                                                                                                                    |
+| `basePrice` differs from the storage prices                                   | Cards show `basePrice`, the detail the storage prices; see [Data and API](#data-and-api).                                                                                      |
+| Unknown id answers 404 `NOT-FOUND`                                            | `apiClient` throws `NotFoundError`, and the page calls `notFound()`.                                                                                                           |
+| Render free plan: the first request can take close to a minute                | 60 s timeout for page loads; a search gives the API 4 s and retries once, so it fails within seconds; the prototype's loading states, and a warm-up before the contract specs. |
+| A product without one of its specs (the iPhone 13 has no `screenRefreshRate`) | Every spec is optional: the phone opens, and the specs table and the meta description leave that spec out.                                                                     |
+| Responses not shaped as documented                                            | Type guards drop invalid items and turn an invalid product into an error.                                                                                                      |
 
 ## Quality
 

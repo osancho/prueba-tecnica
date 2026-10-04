@@ -3,6 +3,10 @@ import 'server-only';
 // Render's free plan can take close to a minute to wake up.
 export const UPSTREAM_TIMEOUT_MS = 60_000;
 
+// A page load may wait for that wake-up; a search typed into a page that already loaded may not.
+// The browser retries a failed search once, so it gives up after about twice this.
+export const SEARCH_TIMEOUT_MS = 4_000;
+
 /**
  * Public address of the deployed site, for absolute URLs in metadata, robots and the sitemap.
  * Undefined where the app has no public address: local runs and CI.
