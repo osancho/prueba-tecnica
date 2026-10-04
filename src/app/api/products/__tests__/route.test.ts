@@ -2,7 +2,7 @@
 import { NextRequest } from 'next/server';
 import { describe, expect, it, vi } from 'vitest';
 import { getProducts } from '@/core/product/application/get-products';
-import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
+import { searchApiProductRepository } from '@/core/product/infrastructure/api-product-repository';
 import { GET } from '../route';
 
 vi.mock('@/core/product/application/get-products', () => ({
@@ -31,7 +31,7 @@ describe('GET /api/products', () => {
     const response = await GET(searchRequest('?search=%20galaxy%20'));
 
     expect(getProductsMock).toHaveBeenCalledWith(
-      apiProductRepository,
+      searchApiProductRepository,
       'galaxy',
     );
     expect(response.status).toBe(200);
@@ -44,7 +44,7 @@ describe('GET /api/products', () => {
     await GET(searchRequest('?search=%20%20'));
 
     expect(getProductsMock).toHaveBeenCalledWith(
-      apiProductRepository,
+      searchApiProductRepository,
       undefined,
     );
   });

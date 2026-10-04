@@ -2,10 +2,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import { apiClient } from '@/services/api-client';
 import { InvalidApiResponseError, NotFoundError } from '@/services/api-errors';
+import { SEARCH_TIMEOUT_MS } from '@/services/server-config';
 import type { Product, ProductListItem } from '../../domain/product';
 import {
   apiProductRepository,
   liveApiProductRepository,
+  searchApiProductRepository,
 } from '../api-product-repository';
 
 vi.mock('@/services/api-client', () => ({ apiClient: vi.fn() }));
@@ -269,5 +271,19 @@ describe('liveApiProductRepository', () => {
     await liveApiProductRepository.list({ limit: 40 });
 
     expect(apiClientMock.mock.calls[0][2]).toEqual({ cacheable: false });
+  });
+});
+
+describe('searchApiProductRepository', () => {
+  it('gives up on a search after the short search wait, while pages wait for the API to wake up', async () => {
+    apiClientMock.mockResolvedValue([]);
+
+    await searchApiProductRepository.list({ search: 'galaxy' });
+    await apiProductRepository.list({ search: 'galaxy' });
+
+    expect(apiClientMock.mock.calls[0][2]).toMatchObject({
+      timeoutMs: SEARCH_TIMEOUT_MS,
+    });
+    expect(apiClientMock.mock.calls[1][2]?.timeoutMs).toBeUndefined();
   });
 });
