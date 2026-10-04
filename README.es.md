@@ -107,38 +107,41 @@ pnpm build && pnpm start  # producción: recursos concatenados y minificados en 
 
 Hexagonal: las reglas de negocio no saben nada de Next, de la API ni del navegador; cada mundo exterior se conecta a través de un puerto.
 
-El catálogo y el carrito cambian por motivos distintos que el framework, así que cada parte puede evolucionar por su cuenta: el navegador ya accede al catálogo con un segundo adaptador (`http-product-repository`), un carrito en servidor u otra API serían un adaptador más, y los casos de uso se prueban con dobles simples en lugar de un framework mockeado.
+El catálogo y el carrito cambian por motivos distintos que el framework, así que cada parte puede evolucionar por su cuenta: el navegador ya accede al catálogo con un segundo adaptador (`http-product-repository`), un carrito en servidor u otra API serían un adaptador más, y tanto los casos de uso como la capa de React se prueban con dobles simples que reciben como argumentos o props, no con rutas de módulos mockeadas.
+
+La regla de dependencias la comprueba ESLint (`import/no-restricted-paths`), así que un import indebido hace fallar `pnpm lint`: el dominio solo importa del dominio, los casos de uso solo del dominio, los adaptadores solo del core y de `services`, y ningún componente, hook o contexto importa un adaptador.
 
 ```
 src/
-  app/                  rutas y punto de composición: entregan los adaptadores reales a los casos de uso
+  app/                  rutas y puntos de composición: el único código que nombra un adaptador
+    providers.tsx       el punto de composición del navegador: entrega al carrito su almacenamiento y su catálogo
     api/products        Route Handler de la búsqueda en el navegador
     api/products/[id]   un teléfono para la comprobación del carrito, sin que la key salga del servidor
     api/images          proxy de imágenes que normaliza las fotos de producto
   core/
     product/
-      domain/           tipos de Product, el puerto ProductRepository, la regla del precio "From"
-      application/      casos de uso: get-products (teléfonos únicos: los 20 primeros, o todas las coincidencias de una búsqueda), get-product
-      infrastructure/   api-product-repository: llama a la API, valida y construye las URLs de imagen;
+      domain/           tipos de Product, el puerto ProductRepository (teléfonos válidos, cada id una vez), la regla del precio "From"
+      application/      get-products: los 20 primeros teléfonos, o todas las coincidencias de una búsqueda
+      infrastructure/   api-product-repository: llama a la API, valida, quita los ids repetidos y construye las URLs de imagen;
                         http-product-repository: la entrada del navegador, a través de nuestro Route Handler
     cart/
       domain/           líneas del carrito, total, reducer, los cambios que puede traer la comprobación, puerto CartRepository
       application/      revalidate-cart: comprueba las líneas guardadas contra el catálogo
       infrastructure/   local-storage-cart-repository
-  services/             cliente y errores de la API, configuración del servidor, normalización de imágenes
-  lib/                  helpers puros y hooks de UI
-  context/cart/         contexto de React que conecta el carrito con su repositorio
+  services/             clientes técnicos que no implementan ningún puerto: cliente y errores de la API, configuración del servidor, normalización de imágenes
+  lib/                  helpers puros y hooks de UI para la parte de React; el core nunca lo importa
+  context/cart/         contexto de React que conecta el carrito con los repositorios que recibe por props
   components/           una carpeta en kebab-case por componente: component.tsx, .css, __tests__/
   styles/               variables.css (tokens de diseño) y globals.css
 e2e/                    specs de Playwright, calentamiento de la API y la API falsa que usa un test
 ```
 
-Los tests viven en `__tests__/`, junto al código que cubren, y los fixtures compartidos en `__mocks__/`. Los casos de uso se prueban con un repositorio en memoria; los adaptadores, con un cliente de API simulado.
+Los tests viven en `__tests__/`, junto al código que cubren, y los fixtures compartidos en `__mocks__/`. Los casos de uso, los componentes y el contexto del carrito se prueban con repositorios en memoria; los adaptadores, con un cliente de API o un `fetch` simulados; y el punto de composición del navegador, con el `localStorage` real.
 
 Solo el servidor habla con la API:
 
-1. Las páginas de listado y detalle son server components que ejecutan los casos de uso `get-products` y `get-product` con `apiProductRepository`. El carrito vive en el navegador y no necesita llamar a la API para mostrarse.
-2. Los casos de uso quitan los teléfonos duplicados; el repositorio valida los datos de la API y apunta las imágenes a nuestro dominio.
+1. Las páginas de listado y detalle son server components que tienen `apiProductRepository`: el listado ejecuta con él el caso de uso `get-products`, y el detalle, que no tiene regla propia, le pide el teléfono. El carrito vive en el navegador y no necesita llamar a la API para mostrarse.
+2. El repositorio valida los datos de la API, quita los ids repetidos y apunta las imágenes a nuestro dominio; solo hay caso de uso donde hay una regla de negocio.
 3. `apiClient` (`import 'server-only'`) es el único sitio que conoce la URL y la key de la API. Traduce un 404 a "no encontrado" y fija la caché y los timeouts.
 4. En el navegador, la búsqueda llama a nuestro Route Handler `/api/products`, que ejecuta el mismo caso de uso.
 5. Las fotos de producto se cargan desde `/api/images/[file]`, que pide el original al host de la API y lo normaliza.
