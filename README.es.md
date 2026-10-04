@@ -195,7 +195,7 @@ Puntos ambiguos de Figma, y cómo se resolvió cada uno
 ### Rendimiento
 
 - **Fotos de producto normalizadas.** Las fotos de la API son irregulares: algunas tienen el fondo blanco opaco y el teléfono ocupa entre el 60 % y el 100 % del encuadre. Lo correcto sería que el backend las entregara ya estandarizadas; hasta entonces, `/api/images` las normaliza con sharp al encuadre de Figma (fondo transparente, teléfono al 73,2 % de un cuadrado).
-- **Cada foto se descarga al tamaño que necesita su hueco.** `/api/images` redimensiona al normalizar, a uno de cinco anchos (360, 520, 648, 832 y 1260 px; el mayor es el detalle de escritorio, 630 px, a 2x); las fotos originales pequeñas nunca se amplían. `next/image` los pide con un loader propio y cada foto declara en `sizes` su tamaño en pantalla, así que el navegador elige la más pequeña que se ve nítida. Las 20 fotos del listado pasan de 1,16 MB a 203 kB a 1440 px en una pantalla 2x, y a 330 kB en un móvil 2x.
+- **Cada foto se descarga al tamaño que necesita su hueco.** `/api/images` redimensiona al normalizar, a uno de cinco anchos (360, 520, 648, 832 y 1260 px; el mayor es el detalle de escritorio, 630 px, a 2x); las fotos originales pequeñas nunca se amplían. `next/image` los pide con un loader propio y cada foto declara en `sizes` su tamaño en pantalla, así que el navegador elige la más pequeña que se ve nítida. `sizes` no puede leer propiedades personalizadas de CSS, así que los cuatro valores viven en `src/lib/product-image-sizes.ts` y un test los recalcula a partir de los tokens: cambiar el tamaño de una tarjeta o de una foto sin ellos hace fallar el test. Las 20 fotos del listado pasan de 1,16 MB a 203 kB a 1440 px en una pantalla 2x, y a 330 kB en un móvil 2x.
 - **Las imágenes normalizadas se guardan en memoria, una por ancho,** y se sirven como `immutable`, porque sus URLs llevan versión. Cualquier otro ancho se rechaza, así que la caché queda acotada por el catálogo (menos de 8 MB).
 - **El catálogo se cachea una hora; las búsquedas y la comprobación del carrito no.** Cada término de búsqueda sería una entrada nueva de caché en disco, y la comprobación del carrito tiene que ver un precio que cambió en la última hora. La lectura cacheada y la lectura en vivo son dos instancias del mismo adaptador, elegidas donde se conecta cada ruta.
 - **Sin prefetch en el enlace del carrito.** El prefetch de `/cart` precargaba su hoja de estilos en todas las páginas, y Chrome lo marcaba como precarga sin usar.
@@ -239,7 +239,7 @@ Puntos ambiguos de Figma, y cómo se resolvió cada uno
 - Los textos en español de Figma ("Añadir", "Eliminar") llevan `lang="es"` dentro de una página en inglés.
 - Las fotos de las tarjetas mantienen un `alt` descriptivo por si no cargan; el enlace de la tarjeta toma su nombre solo del texto visible, así que el teléfono se anuncia una vez.
 - El aviso de cambios del carrito es una región `role="status"`, presente desde el principio para que se anuncie al rellenarse.
-- Las animaciones respetan `prefers-reduced-motion`.
+- Los tamaños de letra y los interlineados son los valores en píxeles de Figma escritos en `rem`, así que el texto sigue el tamaño que el lector elige en el navegador; con la configuración por defecto las páginas son idénticas píxel a píxel a la versión en px, y al doble de tamaño nada se corta ni provoca scroll horizontal.
 - Dos decisiones deliberadas de Figma: el campo de búsqueda no tiene outline, porque el cursor de texto es su indicador de foco (el frame "Input active"), y el placeholder mantiene el gris del diseño.
 
 ## SEO

@@ -10,12 +10,9 @@ import { useCart } from '@/context/cart/cart-context';
 import { lowestPrice } from '@/core/product/domain/lowest-price';
 import type { Product } from '@/core/product/domain/product';
 import { formatPrice } from '@/lib/format-price';
+import { DETAIL_IMAGE_SIZES } from '@/lib/product-image-sizes';
 import { useSelectionInUrl } from './use-selection-in-url';
 import './product-detail.css';
-
-// The square photo covers the box, so it shows at the box height (--detail-image-width × ratio).
-const IMAGE_SIZES =
-  '(min-width: 1280px) 630px, (min-width: 768px) 416px, 273px';
 
 interface ProductDetailProps {
   product: Product;
@@ -58,7 +55,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
               src={shownColor.imageUrl}
               alt={`${brand} ${name} in ${shownColor.name}`}
               fill
-              sizes={IMAGE_SIZES}
+              sizes={DETAIL_IMAGE_SIZES}
               priority
             />
           </CrossFade>

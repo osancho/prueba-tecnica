@@ -92,7 +92,7 @@ Naming:
 - **Mobile first**: base styles for mobile, `@media (min-width: 768px)` tablet (Figma 834 frame values), `@media (min-width: 1280px)` desktop (Figma 1920 frame values).
 - BEM with full class names (`.product-card__price`), never nested with `&`.
 - Single source of truth: any value (size, color, spacing, breakpoint-dependent value) is defined once and referenced everywhere; changing it means editing one line. Responsive changes override the token inside the media query, not every component.
-- Every visual value comes from `src/styles/variables.css` (tokens from Figma). Breakpoints are documented there but written literally in `@media` (custom properties do not work in media queries).
+- Every visual value comes from `src/styles/variables.css` (tokens from Figma). Breakpoints are documented there but written literally in `@media` (custom properties do not work in media queries). Font sizes and line heights are Figma's px values in `rem` (16px = 1rem). The image `sizes` in `src/lib/product-image-sizes.ts` repeat token lengths because `sizes` cannot read custom properties; their test recomputes them from the tokens.
 - Font: `Helvetica, Arial, sans-serif`.
 
 ## API
