@@ -53,7 +53,7 @@ describe('HomePage', () => {
     });
     await expect(
       generateMetadata({ searchParams: searchParams() }),
-    ).resolves.toEqual({});
+    ).resolves.toEqual({ alternates: { canonical: '/' } });
   });
 
   it('has no accessibility violations', async () => {
