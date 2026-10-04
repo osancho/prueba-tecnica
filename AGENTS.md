@@ -2,7 +2,7 @@
 
 Instructions for every coding agent working on this repository.
 
-Technical test for a senior frontend role (Inditex / Zara): smartphone catalog with list, detail and cart views. Quality is what is evaluated: Figma fidelity, accessibility, tests, clean architecture, tidy Git history. Never invent anything that is not in the requirements or in the design.
+Technical test for a senior frontend role (Inditex / Zara): smartphone catalog with list, detail and cart views. Never invent anything that is not in the requirements or in the design.
 
 ## Git — hard rule
 
