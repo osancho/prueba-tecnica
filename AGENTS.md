@@ -97,7 +97,7 @@ Naming:
 - Unknown id → 404 `{ "error": "NOT-FOUND", "message": "Product not found" }` → Next.js `not-found`.
 - Render free plan: first request can be very slow → solid loading and error states.
 - Search: ~300 ms debounce + `AbortController` to cancel previous requests.
-- Cart persisted in `localStorage`, read after mount (no hydration mismatch). One cart line per "Añadir" (Figma has no quantity UI), keyed by a `lineId` from `crypto.randomUUID()`.
+- Cart persisted in `localStorage`, read after mount (no hydration mismatch). One cart line per "Añadir" (Figma has no quantity UI), keyed by a random `lineId` from `crypto.getRandomValues()` (`crypto.randomUUID()` only exists on HTTPS and `localhost`).
 
 ## Non-negotiable quality
 
