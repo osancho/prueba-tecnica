@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getProduct } from '@/core/product/application/get-product';
 import { liveApiProductRepository } from '@/core/product/infrastructure/api-product-repository';
 import type { ApiError } from '@/services/api-errors';
 
@@ -22,7 +21,7 @@ export async function GET(
   const { id } = await params;
 
   try {
-    return NextResponse.json(await getProduct(liveApiProductRepository, id), {
+    return NextResponse.json(await liveApiProductRepository.findById(id), {
       headers: NO_STORE,
     });
   } catch (error) {

@@ -64,13 +64,19 @@ function isSpecs(value: unknown): value is ProductSpecs {
   );
 }
 
-/** Checks what the detail page renders; similar products are filtered one by one later. */
-export function isProduct(value: unknown): value is Product {
+type ProductWithUncheckedSimilar = Omit<Product, 'similarProducts'> & {
+  similarProducts: unknown[];
+};
+
+function isProductWithUncheckedSimilar(
+  value: unknown,
+): value is ProductWithUncheckedSimilar {
   return (
     isObject(value) &&
     isText(value.id) &&
     isText(value.brand) &&
     isText(value.name) &&
+    typeof value.description === 'string' &&
     isPrice(value.basePrice) &&
     isSpecs(value.specs) &&
     Array.isArray(value.colorOptions) &&
@@ -79,4 +85,17 @@ export function isProduct(value: unknown): value is Product {
     value.storageOptions.every(isStorageOption) &&
     Array.isArray(value.similarProducts)
   );
+}
+
+/**
+ * The phone when it is well formed, null otherwise. A malformed similar product is left out
+ * rather than taking the whole phone down.
+ */
+export function parseProduct(value: unknown): Product | null {
+  if (!isProductWithUncheckedSimilar(value)) return null;
+
+  return {
+    ...value,
+    similarProducts: value.similarProducts.filter(isProductListItem),
+  };
 }

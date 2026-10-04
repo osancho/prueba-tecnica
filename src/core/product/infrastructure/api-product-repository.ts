@@ -1,10 +1,16 @@
-import { SEARCH_MAX_LENGTH } from '@/lib/search-term';
 import { apiClient } from '@/services/api-client';
 import { InvalidApiResponseError, NotFoundError } from '@/services/api-errors';
 import { productImageUrl } from '@/services/images/product-image-urls';
 import type { ProductListItem } from '../domain/product';
 import type { ProductRepository } from '../domain/product-repository';
-import { isProduct, isProductListItem } from './product-guards';
+import { SEARCH_MAX_LENGTH } from '../domain/search-term';
+import { isProductListItem, parseProduct } from './product-guards';
+import { uniqueById } from './unique-by-id';
+
+// The API repeats some ids, so it is asked for more phones than any list shows, to still fill
+// the list once the repeats are gone. It never returns more than its 24 entries, so the same
+// request also brings every match of a search.
+const API_LIST_LIMIT = 40;
 
 function withNormalizedImage(phone: ProductListItem): ProductListItem {
   return { ...phone, imageUrl: productImageUrl(phone.imageUrl) };
@@ -15,7 +21,10 @@ interface ApiProductRepositoryOptions {
   cacheable: boolean;
 }
 
-/** The catalog as served by the MBST API, validated and with every picture normalized. */
+/**
+ * The catalog as served by the MBST API: validated, each phone once and with every picture
+ * normalized.
+ */
 function createApiProductRepository({
   cacheable,
 }: ApiProductRepositoryOptions): ProductRepository {
@@ -24,21 +33,28 @@ function createApiProductRepository({
       // Every term would be a new cache entry on disk, so only the catalog without a search is kept.
       const phones = await apiClient<unknown>(
         '/products',
-        { search: search?.slice(0, SEARCH_MAX_LENGTH), limit: String(limit) },
+        {
+          search: search?.slice(0, SEARCH_MAX_LENGTH),
+          limit: String(API_LIST_LIMIT),
+        },
         { cacheable: cacheable && !search },
       );
       if (!Array.isArray(phones))
         throw new InvalidApiResponseError('/products');
 
       // A malformed phone is left out rather than taking the whole catalog down.
-      return phones.filter(isProductListItem).map(withNormalizedImage);
+      return uniqueById(phones.filter(isProductListItem))
+        .slice(0, limit)
+        .map(withNormalizedImage);
     },
 
     async findById(id) {
       const path = `/products/${encodeURIComponent(id)}`;
       try {
-        const product = await apiClient<unknown>(path, {}, { cacheable });
-        if (!isProduct(product)) throw new InvalidApiResponseError(path);
+        const product = parseProduct(
+          await apiClient<unknown>(path, {}, { cacheable }),
+        );
+        if (!product) throw new InvalidApiResponseError(path);
 
         return {
           ...product,
@@ -46,9 +62,9 @@ function createApiProductRepository({
             ...color,
             imageUrl: productImageUrl(color.imageUrl),
           })),
-          similarProducts: product.similarProducts
-            .filter(isProductListItem)
-            .map(withNormalizedImage),
+          similarProducts: uniqueById(product.similarProducts).map(
+            withNormalizedImage,
+          ),
         };
       } catch (error) {
         if (error instanceof NotFoundError) return null;

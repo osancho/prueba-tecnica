@@ -9,7 +9,7 @@ You own the cart screen. Read `AGENTS.md` first and follow it: its rules on Git,
 
 - Route: `src/app/cart/page.tsx` (`noindex, follow`); `src/app/api/products/[id]/route.ts` (one phone for the catalog check).
 - Components: `cart` (with `use-cart-revalidation.ts`), `cart-item`, `cross-fade`, `button`, `cart-link`, `cart-link-container`.
-- State: `context/cart/cart-context.tsx` wires the reducer to its repository.
+- State: `context/cart/cart-context.tsx` wires the reducer to the repositories it receives from `app/providers.tsx`.
 - Core: `core/cart/domain` (`cart-line`, `cart-reducer`, `cart-changes`, `cart-repository`), `core/cart/application/revalidate-cart.ts`, `core/cart/infrastructure/local-storage-cart-repository.ts`, `core/product/infrastructure/http-product-repository.ts`.
 - Tests: the `__tests__` folders of those files, `src/app/cart/__tests__/`; end to end `e2e/cart.spec.ts` and `cart-revalidation.spec.ts`, plus the cart cases in `accessibility.spec.ts`, `keyboard.spec.ts` and `console.spec.ts`.
 

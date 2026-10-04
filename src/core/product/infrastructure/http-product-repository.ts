@@ -1,5 +1,5 @@
 import type { ProductRepository } from '../domain/product-repository';
-import { isProduct } from './product-guards';
+import { parseProduct } from './product-guards';
 
 /**
  * The catalog as the browser reaches it: through our Route Handler, so the API key stays on the
@@ -12,9 +12,11 @@ export const httpProductRepository: Pick<ProductRepository, 'findById'> = {
     if (!response.ok)
       throw new Error(`Product request failed: ${response.status}`);
 
-    const product: unknown = await response.json();
-    if (product === null) return null;
-    if (!isProduct(product)) throw new Error(`Unexpected product: ${id}`);
+    const answer: unknown = await response.json();
+    if (answer === null) return null;
+
+    const product = parseProduct(answer);
+    if (!product) throw new Error(`Unexpected product: ${id}`);
     return product;
   },
 };

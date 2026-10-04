@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CartLinkContainer } from '@/components/cart-link-container/cart-link-container';
 import { CartProvider } from '@/context/cart/cart-context';
+import { inMemoryCartRepository } from '@/core/cart/domain/__mocks__/in-memory-cart-repository';
 import { ProductDetail } from '../product-detail';
 import { galaxy } from '@/core/product/domain/__mocks__/product-fixture';
 
@@ -16,7 +17,10 @@ vi.mock('next/navigation', () => ({
 
 function renderDetail() {
   render(
-    <CartProvider>
+    <CartProvider
+      cartRepository={inMemoryCartRepository()}
+      productRepository={{ findById: vi.fn() }}
+    >
       <CartLinkContainer />
       <ProductDetail product={galaxy} />
     </CartProvider>,

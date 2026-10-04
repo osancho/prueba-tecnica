@@ -1,6 +1,6 @@
 import { useId, useRef } from 'react';
 import { CloseIcon } from '@/components/icons/icons';
-import { SEARCH_MAX_LENGTH } from '@/lib/search-term';
+import { SEARCH_MAX_LENGTH } from '@/core/product/domain/search-term';
 import './search-box.css';
 
 interface SearchBoxProps {

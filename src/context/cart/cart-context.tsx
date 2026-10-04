@@ -16,7 +16,10 @@ import {
   type NewCartLine,
 } from '@/core/cart/domain/cart-line';
 import { cartReducer, type CartAction } from '@/core/cart/domain/cart-reducer';
-import { localStorageCartRepository as cartRepository } from '@/core/cart/infrastructure/local-storage-cart-repository';
+import type { CartRepository } from '@/core/cart/domain/cart-repository';
+import type { ProductRepository } from '@/core/product/domain/product-repository';
+
+type ProductLookup = Pick<ProductRepository, 'findById'>;
 
 interface CartContextValue {
   lines: CartLine[];
@@ -27,6 +30,14 @@ interface CartContextValue {
   add: (line: NewCartLine) => void;
   remove: (lineId: string) => void;
   applyChanges: (changes: CartChanges) => void;
+  /** The catalog the saved cart is checked against. */
+  productRepository: ProductLookup;
+}
+
+interface CartProviderProps {
+  cartRepository: CartRepository;
+  productRepository: ProductLookup;
+  children: ReactNode;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -38,15 +49,11 @@ function newLineId(): string {
   ).join('');
 }
 
-// Another tab may have changed the saved cart since this one last read it, so each change is
-// applied to the saved lines and this tab shows the result. Without storage, the change is
-// applied to the lines in memory, which then hold the cart for this visit.
-function applyToSavedCart(action: CartAction): CartAction {
-  const saved = cartRepository.update((stored) => cartReducer(stored, action));
-  return saved ? { type: 'restore', lines: saved } : action;
-}
-
-export function CartProvider({ children }: { children: ReactNode }) {
+export function CartProvider({
+  cartRepository,
+  productRepository,
+  children,
+}: CartProviderProps) {
   const [lines, dispatch] = useReducer(cartReducer, []);
   // Read after mount so the server and the first client render agree on an empty cart.
   const [isRestored, setIsRestored] = useState(false);
@@ -57,28 +64,31 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartRepository.subscribe((saved) =>
       dispatch({ type: 'restore', lines: saved }),
     );
-  }, []);
+  }, [cartRepository]);
 
-  const value = useMemo<CartContextValue>(
-    () => ({
+  const value = useMemo<CartContextValue>(() => {
+    // Another tab may have changed the saved cart since this one last read it, so each change
+    // is applied to the saved lines and this tab shows the result. Without storage, the change
+    // is applied to the lines in memory, which then hold the cart for this visit.
+    const change = (action: CartAction) => {
+      const saved = cartRepository.update((stored) =>
+        cartReducer(stored, action),
+      );
+      dispatch(saved ? { type: 'restore', lines: saved } : action);
+    };
+
+    return {
       lines,
       isRestored,
       count: lines.length,
       total: cartTotal(lines),
       add: (line) =>
-        dispatch(
-          applyToSavedCart({
-            type: 'add',
-            line: { ...line, lineId: newLineId() },
-          }),
-        ),
-      remove: (lineId) =>
-        dispatch(applyToSavedCart({ type: 'remove', lineId })),
-      applyChanges: (changes) =>
-        dispatch(applyToSavedCart({ type: 'apply-changes', changes })),
-    }),
-    [lines, isRestored],
-  );
+        change({ type: 'add', line: { ...line, lineId: newLineId() } }),
+      remove: (lineId) => change({ type: 'remove', lineId }),
+      applyChanges: (changes) => change({ type: 'apply-changes', changes }),
+      productRepository,
+    };
+  }, [lines, isRestored, cartRepository, productRepository]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
