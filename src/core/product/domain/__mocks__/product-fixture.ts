@@ -6,7 +6,6 @@ export const galaxy: Product = {
   name: 'Galaxy S24 Ultra',
   description: 'Samsung flagship with a 6.8 inch screen.',
   basePrice: 1329,
-  rating: 4.6,
   specs: {
     screen: '6.8" Dynamic AMOLED 2X',
     resolution: '3120 x 1440 pixels',

@@ -5,7 +5,6 @@ import { BackLink } from '@/components/back-link/back-link';
 import { ProductDetail } from '@/components/product-detail/product-detail';
 import { ProductSpecs } from '@/components/product-specs/product-specs';
 import { SimilarProducts } from '@/components/similar-products/similar-products';
-import { getProduct } from '@/core/product/application/get-product';
 import { lowestPrice } from '@/core/product/domain/lowest-price';
 import type { Product } from '@/core/product/domain/product';
 import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
@@ -15,7 +14,7 @@ import './page.css';
 // The page and its metadata both ask for the product. Next merges the two calls only when the
 // response is cached; when the API fails or is waking up it would be asked, and waited for,
 // twice. cache() keeps it to one call per render.
-const findProduct = cache((id: string) => getProduct(apiProductRepository, id));
+const findProduct = cache((id: string) => apiProductRepository.findById(id));
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
