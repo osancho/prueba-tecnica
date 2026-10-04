@@ -2,12 +2,13 @@ import type { Product, ProductListItem } from './product';
 
 export interface ProductQuery {
   search?: string;
-  limit: number;
+  /** Left out, every phone that matches. */
+  limit?: number;
 }
 
-/** Where the catalog comes from. Implementations return only well-formed phones. */
+/** Where the catalog comes from. Implementations return only well-formed phones, each id once. */
 export interface ProductRepository {
-  /** Up to `limit` phones; the source may repeat an id. */
+  /** The first `limit` phones in catalog order. */
   list(query: ProductQuery): Promise<ProductListItem[]>;
   /** Null when no phone has that id. */
   findById(id: string): Promise<Product | null>;

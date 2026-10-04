@@ -2,12 +2,13 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 import { CartProvider } from '@/context/cart/cart-context';
-import { getProduct } from '@/core/product/application/get-product';
+import { inMemoryCartRepository } from '@/core/cart/domain/__mocks__/in-memory-cart-repository';
 import { galaxy } from '@/core/product/domain/__mocks__/product-fixture';
+import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
 import ProductPage, { generateMetadata } from '../page';
 
-vi.mock('@/core/product/application/get-product', () => ({
-  getProduct: vi.fn(),
+vi.mock('@/core/product/infrastructure/api-product-repository', () => ({
+  apiProductRepository: { findById: vi.fn() },
 }));
 vi.mock('next/navigation', () => ({
   notFound: () => {
@@ -17,12 +18,12 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-const getProductMock = vi.mocked(getProduct);
+const findById = vi.mocked(apiProductRepository.findById);
 const params = (id: string) => Promise.resolve({ id });
 
 describe('ProductPage', () => {
   it('shows the not found page for an unknown phone', async () => {
-    getProductMock.mockResolvedValue(null);
+    findById.mockResolvedValue(null);
 
     await expect(ProductPage({ params: params('NOPE') })).rejects.toThrow(
       'NEXT_NOT_FOUND',
@@ -30,7 +31,7 @@ describe('ProductPage', () => {
   });
 
   it('describes the phone to search engines with its name and key specs', async () => {
-    getProductMock.mockResolvedValue(galaxy);
+    findById.mockResolvedValue(galaxy);
 
     await expect(
       generateMetadata({ params: params('SMG-S24U') }),
@@ -55,7 +56,7 @@ describe('ProductPage', () => {
   ])(
     'describes a phone without %s using only what it has',
     async (_, missing, description) => {
-      getProductMock.mockResolvedValue({
+      findById.mockResolvedValue({
         ...galaxy,
         specs: { ...galaxy.specs, ...missing },
       });
@@ -67,10 +68,13 @@ describe('ProductPage', () => {
   );
 
   it('has no accessibility violations', async () => {
-    getProductMock.mockResolvedValue(galaxy);
+    findById.mockResolvedValue(galaxy);
 
     const { container } = render(
-      <CartProvider>
+      <CartProvider
+        cartRepository={inMemoryCartRepository()}
+        productRepository={{ findById: vi.fn() }}
+      >
         {await ProductPage({ params: params('SMG-S24U') })}
       </CartProvider>,
     );

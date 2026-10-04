@@ -35,7 +35,6 @@ export interface Product {
   name: string;
   description: string;
   basePrice: number;
-  rating: number;
   specs: ProductSpecs;
   colorOptions: ColorOption[];
   storageOptions: StorageOption[];
