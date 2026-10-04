@@ -1,0 +1,2154 @@
+{
+  "list": [
+    {
+      "id": "SMG-S24U",
+      "brand": "Samsung",
+      "name": "Galaxy S24 Ultra",
+      "basePrice": 1329,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+    },
+    {
+      "id": "SMG-A25",
+      "brand": "Samsung",
+      "name": "Galaxy A25 5G",
+      "basePrice": 239,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+    },
+    {
+      "id": "GPX-8A",
+      "brand": "Google",
+      "name": "Pixel 8a",
+      "basePrice": 459,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+    },
+    {
+      "id": "APL-I15PM",
+      "brand": "Apple",
+      "name": "iPhone 15 Pro Max",
+      "basePrice": 1319,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+    },
+    {
+      "id": "OPP-A18",
+      "brand": "OPPO",
+      "name": "A18",
+      "basePrice": 99,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+    },
+    {
+      "id": "XMI-RN13P5G",
+      "brand": "Xiaomi",
+      "name": "Redmi Note 13 Pro 5G",
+      "basePrice": 399,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+    },
+    {
+      "id": "XMI-RN13P5G",
+      "brand": "Xiaomi",
+      "name": "Redmi Note 13 Pro 5G",
+      "basePrice": 399,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+    },
+    {
+      "id": "APL-IP13-128",
+      "brand": "Apple",
+      "name": "iPhone 13",
+      "basePrice": 619,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-medianoche.webp"
+    },
+    {
+      "id": "OPP-R11F",
+      "brand": "OPPO",
+      "name": "Reno 11 F",
+      "basePrice": 269,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R11F-verde.webp"
+    },
+    {
+      "id": "XIA-RN13",
+      "brand": "Xiaomi",
+      "name": "Redmi Note 13",
+      "basePrice": 169,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+    },
+    {
+      "id": "XMI-14",
+      "brand": "Xiaomi",
+      "name": "14",
+      "basePrice": 899,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-negro.webp"
+    },
+    {
+      "id": "SMG-A35",
+      "brand": "Samsung",
+      "name": "Galaxy A35 5G",
+      "basePrice": 333,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+    },
+    {
+      "id": "XMI-R13C",
+      "brand": "Xiaomi",
+      "name": "Redmi 13C",
+      "basePrice": 149,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-navy-blue.webp"
+    },
+    {
+      "id": "XMI-13TPro",
+      "brand": "XIAOMI",
+      "name": "13T Pro",
+      "basePrice": 553.31,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-13TPro-negro.webp"
+    },
+    {
+      "id": "SMG-A05S",
+      "brand": "Samsung",
+      "name": "Galaxy A05s",
+      "basePrice": 119,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-black.webp"
+    },
+    {
+      "id": "XIA-R12",
+      "brand": "Xiaomi",
+      "name": "Redmi 12",
+      "basePrice": 117.29,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-R12-sky-blue.webp"
+    },
+    {
+      "id": "SMG-S23FE",
+      "brand": "Samsung",
+      "name": "Galaxy S23 FE",
+      "basePrice": 699,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-purple.webp"
+    },
+    {
+      "id": "MTE-EDGE50PRO",
+      "brand": "Motorola",
+      "name": "edge 50 Pro",
+      "basePrice": 649,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTE-EDGE50PRO-negro.webp"
+    },
+    {
+      "id": "SNY-XPERIA1V",
+      "brand": "SONY",
+      "name": "Xperia 1 V",
+      "basePrice": 959.42,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SNY-XPERIA1V-negro.webp"
+    },
+    {
+      "id": "MTO-G24",
+      "brand": "Motorola",
+      "name": "g24",
+      "basePrice": 119,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTO-G24-gris.webp"
+    },
+    {
+      "id": "SMG-A15",
+      "brand": "Samsung",
+      "name": "Galaxy A15 LTE",
+      "basePrice": 159,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+    },
+    {
+      "id": "OPP-A60",
+      "brand": "OPPO",
+      "name": "A60",
+      "basePrice": 179,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-midnight-purple.webp"
+    },
+    {
+      "id": "OPP-R12FS",
+      "brand": "OPPO",
+      "name": "Reno 12 FS 4G",
+      "basePrice": 299,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R12FS-amber-orange.webp"
+    },
+    {
+      "id": "RLM-NOTE50",
+      "brand": "realme",
+      "name": "Note 50",
+      "basePrice": 99,
+      "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/RLM-NOTE50-midnight-black.webp"
+    }
+  ],
+  "details": {
+    "SMG-S24U": {
+      "id": "SMG-S24U",
+      "brand": "Samsung",
+      "name": "Galaxy S24 Ultra",
+      "description": "El Samsung Galaxy S24 Ultra es un smartphone de gama alta con una pantalla Dynamic AMOLED 2X de 6.8 pulgadas, procesador Qualcomm Snapdragon 8 Gen 3 for Galaxy, y un avanzado sistema de cámara con inteligencia artificial.",
+      "basePrice": 1329,
+      "rating": 4.6,
+      "specs": {
+        "screen": "6.8\" Dynamic AMOLED 2X",
+        "resolution": "3120 x 1440 pixels",
+        "processor": "Qualcomm Snapdragon 8 Gen 3 for Galaxy Octa-Core",
+        "mainCamera": "200 MP (F1.7) Principal, OIS + 10 MP (F2.4) Zoom x3, OIS + 12 MP (F2.2) Ultra gran angular + 50 MP (F3.4) Zoom x5, OIS",
+        "selfieCamera": "12 MP",
+        "battery": "5000 mAh",
+        "os": "Android 14",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Titanium Violet",
+          "hexCode": "#8E6F96",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "name": "Titanium Black",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-black.webp"
+        },
+        {
+          "name": "Titanium Gray",
+          "hexCode": "#808080",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-gray.webp"
+        },
+        {
+          "name": "Titanium Yellow",
+          "hexCode": "#FFFF00",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-yellow.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "256 GB",
+          "price": 1229
+        },
+        {
+          "capacity": "512 GB",
+          "price": 1329
+        },
+        {
+          "capacity": "1 TB",
+          "price": 1529
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "SMG-A25",
+          "brand": "Samsung",
+          "name": "Galaxy A25 5G",
+          "basePrice": 239,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "APL-IP13-128",
+          "brand": "Apple",
+          "name": "iPhone 13",
+          "basePrice": 619,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-medianoche.webp"
+        },
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "id": "SMG-A15",
+          "brand": "Samsung",
+          "name": "Galaxy A15 LTE",
+          "basePrice": 159,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        }
+      ]
+    },
+    "SMG-A25": {
+      "id": "SMG-A25",
+      "brand": "Samsung",
+      "name": "Galaxy A25 5G",
+      "description": "El Samsung Galaxy A25 5G es un smartphone de gama media con una pantalla FHD+ de 6.5 pulgadas, procesador Exynos 1280 Octa-Core, y una potente batería de 5000mAh, ofreciendo un rendimiento equilibrado y una experiencia 5G asequible.",
+      "basePrice": 239,
+      "rating": 4.3,
+      "specs": {
+        "screen": "6.5\" FHD+",
+        "resolution": "1080 x 2340 pixels",
+        "processor": "Samsung Exynos 1280 Octa-Core",
+        "mainCamera": "50 MP (F1.8) Principal, OIS + 8 MP (F2.2) Ultra gran angular + 2 MP (F2.4) Macro",
+        "selfieCamera": "13 MP",
+        "battery": "5000 mAh",
+        "os": "Android 14",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Negro",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+        },
+        {
+          "name": "Azul",
+          "hexCode": "#0000FF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-azul.webp"
+        },
+        {
+          "name": "Amarillo",
+          "hexCode": "#FFFF00",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-amarillo.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 219
+        },
+        {
+          "capacity": "256 GB",
+          "price": 239
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "OPP-A18",
+          "brand": "OPPO",
+          "name": "A18",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+        },
+        {
+          "id": "MTE-EDGE50PRO",
+          "brand": "Motorola",
+          "name": "edge 50 Pro",
+          "basePrice": 649,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTE-EDGE50PRO-negro.webp"
+        },
+        {
+          "id": "SMG-A15",
+          "brand": "Samsung",
+          "name": "Galaxy A15 LTE",
+          "basePrice": 159,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        },
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "id": "OPP-R11F",
+          "brand": "OPPO",
+          "name": "Reno 11 F",
+          "basePrice": 269,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R11F-verde.webp"
+        }
+      ]
+    },
+    "GPX-8A": {
+      "id": "GPX-8A",
+      "brand": "Google",
+      "name": "Pixel 8a",
+      "description": "Descubre Pixel 8a, creado por Google. Saca fotos magníficas con la Cámara Pixel. Haz más en menos tiempo con la IA de Google, como arreglar imágenes borrosas, filtrar llamadas y aprender cosas nuevas. Sus funciones de seguridad del más alto nivel ayudan a proteger tus datos. Y se ha diseñado para durar. Todo, a un precio excepcional.",
+      "basePrice": 459,
+      "rating": 4.7,
+      "specs": {
+        "screen": "6.1\" OLED Actua",
+        "resolution": "2400 x 1080 pixels",
+        "processor": "Google Tensor G3",
+        "mainCamera": "64 MP + 13 MP",
+        "selfieCamera": "13 MP",
+        "battery": "4492 mAh",
+        "os": "Android",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Obsidiana",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "name": "Porcelana",
+          "hexCode": "#F5F5F5",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-porcelana.webp"
+        },
+        {
+          "name": "Celeste",
+          "hexCode": "#87CEEB",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-celeste.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 459
+        },
+        {
+          "capacity": "256 GB",
+          "price": 509
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "XMI-14",
+          "brand": "Xiaomi",
+          "name": "14",
+          "basePrice": 899,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-negro.webp"
+        },
+        {
+          "id": "RLM-NOTE50",
+          "brand": "realme",
+          "name": "Note 50",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/RLM-NOTE50-midnight-black.webp"
+        },
+        {
+          "id": "SMG-S23FE",
+          "brand": "Samsung",
+          "name": "Galaxy S23 FE",
+          "basePrice": 699,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-purple.webp"
+        },
+        {
+          "id": "OPP-R11F",
+          "brand": "OPPO",
+          "name": "Reno 11 F",
+          "basePrice": 269,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R11F-verde.webp"
+        },
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        }
+      ]
+    },
+    "APL-I15PM": {
+      "id": "APL-I15PM",
+      "brand": "Apple",
+      "name": "iPhone 15 Pro Max",
+      "description": "El Apple iPhone 15 Pro Max es un smartphone de gama alta con una pantalla Super Retina XDR de 6.7 pulgadas, chip A17 Bionic, y un avanzado sistema de cámara con capacidades de IA.",
+      "basePrice": 1319,
+      "rating": 4.5,
+      "specs": {
+        "screen": "6.7\" Super Retina XDR",
+        "resolution": "2796 x 1290 pixels",
+        "processor": "A17 Bionic",
+        "mainCamera": "Sistema de cámaras Pro de 48 MP",
+        "selfieCamera": "12 MP TrueDepth",
+        "battery": "No especificada",
+        "os": "iOS",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Titanio Negro",
+          "hexCode": "#2C2C2C",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "name": "Titanio Blanco",
+          "hexCode": "#F0F0F0",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-blanco.webp"
+        },
+        {
+          "name": "Titanio Natural",
+          "hexCode": "#DBCEC3",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-natural.webp"
+        },
+        {
+          "name": "Titanio Azul",
+          "hexCode": "#3A4A5A",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-azul.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "256 GB",
+          "price": 1319
+        },
+        {
+          "capacity": "512 GB",
+          "price": 1449
+        },
+        {
+          "capacity": "1 TB",
+          "price": 1699
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "XMI-R13C",
+          "brand": "Xiaomi",
+          "name": "Redmi 13C",
+          "basePrice": 149,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-navy-blue.webp"
+        },
+        {
+          "id": "SMG-A25",
+          "brand": "Samsung",
+          "name": "Galaxy A25 5G",
+          "basePrice": 239,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+        },
+        {
+          "id": "OPP-A18",
+          "brand": "OPPO",
+          "name": "A18",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+        },
+        {
+          "id": "SMG-S23FE",
+          "brand": "Samsung",
+          "name": "Galaxy S23 FE",
+          "basePrice": 699,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-purple.webp"
+        },
+        {
+          "id": "MTO-G24",
+          "brand": "Motorola",
+          "name": "g24",
+          "basePrice": 119,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTO-G24-gris.webp"
+        },
+        {
+          "id": "XMI-14",
+          "brand": "Xiaomi",
+          "name": "14",
+          "basePrice": 899,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-negro.webp"
+        }
+      ]
+    },
+    "OPP-A18": {
+      "id": "OPP-A18",
+      "brand": "OPPO",
+      "name": "A18",
+      "description": "El OPPO A18 es un smartphone con 4 GB de RAM (ampliable hasta 8 GB), una gran batería de 5000 mAh, pantalla de luz solar de 90 Hz y una fluidez de 36 meses. Cuenta con un rendimiento fluido, una pantalla brillante y colores excelentes, modo Ultra Volumen para una claridad de audio excepcional, y un diseño sofisticado con desbloqueo lateral de huellas dactilares.",
+      "basePrice": 99,
+      "rating": 3,
+      "specs": {
+        "screen": "6.56\" HD+",
+        "resolution": "1612 x 720 pixels",
+        "processor": "MediaTek Helio G85",
+        "mainCamera": "No especificada",
+        "selfieCamera": "No especificada",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "90 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Azul brillante",
+          "hexCode": "#0000FF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 99
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "SMG-S23FE",
+          "brand": "Samsung",
+          "name": "Galaxy S23 FE",
+          "basePrice": 699,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-purple.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "SMG-A05S",
+          "brand": "Samsung",
+          "name": "Galaxy A05s",
+          "basePrice": 119,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-black.webp"
+        },
+        {
+          "id": "SMG-A15",
+          "brand": "Samsung",
+          "name": "Galaxy A15 LTE",
+          "basePrice": 159,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        },
+        {
+          "id": "SMG-A25",
+          "brand": "Samsung",
+          "name": "Galaxy A25 5G",
+          "basePrice": 239,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+        },
+        {
+          "id": "OPP-R12FS",
+          "brand": "OPPO",
+          "name": "Reno 12 FS 4G",
+          "basePrice": 299,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R12FS-amber-orange.webp"
+        }
+      ]
+    },
+    "XMI-RN13P5G": {
+      "id": "XMI-RN13P5G",
+      "brand": "Xiaomi",
+      "name": "Redmi Note 13 Pro 5G",
+      "description": "El Xiaomi Redmi Note 13 Pro 5G es un smartphone de gama media-alta con una pantalla AMOLED de 6.67 pulgadas, procesador Qualcomm Snapdragon 7 Gen 2, y una potente batería de 5100 mAh.",
+      "basePrice": 399,
+      "rating": 4.4,
+      "specs": {
+        "screen": "6.67\" AMOLED 1.5K",
+        "resolution": "1.5K",
+        "processor": "Qualcomm Snapdragon 7 Gen 2",
+        "mainCamera": "200 MP (información no disponible en el HTML)",
+        "selfieCamera": "16 MP (información no disponible en el HTML)",
+        "battery": "5100 mAh",
+        "os": "Android",
+        "screenRefreshRate": "120 Hz (información no disponible en el HTML)"
+      },
+      "colorOptions": [
+        {
+          "name": "Midnight Black",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "name": "Morado",
+          "hexCode": "#800080",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-morado.webp"
+        },
+        {
+          "name": "Azul",
+          "hexCode": "#0000FF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-azul.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "256 GB",
+          "price": 399
+        },
+        {
+          "capacity": "512 GB",
+          "price": 399
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "OPP-A18",
+          "brand": "OPPO",
+          "name": "A18",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+        },
+        {
+          "id": "XMI-13TPro",
+          "brand": "XIAOMI",
+          "name": "13T Pro",
+          "basePrice": 553.31,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-13TPro-negro.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "id": "APL-IP13-128",
+          "brand": "Apple",
+          "name": "iPhone 13",
+          "basePrice": 619,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-medianoche.webp"
+        },
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "id": "MTE-EDGE50PRO",
+          "brand": "Motorola",
+          "name": "edge 50 Pro",
+          "basePrice": 649,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTE-EDGE50PRO-negro.webp"
+        }
+      ]
+    },
+    "APL-IP13-128": {
+      "id": "APL-IP13-128",
+      "brand": "Apple",
+      "name": "iPhone 13",
+      "description": "El Apple iPhone 13 es un smartphone de gama alta con una pantalla OLED Super Retina XDR de 6.1 pulgadas, chip A15 Bionic, y un avanzado sistema de cámara dual.",
+      "basePrice": 619,
+      "rating": 4.6,
+      "specs": {
+        "screen": "6.1\" OLED Super Retina XDR",
+        "resolution": "2532 x 1170 pixels",
+        "processor": "Chip A15 Bionic",
+        "mainCamera": "Sistema de cámara dual de 12 MP",
+        "selfieCamera": "12 MP",
+        "battery": "No especificada",
+        "os": "iOS",
+        "storage": "128 GB"
+      },
+      "colorOptions": [
+        {
+          "name": "Medianoche",
+          "hexCode": "#1C1C1E",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-medianoche.webp"
+        },
+        {
+          "name": "Blanco estrella",
+          "hexCode": "#F9F6EF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-blanco-estrella.webp"
+        },
+        {
+          "name": "Rosa",
+          "hexCode": "#FEC2EB",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-rosa.webp"
+        },
+        {
+          "name": "(PRODUCT)RED",
+          "hexCode": "#BA0C2F",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-product-red.webp"
+        },
+        {
+          "name": "Azul",
+          "hexCode": "#215E7C",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-azul.webp"
+        },
+        {
+          "name": "Verde",
+          "hexCode": "#4E5851",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-verde.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 619
+        },
+        {
+          "capacity": "256 GB",
+          "price": 729
+        },
+        {
+          "capacity": "512 GB",
+          "price": 959
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "SMG-A05S",
+          "brand": "Samsung",
+          "name": "Galaxy A05s",
+          "basePrice": 119,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-black.webp"
+        },
+        {
+          "id": "OPP-A18",
+          "brand": "OPPO",
+          "name": "A18",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+        },
+        {
+          "id": "SNY-XPERIA1V",
+          "brand": "SONY",
+          "name": "Xperia 1 V",
+          "basePrice": 959.42,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SNY-XPERIA1V-negro.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "XIA-R12",
+          "brand": "Xiaomi",
+          "name": "Redmi 12",
+          "basePrice": 117.29,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-R12-sky-blue.webp"
+        }
+      ]
+    },
+    "OPP-R11F": {
+      "id": "OPP-R11F",
+      "brand": "OPPO",
+      "name": "Reno 11 F",
+      "description": "El OPPO Reno 11 F es un smartphone de gama media con una pantalla AMOLED FHD+ de 6.7 pulgadas, procesador MediaTek Dimensity 7050, y un avanzado sistema de cámara con funciones de inteligencia artificial.",
+      "basePrice": 269,
+      "rating": 4.7,
+      "specs": {
+        "screen": "6.7\" AMOLED FHD+",
+        "resolution": "FHD+",
+        "processor": "MediaTek Dimensity 7050",
+        "mainCamera": "64 MP cámara principal + Ultra Gran Angular + Cámara Macro",
+        "selfieCamera": "Cámara Selfie capaz de grabar vídeo en 4K",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Verde",
+          "hexCode": "#008000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R11F-verde.webp"
+        },
+        {
+          "name": "Azul",
+          "hexCode": "#0000FF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R11F-azul.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "256 GB",
+          "price": 269
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "RLM-NOTE50",
+          "brand": "realme",
+          "name": "Note 50",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/RLM-NOTE50-midnight-black.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "OPP-A60",
+          "brand": "OPPO",
+          "name": "A60",
+          "basePrice": 179,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-midnight-purple.webp"
+        },
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "id": "SMG-S23FE",
+          "brand": "Samsung",
+          "name": "Galaxy S23 FE",
+          "basePrice": 699,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-purple.webp"
+        }
+      ]
+    },
+    "XIA-RN13": {
+      "id": "XIA-RN13",
+      "brand": "Xiaomi",
+      "name": "Redmi Note 13",
+      "description": "El Xiaomi Redmi Note 13 es un smartphone con una pantalla AMOLED FHD+ de 6.67 pulgadas, procesador Snapdragon 685, y una potente batería de 5000 mAh, ofreciendo un rendimiento equilibrado y una experiencia de usuario fluida con Android.",
+      "basePrice": 169,
+      "rating": 4.4,
+      "specs": {
+        "screen": "6.67\" AMOLED FHD+",
+        "resolution": "FHD+",
+        "processor": "Snapdragon 685",
+        "mainCamera": "No especificada en la información proporcionada",
+        "selfieCamera": "No especificada en la información proporcionada",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "No especificada en la información proporcionada"
+      },
+      "colorOptions": [
+        {
+          "name": "Mint Green",
+          "hexCode": "#98FF98",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "name": "Azul",
+          "hexCode": "#0000FF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-azul.webp"
+        },
+        {
+          "name": "Midnight Black",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-midnight-black.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 169
+        },
+        {
+          "capacity": "256 GB",
+          "price": 189
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "SMG-A25",
+          "brand": "Samsung",
+          "name": "Galaxy A25 5G",
+          "basePrice": 239,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+        },
+        {
+          "id": "OPP-A18",
+          "brand": "OPPO",
+          "name": "A18",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+        },
+        {
+          "id": "SMG-A15",
+          "brand": "Samsung",
+          "name": "Galaxy A15 LTE",
+          "basePrice": 159,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        },
+        {
+          "id": "SNY-XPERIA1V",
+          "brand": "SONY",
+          "name": "Xperia 1 V",
+          "basePrice": 959.42,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SNY-XPERIA1V-negro.webp"
+        },
+        {
+          "id": "XMI-R13C",
+          "brand": "Xiaomi",
+          "name": "Redmi 13C",
+          "basePrice": 149,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-navy-blue.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        }
+      ]
+    },
+    "XMI-14": {
+      "id": "XMI-14",
+      "brand": "Xiaomi",
+      "name": "14",
+      "description": "El Xiaomi 14 es un smartphone de gama alta con una pantalla AMOLED de 6.36 pulgadas, procesador Snapdragon 8 Gen 3, y un avanzado sistema de cámara Leica con inteligencia artificial.",
+      "basePrice": 899,
+      "rating": 4.4,
+      "specs": {
+        "screen": "6.36\" AMOLED 120Hz",
+        "resolution": "2670 x 1200 pixels",
+        "processor": "Snapdragon 8 Gen 3",
+        "mainCamera": "50 MP Principal + 50 MP Ultra gran angular + 50 MP Teleobjetivo",
+        "selfieCamera": "32 MP",
+        "battery": "4610 mAh",
+        "os": "Android 14 (HyperOS)",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Negro",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-negro.webp"
+        },
+        {
+          "name": "Blanco",
+          "hexCode": "#FFFFFF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-blanco.webp"
+        },
+        {
+          "name": "Verde",
+          "hexCode": "#008000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-verde.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "256 GB",
+          "price": 849
+        },
+        {
+          "capacity": "512 GB",
+          "price": 899
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "id": "XIA-R12",
+          "brand": "Xiaomi",
+          "name": "Redmi 12",
+          "basePrice": 117.29,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-R12-sky-blue.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        }
+      ]
+    },
+    "SMG-A35": {
+      "id": "SMG-A35",
+      "brand": "Samsung",
+      "name": "Galaxy A35 5G",
+      "description": "El Samsung Galaxy A35 5G es un smartphone de gama media con una pantalla Super AMOLED FHD+ de 6.6 pulgadas y una tasa de refresco de 120 Hz. Cuenta con un procesador Octa-Core, un conjunto de cámaras versátil y una batería de larga duración de 5000 mAh.",
+      "basePrice": 333,
+      "rating": 4.2,
+      "specs": {
+        "screen": "6.6\" Super AMOLED FHD+",
+        "resolution": "2340 x 1080 pixels",
+        "processor": "Exynos 1380 Octa-Core",
+        "mainCamera": "50 MP (F1.8) Principal, OIS + 8 MP (F2.2) Gran angular + 5 MP Macro",
+        "selfieCamera": "13 MP",
+        "battery": "5000 mAh",
+        "os": "Android 14",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Light Blue",
+          "hexCode": "#87CEEB",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "name": "Black",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-black.webp"
+        },
+        {
+          "name": "Light Violet",
+          "hexCode": "#E6E6FA",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-violet.webp"
+        },
+        {
+          "name": "Yellow",
+          "hexCode": "#FFFF00",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-yellow.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 333
+        },
+        {
+          "capacity": "256 GB",
+          "price": 383
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "MTE-EDGE50PRO",
+          "brand": "Motorola",
+          "name": "edge 50 Pro",
+          "basePrice": 649,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTE-EDGE50PRO-negro.webp"
+        },
+        {
+          "id": "OPP-R12FS",
+          "brand": "OPPO",
+          "name": "Reno 12 FS 4G",
+          "basePrice": 299,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R12FS-amber-orange.webp"
+        },
+        {
+          "id": "APL-IP13-128",
+          "brand": "Apple",
+          "name": "iPhone 13",
+          "basePrice": 619,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-medianoche.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        }
+      ]
+    },
+    "XMI-R13C": {
+      "id": "XMI-R13C",
+      "brand": "Xiaomi",
+      "name": "Redmi 13C",
+      "description": "Bordes planos, mucha batería y una cámara de 50 megapíxels, el teléfono Xiaomi Redmi 13C es el candidato perfecto para ser un todoterreno de gama de entrada.",
+      "basePrice": 149,
+      "rating": 4.7,
+      "specs": {
+        "screen": "6.74\" HD+",
+        "resolution": "1600 x 720 pixels",
+        "processor": "MediaTek Helio G85",
+        "mainCamera": "50 MP Triple cámara",
+        "selfieCamera": "8 MP",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "90 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Navy Blue",
+          "hexCode": "#000080",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-navy-blue.webp"
+        },
+        {
+          "name": "Midnight Black",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-midnight-black.webp"
+        },
+        {
+          "name": "Clover Green",
+          "hexCode": "#228B22",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-clover-green.webp"
+        },
+        {
+          "name": "Glacier White",
+          "hexCode": "#F0F8FF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-glacier-white.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 139
+        },
+        {
+          "capacity": "256 GB",
+          "price": 149
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "id": "XIA-R12",
+          "brand": "Xiaomi",
+          "name": "Redmi 12",
+          "basePrice": 117.29,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-R12-sky-blue.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "OPP-R11F",
+          "brand": "OPPO",
+          "name": "Reno 11 F",
+          "basePrice": 269,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R11F-verde.webp"
+        },
+        {
+          "id": "RLM-NOTE50",
+          "brand": "realme",
+          "name": "Note 50",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/RLM-NOTE50-midnight-black.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        }
+      ]
+    },
+    "XMI-13TPro": {
+      "id": "XMI-13TPro",
+      "brand": "XIAOMI",
+      "name": "13T Pro",
+      "description": "El XIAOMI 13T Pro cuenta con una pantalla AMOLED de 6,67\" con un brillo máximo de 2600 nits y una tasa de actualización de 144 Hz. Ofrece un rendimiento óptimo bajo la luz del sol y una mejor experiencia creativa. El dispositivo presenta un diseño sofisticado con resistencia al agua y al polvo IP68.",
+      "basePrice": 553.31,
+      "rating": 4.7,
+      "specs": {
+        "screen": "6.67\" AMOLED",
+        "resolution": "No especificada",
+        "processor": "Mediatek Dimensity 9200+ (4 nm)",
+        "mainCamera": "Cámara principal Leica de 50MP + Cámara teleobjetivo Leica de 50MP + Cámara Leica ultra gran angular de 12MP",
+        "selfieCamera": "No especificada",
+        "battery": "No especificada",
+        "os": "Android",
+        "screenRefreshRate": "144 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Negro",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-13TPro-negro.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "512 GB",
+          "price": 553.31
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "SMG-A25",
+          "brand": "Samsung",
+          "name": "Galaxy A25 5G",
+          "basePrice": 239,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        }
+      ]
+    },
+    "SMG-A05S": {
+      "id": "SMG-A05S",
+      "brand": "Samsung",
+      "name": "Galaxy A05s",
+      "description": "El Samsung Galaxy A05s es un smartphone con una pantalla de 6.7 pulgadas, procesador Qualcomm Snapdragon 680, cámara triple de 50 MP y una potente batería de 5000 mAh. Ideal para usuarios que buscan un dispositivo con buena relación calidad-precio.",
+      "basePrice": 119,
+      "rating": 4.5,
+      "specs": {
+        "screen": "6.7\" Infinity U Super AMOLED",
+        "resolution": "2400 x 1080 pixels",
+        "processor": "Qualcomm Snapdragon 680",
+        "mainCamera": "50 MP (F1.8) Principal + 2 MP (F2.4) Profundidad + 2 MP F2.4) Macro",
+        "selfieCamera": "13 MP",
+        "battery": "5000 mAh",
+        "os": "Android 14",
+        "screenRefreshRate": "60-90 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Black",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-black.webp"
+        },
+        {
+          "name": "Light Green",
+          "hexCode": "#90EE90",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-light-green.webp"
+        },
+        {
+          "name": "Silver",
+          "hexCode": "#C0C0C0",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-silver.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "64 GB",
+          "price": 119
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "OPP-A18",
+          "brand": "OPPO",
+          "name": "A18",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A18-azul-brillante.webp"
+        },
+        {
+          "id": "OPP-R12FS",
+          "brand": "OPPO",
+          "name": "Reno 12 FS 4G",
+          "basePrice": 299,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R12FS-amber-orange.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        }
+      ]
+    },
+    "XIA-R12": {
+      "id": "XIA-R12",
+      "brand": "Xiaomi",
+      "name": "Redmi 12",
+      "description": "El Xiaomi Redmi 12 es un smartphone de gama de entrada con un diseño minimalista que combina potencia, batería y una super cámara. Cuenta con una gran pantalla de 6.79\" FHD+ IPS, procesador MediaTek Helio G88, y una impresionante configuración de cámara triple de 50MP.",
+      "basePrice": 117.29,
+      "rating": 0,
+      "specs": {
+        "screen": "6.79\" FHD+ IPS",
+        "resolution": "2460 x 1080 pixels",
+        "processor": "MediaTek Helio G88",
+        "mainCamera": "Triple cámara de 50MP + Ultra gran angular + Macro",
+        "selfieCamera": "No especificada",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "90 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Sky Blue",
+          "hexCode": "#87CEEB",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-R12-sky-blue.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 117.29
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "id": "SMG-A05S",
+          "brand": "Samsung",
+          "name": "Galaxy A05s",
+          "basePrice": 119,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-black.webp"
+        },
+        {
+          "id": "MTO-G24",
+          "brand": "Motorola",
+          "name": "g24",
+          "basePrice": 119,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTO-G24-gris.webp"
+        },
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "SNY-XPERIA1V",
+          "brand": "SONY",
+          "name": "Xperia 1 V",
+          "basePrice": 959.42,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SNY-XPERIA1V-negro.webp"
+        }
+      ]
+    },
+    "SMG-S23FE": {
+      "id": "SMG-S23FE",
+      "brand": "Samsung",
+      "name": "Galaxy S23 FE",
+      "description": "El Samsung Galaxy S23 FE es un smartphone de gama alta con una pantalla Dynamic AMOLED 2X de 6.4 pulgadas, procesador Exynos 2200, y un avanzado sistema de cámara con inteligencia artificial.",
+      "basePrice": 699,
+      "rating": 3.8,
+      "specs": {
+        "screen": "6.4\" Dynamic AMOLED 2X",
+        "resolution": "1080 x 2340 pixels",
+        "processor": "Exynos 2200",
+        "mainCamera": "50 MP (F1.8) Principal, OIS + 10 MP (F2.4), Zoom x3, OIS + 12 MP (F2.2), Ultra gran angular",
+        "selfieCamera": "12 MP",
+        "battery": "4500 mAh",
+        "os": "Android 14",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Purple",
+          "hexCode": "#8E6F96",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-purple.webp"
+        },
+        {
+          "name": "Graphite",
+          "hexCode": "#4A4A4A",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-graphite.webp"
+        },
+        {
+          "name": "Mint",
+          "hexCode": "#98FF98",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S23FE-mint.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128 GB",
+          "price": 649
+        },
+        {
+          "capacity": "256 GB",
+          "price": 699
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "OPP-R11F",
+          "brand": "OPPO",
+          "name": "Reno 11 F",
+          "basePrice": 269,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R11F-verde.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "id": "RLM-NOTE50",
+          "brand": "realme",
+          "name": "Note 50",
+          "basePrice": 99,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/RLM-NOTE50-midnight-black.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        }
+      ]
+    },
+    "MTE-EDGE50PRO": {
+      "id": "MTE-EDGE50PRO",
+      "brand": "Motorola",
+      "name": "edge 50 Pro",
+      "description": "Más allá de los límites, este móvil Motorola edge 50 Pro dispone de un diseño elegante y resistente al agua que cabe fácilmente en la palma de la mano y se adapta perfectamente a tu estilo de vida.",
+      "basePrice": 649,
+      "rating": 3.8,
+      "specs": {
+        "screen": "6.67\" Super HD (1220p)",
+        "resolution": "2712 x 1220 pixels",
+        "processor": "Snapdragon® 7 Gen 3",
+        "mainCamera": "50 MP",
+        "selfieCamera": "50 MP",
+        "battery": "4500 mAh",
+        "os": "Android 14",
+        "screenRefreshRate": "No especificado"
+      },
+      "colorOptions": [
+        {
+          "name": "Negro",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTE-EDGE50PRO-negro.webp"
+        },
+        {
+          "name": "Lavanda",
+          "hexCode": "#E6E6FA",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTE-EDGE50PRO-lavanda.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "512 GB",
+          "price": 649
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "XIA-R12",
+          "brand": "Xiaomi",
+          "name": "Redmi 12",
+          "basePrice": 117.29,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-R12-sky-blue.webp"
+        },
+        {
+          "id": "OPP-A60",
+          "brand": "OPPO",
+          "name": "A60",
+          "basePrice": 179,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-midnight-purple.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "XMI-13TPro",
+          "brand": "XIAOMI",
+          "name": "13T Pro",
+          "basePrice": 553.31,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-13TPro-negro.webp"
+        },
+        {
+          "id": "XMI-14",
+          "brand": "Xiaomi",
+          "name": "14",
+          "basePrice": 899,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-negro.webp"
+        }
+      ]
+    },
+    "SNY-XPERIA1V": {
+      "id": "SNY-XPERIA1V",
+      "brand": "SONY",
+      "name": "Xperia 1 V",
+      "description": "Descubre el diseño táctil funcional. En el Xperia 1 V, cada detalle, superficie, textura y forma se han tenido muy en cuenta para mejorar tu experiencia de usuario. Con su elegante acabado mate, los materiales del Xperia 1 V combinan el atractivo estético con un rendimiento en el mundo real impecable.",
+      "basePrice": 959.42,
+      "rating": 4.7,
+      "specs": {
+        "screen": "6.5\" OLED 4K HDR",
+        "resolution": "No especificado",
+        "processor": "Qualcomm Snapdragon 8 Gen 2",
+        "mainCamera": "No especificado",
+        "selfieCamera": "No especificado",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "No especificado"
+      },
+      "colorOptions": [
+        {
+          "name": "Negro",
+          "hexCode": "#000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SNY-XPERIA1V-negro.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "256 GB",
+          "price": 959.42
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "OPP-A60",
+          "brand": "OPPO",
+          "name": "A60",
+          "basePrice": 179,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-midnight-purple.webp"
+        },
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "id": "XMI-R13C",
+          "brand": "Xiaomi",
+          "name": "Redmi 13C",
+          "basePrice": 149,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-navy-blue.webp"
+        },
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "id": "XMI-13TPro",
+          "brand": "XIAOMI",
+          "name": "13T Pro",
+          "basePrice": 553.31,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-13TPro-negro.webp"
+        }
+      ]
+    },
+    "MTO-G24": {
+      "id": "MTO-G24",
+      "brand": "Motorola",
+      "name": "g24",
+      "description": "El móvil motorola g24 cuenta con diseño excepcional a un precio asequible, se ha fabricado con materiales de primera calidad y tiene un diseño optimizado que resulta agradable de coger. Gracias a sus 8GB de RAM, abrirás las aplicaciones más rápido, las tendrás abiertas más tiempo y realizarás varias tareas a la vez de forma fluida.",
+      "basePrice": 119,
+      "rating": 4.5,
+      "specs": {
+        "screen": "6.56\" HD+",
+        "resolution": "No especificado",
+        "processor": "MediaTek Helio G85",
+        "mainCamera": "50 MP",
+        "selfieCamera": "8 MP",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "No especificado"
+      },
+      "colorOptions": [
+        {
+          "name": "Gris",
+          "hexCode": "#808080",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTO-G24-gris.webp"
+        },
+        {
+          "name": "Lavanda",
+          "hexCode": "#E6E6FA",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTO-G24-lavanda.webp"
+        },
+        {
+          "name": "Verde",
+          "hexCode": "#008000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTO-G24-verde.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128GB",
+          "price": 119
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "SMG-S24U",
+          "brand": "Samsung",
+          "name": "Galaxy S24 Ultra",
+          "basePrice": 1329,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-S24U-titanium-violet.webp"
+        },
+        {
+          "id": "SMG-A05S",
+          "brand": "Samsung",
+          "name": "Galaxy A05s",
+          "basePrice": 119,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A05S-black.webp"
+        },
+        {
+          "id": "MTE-EDGE50PRO",
+          "brand": "Motorola",
+          "name": "edge 50 Pro",
+          "basePrice": 649,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTE-EDGE50PRO-negro.webp"
+        },
+        {
+          "id": "SMG-A25",
+          "brand": "Samsung",
+          "name": "Galaxy A25 5G",
+          "basePrice": 239,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A25-negro.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "SNY-XPERIA1V",
+          "brand": "SONY",
+          "name": "Xperia 1 V",
+          "basePrice": 959.42,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SNY-XPERIA1V-negro.webp"
+        }
+      ]
+    },
+    "SMG-A15": {
+      "id": "SMG-A15",
+      "brand": "Samsung",
+      "name": "Galaxy A15 LTE",
+      "description": "El Samsung Galaxy A15 LTE es un smartphone de gama media que ofrece una pantalla FHD+ de 6.5 pulgadas, un potente procesador MediaTek G99 Octa-Core, una generosa batería de 5000mAh y el último sistema operativo Android 14. Con opciones de almacenamiento de hasta 256GB y 4GB de RAM, este dispositivo proporciona un rendimiento fluido y espacio suficiente para todas tus aplicaciones y archivos.",
+      "basePrice": 159,
+      "rating": 4.5,
+      "specs": {
+        "screen": "6.5\"",
+        "resolution": "FHD+",
+        "processor": "MediaTek G99 Octa-Core",
+        "mainCamera": "No especificado",
+        "selfieCamera": "No especificado",
+        "battery": "5000mAh",
+        "os": "Android 14",
+        "screenRefreshRate": "No especificado"
+      },
+      "colorOptions": [
+        {
+          "name": "Azul",
+          "hexCode": "#0000FF",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        },
+        {
+          "name": "Negro",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-negro.webp"
+        },
+        {
+          "name": "Amarillo",
+          "hexCode": "#FFFF00",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-amarillo.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128GB",
+          "price": 159
+        },
+        {
+          "capacity": "256GB",
+          "price": 199
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "OPP-A60",
+          "brand": "OPPO",
+          "name": "A60",
+          "basePrice": 179,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-midnight-purple.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "id": "APL-IP13-128",
+          "brand": "Apple",
+          "name": "iPhone 13",
+          "basePrice": 619,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-medianoche.webp"
+        },
+        {
+          "id": "XMI-14",
+          "brand": "Xiaomi",
+          "name": "14",
+          "basePrice": 899,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-14-negro.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        }
+      ]
+    },
+    "OPP-A60": {
+      "id": "OPP-A60",
+      "brand": "OPPO",
+      "name": "A60",
+      "description": "El OPPO A60 es un smartphone de gama media que ofrece una pantalla HD+ de 6.67 pulgadas con una frecuencia de actualización de 90 Hz, un potente procesador Qualcomm Snapdragon 680 4G, una generosa batería de 5000mAh con carga rápida de 45W, y corre Android. Con 8GB de RAM y 256GB de almacenamiento, este dispositivo proporciona un rendimiento fluido y espacio suficiente para todas tus aplicaciones y archivos. Además, cuenta con una cámara trasera dual de 50 MP y una cámara selfie de 8 MP, ofreciendo versatilidad fotográfica para capturar tus momentos especiales.",
+      "basePrice": 179,
+      "rating": 3,
+      "specs": {
+        "screen": "6.67\"",
+        "resolution": "HD+",
+        "processor": "Qualcomm Snapdragon 680 4G",
+        "mainCamera": "50 MP f/1.8 + 2 MP Bokeh",
+        "selfieCamera": "8 MP f/2.0",
+        "battery": "5000mAh",
+        "os": "Android",
+        "screenRefreshRate": "90 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Midnight Purple",
+          "hexCode": "#4B0082",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-midnight-purple.webp"
+        },
+        {
+          "name": "Ripple Blue",
+          "hexCode": "#4169E1",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-ripple-blue.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "256GB",
+          "price": 179
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "id": "XIA-R12",
+          "brand": "Xiaomi",
+          "name": "Redmi 12",
+          "basePrice": 117.29,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-R12-sky-blue.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        },
+        {
+          "id": "SMG-A15",
+          "brand": "Samsung",
+          "name": "Galaxy A15 LTE",
+          "basePrice": 159,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        },
+        {
+          "id": "XIA-RN13",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13",
+          "basePrice": 169,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XIA-RN13-mint-green.webp"
+        },
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        }
+      ]
+    },
+    "OPP-R12FS": {
+      "id": "OPP-R12FS",
+      "brand": "OPPO",
+      "name": "Reno 12 FS 4G",
+      "description": "El OPPO Reno 12 FS 4G es un smartphone de gama media-alta que ofrece una pantalla AMOLED Full HD+ de 6.67 pulgadas con una frecuencia de actualización de 120 Hz, un potente procesador Qualcomm Snapdragon 685, una generosa batería de 5000mAh con carga rápida de 45W SUPERVOOC, y corre Android. Con 8GB de RAM y 512GB de almacenamiento, este dispositivo proporciona un rendimiento fluido y espacio suficiente para todas tus aplicaciones y archivos. Además, cuenta con una cámara principal de 50 MP, una cámara ultra gran angular y una cámara macro, ofreciendo versatilidad fotográfica para capturar tus momentos especiales.",
+      "basePrice": 299,
+      "rating": 0,
+      "specs": {
+        "screen": "6.67\" AMOLED",
+        "resolution": "Full HD+",
+        "processor": "Qualcomm Snapdragon 685",
+        "mainCamera": "50 MP",
+        "selfieCamera": "No especificado",
+        "battery": "5000mAh",
+        "os": "Android",
+        "screenRefreshRate": "120 Hz"
+      },
+      "colorOptions": [
+        {
+          "name": "Amber Orange",
+          "hexCode": "#FF7F00",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R12FS-amber-orange.webp"
+        },
+        {
+          "name": "Matte Grey",
+          "hexCode": "#808080",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-R12FS-matte-grey.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "512GB",
+          "price": 299
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "XMI-R13C",
+          "brand": "Xiaomi",
+          "name": "Redmi 13C",
+          "basePrice": 149,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-R13C-navy-blue.webp"
+        },
+        {
+          "id": "SMG-A15",
+          "brand": "Samsung",
+          "name": "Galaxy A15 LTE",
+          "basePrice": 159,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        },
+        {
+          "id": "OPP-A60",
+          "brand": "OPPO",
+          "name": "A60",
+          "basePrice": 179,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/OPP-A60-midnight-purple.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "SNY-XPERIA1V",
+          "brand": "SONY",
+          "name": "Xperia 1 V",
+          "basePrice": 959.42,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SNY-XPERIA1V-negro.webp"
+        },
+        {
+          "id": "APL-IP13-128",
+          "brand": "Apple",
+          "name": "iPhone 13",
+          "basePrice": 619,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-IP13-128-medianoche.webp"
+        }
+      ]
+    },
+    "RLM-NOTE50": {
+      "id": "RLM-NOTE50",
+      "brand": "realme",
+      "name": "Note 50",
+      "description": "El realme Note 50 es un smartphone económico que ofrece una pantalla HD+ de 6.7 pulgadas, un procesador Unisoc T612, una generosa batería de 5000mAh, y corre Android. Con 4GB de RAM y 128GB de almacenamiento, este dispositivo proporciona un rendimiento adecuado para tareas cotidianas y espacio suficiente para tus aplicaciones y archivos. Su diseño en color Midnight Black lo hace atractivo para aquellos que buscan un dispositivo funcional y elegante a un precio accesible.",
+      "basePrice": 99,
+      "rating": 4.7,
+      "specs": {
+        "screen": "6.7\"",
+        "resolution": "HD+",
+        "processor": "Unisoc T612",
+        "mainCamera": "No especificado",
+        "selfieCamera": "No especificado",
+        "battery": "5000 mAh",
+        "os": "Android",
+        "screenRefreshRate": "No especificado"
+      },
+      "colorOptions": [
+        {
+          "name": "Midnight Black",
+          "hexCode": "#000000",
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/RLM-NOTE50-midnight-black.webp"
+        }
+      ],
+      "storageOptions": [
+        {
+          "capacity": "128GB",
+          "price": 99
+        }
+      ],
+      "similarProducts": [
+        {
+          "id": "SMG-A35",
+          "brand": "Samsung",
+          "name": "Galaxy A35 5G",
+          "basePrice": 333,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A35-light-blue.webp"
+        },
+        {
+          "id": "SMG-A15",
+          "brand": "Samsung",
+          "name": "Galaxy A15 LTE",
+          "basePrice": 159,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/SMG-A15-azul.webp"
+        },
+        {
+          "id": "XMI-RN13P5G",
+          "brand": "Xiaomi",
+          "name": "Redmi Note 13 Pro 5G",
+          "basePrice": 399,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/XMI-RN13P5G-midnight-black.webp"
+        },
+        {
+          "id": "APL-I15PM",
+          "brand": "Apple",
+          "name": "iPhone 15 Pro Max",
+          "basePrice": 1319,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/APL-I15PM-titanio-negro.webp"
+        },
+        {
+          "id": "MTO-G24",
+          "brand": "Motorola",
+          "name": "g24",
+          "basePrice": 119,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/MTO-G24-gris.webp"
+        },
+        {
+          "id": "GPX-8A",
+          "brand": "Google",
+          "name": "Pixel 8a",
+          "basePrice": 459,
+          "imageUrl": "http://prueba-tecnica-api-tienda-moviles.onrender.com/images/GPX-8A-obsidiana.webp"
+        }
+      ]
+    }
+  }
+}

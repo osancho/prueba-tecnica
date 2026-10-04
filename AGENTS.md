@@ -44,7 +44,8 @@ pnpm lint
 pnpm typecheck
 pnpm format       # format:check in CI
 pnpm test         # test:coverage in CI
-pnpm test:e2e     # Playwright on the production build
+pnpm test:e2e     # Playwright on the production build, against the fake API
+pnpm test:e2e:contract   # Playwright against the real API (needs .env.local)
 ```
 
 ## Structure
@@ -68,7 +69,8 @@ src/
   context/cart/ React adapter: wires the cart reducer to the repositories it receives as props
   components/   <component-name>/component-name.tsx + component-name.css
   styles/       variables.css (Figma tokens), globals.css
-e2e/            Playwright specs, API warm-up, fake API (servers.ts holds the ports)
+e2e/            Playwright specs, fake API (fake-api.mjs) and its fixed catalog (fixtures/); contract/ holds the
+                specs against the real API and its warm-up; servers.ts holds the ports
 ```
 
 Dependency rule, enforced by `import/no-restricted-paths` in `eslint.config.mjs`: `domain` imports only `domain`; `application` only `domain` and `application`; `infrastructure` only `core` and `services`; neither `domain` nor `application` imports a package; `services` never imports `core`; nothing outside `src/app` and `core` imports `infrastructure`. Components and context receive their repositories, and their tests pass fakes (`core/cart/domain/__mocks__/in-memory-cart-repository.ts`) instead of mocking module paths.
@@ -117,4 +119,4 @@ Naming:
 - Precise and complete wording in everything written (copy, alt texts, metadata, commits, docs).
 - Minimal by default: native platform and stdlib first, no speculative abstractions, smallest diff that fully meets the requirements. Never trade away accessibility, security or required features.
 - Tests describe what the end user experiences (named by outcome), not implementation details; pure helpers are covered through the behaviour that uses them. Server modules use `// @vitest-environment node`. Mocks/stubs are reset globally in `vitest.config.mts` — no per-file reset boilerplate.
-- Minimum tests: cart reducer, search, detail add-to-cart disabled state. Playwright 1.61.1 E2E (`e2e/`, Chromium only, `pnpm test:e2e`) runs the user journeys and a clean-console check on the production build; CI runs it with the `API_BASE_URL` and `API_KEY` secrets.
+- Minimum tests: cart reducer, search, detail add-to-cart disabled state. Playwright 1.61.1 E2E (`e2e/`, Chromium only, `pnpm test:e2e`) runs the user journeys, the axe audit and a clean-console check on the production build against the fake API, with no network: specs take phones, prices and counts from `e2e/fixtures/catalog.ts`, never from literals, and anything new the journeys need from the API is added to the fake. `pnpm test:e2e:contract` (`playwright.contract.config.ts`, `e2e/contract/`) checks the app against the real API with no catalog value written in the specs; CI runs it as its own job with the `API_BASE_URL` and `API_KEY` secrets. No retries and no fixed waits in either.

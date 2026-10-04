@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import axe from 'axe-core';
 import { chooseOption } from './choose-option';
+import { LIST_SIZE, PHONE, SEARCHES, UNKNOWN_PATH } from './fixtures/catalog';
 
 declare global {
   interface Window {
@@ -27,26 +28,28 @@ const viewports = {
 const screens: Record<string, (page: Page) => Promise<void>> = {
   list: async (page) => {
     await page.goto('/');
-    await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(20);
+    await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(
+      LIST_SIZE,
+    );
   },
   'search results': async (page) => {
-    await page.goto('/?search=galaxy');
+    await page.goto(`/?search=${SEARCHES.brand.term}`);
     await expect(
       page.getByRole('main').getByText(/\d+ results?/),
     ).toBeVisible();
   },
   'search without results': async (page) => {
-    await page.goto('/?search=zzzzzz');
+    await page.goto(`/?search=${SEARCHES.none.term}`);
     await expect(page.getByRole('main').getByText('0 results')).toBeVisible();
   },
   'product with nothing chosen': async (page) => {
-    await page.goto('/product/SMG-S24U');
+    await page.goto(PHONE.path);
     await expect(page.getByRole('button', { name: 'Añadir' })).toBeDisabled();
   },
   'product with storage and color chosen': async (page) => {
-    await page.goto('/product/SMG-S24U');
-    await chooseOption(page, '512 GB');
-    await chooseOption(page, 'Titanium Black');
+    await page.goto(PHONE.path);
+    await chooseOption(page, PHONE.storage);
+    await chooseOption(page, PHONE.color);
     await expect(page.getByRole('button', { name: 'Añadir' })).toBeEnabled();
   },
   'empty cart': async (page) => {
@@ -56,16 +59,16 @@ const screens: Record<string, (page: Page) => Promise<void>> = {
     ).toBeVisible();
   },
   'cart with a phone': async (page) => {
-    await page.goto('/product/SMG-S24U');
-    await chooseOption(page, '512 GB');
-    await chooseOption(page, 'Titanium Black');
+    await page.goto(PHONE.path);
+    await chooseOption(page, PHONE.storage);
+    await chooseOption(page, PHONE.color);
     await page.getByRole('button', { name: 'Añadir' }).click();
     await expect(
       page.getByRole('heading', { level: 1, name: 'Cart (1)' }),
     ).toBeVisible();
   },
   'unknown product': async (page) => {
-    await page.goto('/product/NOPE-123');
+    await page.goto(UNKNOWN_PATH);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   },
 };

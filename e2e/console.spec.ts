@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { PHONE, UNKNOWN_PATH } from './fixtures/catalog';
 
 // Chrome reports some warnings, such as unused preloads, a few seconds after `load`.
 const LATE_WARNINGS_DELAY = 5_500;
@@ -30,7 +31,7 @@ function unusedStylePreloads(page: Page): Promise<string[]> {
   });
 }
 
-for (const path of ['/', '/product/SMG-S24U', '/cart', '/product/NOPE-123']) {
+for (const path of ['/', PHONE.path, '/cart', UNKNOWN_PATH]) {
   test(`${path} leaves the browser console clean`, async ({ page }) => {
     const problems = recordConsoleProblems(page);
 

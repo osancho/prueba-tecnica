@@ -1,28 +1,31 @@
 import { expect, test } from '@playwright/test';
 import { chooseOption } from './choose-option';
+import { PHONE } from './fixtures/catalog';
 
 test('adds the phone to the cart once storage and color are chosen', async ({
   page,
 }) => {
-  await page.goto('/product/SMG-S24U');
+  await page.goto(PHONE.path);
   const heading = page.getByRole('heading', {
     level: 1,
-    name: 'Galaxy S24 Ultra',
+    name: PHONE.name,
   });
   const price = heading.locator('xpath=..');
   const add = page.getByRole('button', { name: 'Añadir' });
 
-  await expect(price).toContainText('From 1229 EUR');
+  await expect(price).toContainText(`From ${PHONE.lowestPrice} EUR`);
   await expect(add).toBeDisabled();
 
-  await chooseOption(page, '512 GB');
-  await expect(price).toContainText(/^Galaxy S24 Ultra\s*1329 EUR$/);
+  await chooseOption(page, PHONE.storage);
+  await expect(price).toHaveText(
+    new RegExp(`^${PHONE.name}\\s*${PHONE.price} EUR$`),
+  );
   await expect(add).toBeDisabled();
 
-  await chooseOption(page, 'Titanium Black');
+  await chooseOption(page, PHONE.color);
   await expect(
     page.getByRole('img', {
-      name: 'Samsung Galaxy S24 Ultra in Titanium Black',
+      name: `${PHONE.brand} ${PHONE.name} in ${PHONE.color}`,
     }),
   ).toBeVisible();
   await expect(add).toBeEnabled();
