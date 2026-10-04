@@ -34,24 +34,28 @@ export function removeWhiteBackground({
   height,
 }: RgbaImage): Uint8Array {
   const result = Uint8Array.from(data);
-  const visited = new Uint8Array(width * height);
-  const pending = borderPixels(width, height);
+  // Marked when queued, not when taken out, so no pixel enters the queue twice.
+  const queued = new Uint8Array(width * height);
+  const pending: number[] = [];
+  const enqueue = (pixel: number) => {
+    if (queued[pixel]) return;
+    queued[pixel] = 1;
+    pending.push(pixel);
+  };
+  borderPixels(width, height).forEach(enqueue);
 
   while (pending.length > 0) {
     const pixel = pending.pop()!;
-    if (visited[pixel]) continue;
-    visited[pixel] = 1;
-
     const offset = pixel * CHANNELS;
     if (!isOpaqueWhite(result, offset)) continue;
     result[offset + 3] = 0;
 
     const x = pixel % width;
     const y = (pixel - x) / width;
-    if (x > 0) pending.push(pixel - 1);
-    if (x < width - 1) pending.push(pixel + 1);
-    if (y > 0) pending.push(pixel - width);
-    if (y < height - 1) pending.push(pixel + width);
+    if (x > 0) enqueue(pixel - 1);
+    if (x < width - 1) enqueue(pixel + 1);
+    if (y > 0) enqueue(pixel - width);
+    if (y < height - 1) enqueue(pixel + width);
   }
 
   return result;
