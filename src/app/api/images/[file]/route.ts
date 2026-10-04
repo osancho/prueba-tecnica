@@ -12,7 +12,8 @@ const CACHE_SECONDS = 86_400;
 // Image URLs carry a version (`?v=`), so a given URL never changes: browsers may keep it for good.
 const BROWSER_CACHE_CONTROL = 'public, max-age=31536000, immutable';
 
-// sharp is the expensive part and there is no CDN in front of the VPS. Only images the API
+// sharp is the expensive part. Without a CDN in front, this map is the only cache; with one, the
+// CDN can keep these immutable responses and leave the map its misses. Only images the API
 // actually has get stored, at the few widths the app serves, so the catalogue bounds the map
 // (about 60 images × 5 widths, under 8 MB). It lives in the process and empties on restart;
 // a much larger catalogue would need disk. It holds the promise, not the bytes, so the burst of

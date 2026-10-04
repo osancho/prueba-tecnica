@@ -62,7 +62,7 @@ How each point of the brief is met.
 | React ≥ 17, CSS, Node 18, Context API, `x-api-key`                                  | React 19.1, plain CSS, Node 18.20.8, `CartContext`, `src/services/api-client.ts`                             |
 | Tests, accessibility, linters and formatters, clean console                         | [Quality](#quality), [Accessibility](#accessibility)                                                         |
 | Optional: SSR with Next.js and CSS variables                                        | Server components for the list and detail; tokens in `variables.css`                                         |
-| Optional: deployment                                                                | Own VPS on Node 18: <https://zara.oscarsancho.dev>                                                           |
+| Optional: deployment                                                                | Own VPS on Node 18 behind Cloudflare: <https://zara.oscarsancho.dev>                                         |
 
 ## Getting started
 
@@ -98,7 +98,7 @@ pnpm build && pnpm start  # production: concatenated and minified assets on port
 pnpm warm-up [url]        # after start: loads the catalog and prepares every list photo
 ```
 
-Normalized photos are kept in the server's memory, so after a deploy the first visitor would wait for about 20 of them at once. `pnpm warm-up` (default `http://localhost:3000`) requests the list and each of its photos at every width its `srcset` offers, one at a time, and exits with an error if any request fails.
+Normalized photos are kept in the server's memory, so after a deploy the first visitor would wait for about 20 of them at once. `pnpm warm-up` (default `http://localhost:3000`) requests the list and each of its photos at every width its `srcset` offers, one at a time, and exits with an error if any request fails. With a CDN in front, running it against the public address also fills the CDN's cache.
 
 ## Scripts
 
@@ -165,7 +165,7 @@ Only the server talks to the API:
 ### Data and API
 
 - **The API key never reaches the browser.** Pages fetch on the server and the search goes through `/api/products`.
-- **Security headers** on every response: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin` and `Content-Security-Policy: frame-ancestors 'none'`. A full CSP is left out because Next's inline scripts would need `'unsafe-inline'`, which cancels its protection, or a nonce per request, which renders every page dynamically and drops the cached catalog. HSTS is set by the HTTPS proxy in front of the app.
+- **Security headers** on every response: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin` and `Content-Security-Policy: frame-ancestors 'none'`. A full CSP is left out because Next's inline scripts would need `'unsafe-inline'`, which cancels its protection, or a nonce per request, which renders every page dynamically and drops the cached catalog. HSTS belongs to the HTTPS layer in front of the app, not to the app itself; the demo's Cloudflare does not enable it.
 - **Node 18 end to end**, production included: the app runs on its own VPS because Vercel no longer offers Node 18. Tools are held to Node 18 compatible majors, with exact versions where it matters (Next 15.5.27, Playwright 1.61.1, vitest-axe 0.1.0).
 - **Validated responses.** Type guards check the data at the boundary: a malformed phone is left out of a list, a malformed product shows the error page instead of a false "not found". A spec the API leaves out is not malformed data: the phone opens, and the specs table and the meta description leave that spec out.
 - **One API call per product page.** The page and its metadata share the request through React `cache()`, so a slow or failing API is waited for once.
@@ -207,7 +207,7 @@ Only the server talks to the API:
 
 - **Normalized product photos.** The API's photos are inconsistent: some have an opaque white background and the phone fills 60% to 100% of the frame. The right fix is a standardized source from the backend; until then `/api/images` normalizes them with sharp to the Figma framing (transparent background, phone at 73.2% of a square).
 - **Each photo is downloaded at the size its slot needs.** `/api/images` resizes as it normalizes, to one of five widths (360, 520, 648, 832 and 1260 px, the largest being the 630 px desktop detail at 2x); small source photos are never enlarged. `next/image` asks for them through a custom loader, and each photo declares its on-screen size in `sizes`, so the browser picks the smallest sharp one. `sizes` cannot read CSS custom properties, so the four values live in `src/lib/product-image-sizes.ts` and a test recomputes them from the tokens: changing a card or photo size without them fails the test. The 20 list photos went from 1.16 MB to 203 kB at 1440 px on a 2x screen, 330 kB on a 2x phone.
-- **Normalized images are kept in memory, one per width,** and sent as `immutable`, since their URLs carry a version. Any other width is rejected, so the cache stays bounded by the catalog (under 8 MB).
+- **Normalized images are kept in memory, one per width,** and sent as `immutable`, since their URLs carry a version. Any other width is rejected, so the cache stays bounded by the catalog (under 8 MB). For the same reason any CDN in front can keep them; on the demo, Cloudflare serves most of them from its edge.
 - **The catalog is cached for an hour; searches and the cart check are not.** Each search term would become a new cache entry on disk, and the cart check must see a price that changed in the last hour. The cached and the live reading are two instances of the same adapter, chosen where each route is wired.
 - **No prefetch on the cart link.** Prefetching `/cart` preloaded its stylesheet on every page, which Chrome reported as an unused preload.
 
@@ -272,7 +272,7 @@ Only the server talks to the API:
 - A product that does not exist shows the "not found" page with HTTP 200 and `noindex`: the route has a loading state, so Next has already sent the 200 when `notFound()` runs. Unknown routes return 404.
 - Some source photos have an opaque floor reflection under the phone (the Pixel 8a, for example) that cannot be told apart from the device safely. It is left as is; the fix belongs in the source image.
 - The end-to-end suite runs on a recording of the catalog (4 October 2026) with drawn pictures. A change in the real API or in its photos is only seen by the contract specs, which depend on the real API being reachable.
-- The normalized image cache lives in the server process and empties on restart; `pnpm warm-up` refills it for the list.
+- The normalized image cache lives in the server process and empties on restart; `pnpm warm-up` refills it for the list. A CDN in front, such as Cloudflare on the demo, keeps serving the photos it already holds.
 - There is no design for the 404, error and failed-search states, nor for the message about cart changes: they use the existing tokens with minimal styling.
 - Accepted security advisories, every one `pnpm audit` reports (3 high, 2 moderate):
   - High, `sharp` (GHSA-f88m-g3jw-g9cj, libvips; GHSA-rgj7-g3m4-5g8c, libheif): the app only processes images from the API host (users cannot upload any), and sharp 0.35.4, which fixes both, requires Node 20.
