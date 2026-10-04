@@ -1,14 +1,20 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { normalizeProductImage } from '@/services/images/normalize-product-image';
+import {
+  cutOutPhone,
+  frameProductImage,
+} from '@/services/images/normalize-product-image';
 import { GET } from '../route';
 
 vi.mock('@/services/images/normalize-product-image', () => ({
-  normalizeProductImage: vi.fn(),
+  cutOutPhone: vi.fn(),
+  frameProductImage: vi.fn(),
 }));
 
 const fetchMock = vi.fn();
-const normalizeMock = vi.mocked(normalizeProductImage);
+const cutOutMock = vi.mocked(cutOutPhone);
+const frameMock = vi.mocked(frameProductImage);
+const CUTOUT = Buffer.from([8]);
 
 function requestImage(file: string, query = '?v=3&w=648') {
   return GET(new Request(`http://localhost/api/images/${file}${query}`), {
@@ -21,18 +27,20 @@ describe('GET /api/images/[file]', () => {
     vi.stubEnv('API_BASE_URL', 'https://api.test');
     vi.stubGlobal('fetch', fetchMock);
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    cutOutMock.mockResolvedValue(CUTOUT);
   });
 
   it('serves the normalized picture of a phone from the API image host', async () => {
     fetchMock.mockResolvedValue(new Response(new Uint8Array([1, 2, 3])));
-    normalizeMock.mockResolvedValue(Buffer.from([9, 9]));
+    frameMock.mockResolvedValue(Buffer.from([9, 9]));
 
     const response = await requestImage('SMG-S24U-titanium-violet.webp');
 
     expect(String(fetchMock.mock.calls[0][0])).toBe(
       'https://api.test/images/SMG-S24U-titanium-violet.webp',
     );
-    expect(normalizeMock).toHaveBeenCalledWith(expect.any(Buffer), 648);
+    expect(cutOutMock).toHaveBeenCalledWith(Buffer.from([1, 2, 3]));
+    expect(frameMock).toHaveBeenCalledWith(CUTOUT, 648);
     expect(response.status).toBe(200);
     expect(response.headers.get('Content-Type')).toBe('image/webp');
     expect(response.headers.get('Cache-Control')).toBe(
@@ -47,13 +55,13 @@ describe('GET /api/images/[file]', () => {
     fetchMock.mockImplementation(
       async () => new Response(new Uint8Array([1, 2, 3])),
     );
-    normalizeMock.mockResolvedValue(Buffer.from([7, 7]));
+    frameMock.mockResolvedValue(Buffer.from([7, 7]));
 
     await requestImage('GPX-8A-obsidiana.webp');
     const again = await requestImage('GPX-8A-obsidiana.webp');
 
     expect(fetchMock).toHaveBeenCalledOnce();
-    expect(normalizeMock).toHaveBeenCalledOnce();
+    expect(frameMock).toHaveBeenCalledOnce();
     expect(new Uint8Array(await again.arrayBuffer())).toEqual(
       new Uint8Array([7, 7]),
     );
@@ -67,7 +75,7 @@ describe('GET /api/images/[file]', () => {
           answerOriginal = () => resolve(new Response(new Uint8Array([1])));
         }),
     );
-    normalizeMock.mockResolvedValue(Buffer.from([4, 4]));
+    frameMock.mockResolvedValue(Buffer.from([4, 4]));
 
     const requests = Array.from({ length: 20 }, () =>
       requestImage('APL-IP15-negro.webp'),
@@ -77,7 +85,7 @@ describe('GET /api/images/[file]', () => {
     const responses = await Promise.all(requests);
 
     expect(fetchMock).toHaveBeenCalledOnce();
-    expect(normalizeMock).toHaveBeenCalledOnce();
+    expect(frameMock).toHaveBeenCalledOnce();
     expect(responses.map((response) => response.status)).toEqual(
       Array(20).fill(200),
     );
@@ -93,7 +101,7 @@ describe('GET /api/images/[file]', () => {
           }),
       )
       .mockResolvedValueOnce(new Response(new Uint8Array([1])));
-    normalizeMock.mockResolvedValue(Buffer.from([4]));
+    frameMock.mockResolvedValue(Buffer.from([4]));
 
     const waiting = [
       requestImage('APL-IP15-rosa.webp'),
@@ -113,25 +121,56 @@ describe('GET /api/images/[file]', () => {
     fetchMock.mockImplementation(
       async () => new Response(new Uint8Array([1, 2, 3])),
     );
-    normalizeMock.mockResolvedValue(Buffer.from([7, 7]));
+    frameMock.mockResolvedValue(Buffer.from([7, 7]));
 
     await requestImage('GPX-8A-obsidiana.webp', '?v=3&w=360');
     await requestImage('GPX-8A-obsidiana.webp', '?v=3&w=1260');
     await requestImage('GPX-8A-obsidiana.webp', '?v=3&w=360');
 
-    expect(normalizeMock.mock.calls.map(([, width]) => width)).toEqual([
-      360, 1260,
-    ]);
+    expect(frameMock.mock.calls.map(([, width]) => width)).toEqual([360, 1260]);
+  });
+
+  it('cuts the phone out of a picture once for every width, even when they are asked for at the same time', async () => {
+    fetchMock.mockImplementation(
+      async () => new Response(new Uint8Array([1, 2, 3])),
+    );
+    frameMock.mockResolvedValue(Buffer.from([7, 7]));
+    const widths = [360, 520, 648, 832, 1260];
+
+    await Promise.all(
+      widths.map((width) =>
+        requestImage('XMI-14-azul.webp', `?v=3&w=${width}`),
+      ),
+    );
+    await requestImage('XMI-14-azul.webp', '?v=3&w=648');
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(cutOutMock).toHaveBeenCalledOnce();
+    expect(frameMock.mock.calls.map(([, width]) => width)).toEqual(widths);
+  });
+
+  it('cuts the phone out again after a failed attempt', async () => {
+    fetchMock.mockImplementation(
+      async () => new Response(new Uint8Array([1, 2, 3])),
+    );
+    cutOutMock
+      .mockRejectedValueOnce(new Error('corrupt'))
+      .mockResolvedValueOnce(CUTOUT);
+    frameMock.mockResolvedValue(Buffer.from([7, 7]));
+
+    expect((await requestImage('XMI-14-verde.webp')).status).toBe(502);
+    expect((await requestImage('XMI-14-verde.webp')).status).toBe(200);
+    expect(cutOutMock).toHaveBeenCalledTimes(2);
   });
 
   it('keeps serving pictures to URLs without a width, saved by an older version', async () => {
     fetchMock.mockResolvedValue(new Response(new Uint8Array([1])));
-    normalizeMock.mockResolvedValue(Buffer.from([5]));
+    frameMock.mockResolvedValue(Buffer.from([5]));
 
     const response = await requestImage('XMI-14-negro.webp', '?v=2');
 
     expect(response.status).toBe(200);
-    expect(normalizeMock).toHaveBeenCalledWith(expect.any(Buffer), 1260);
+    expect(frameMock).toHaveBeenCalledWith(CUTOUT, 1260);
   });
 
   it.each(['?w=100', '?w=abc', '?w=0648', '?w='])(
@@ -148,7 +187,7 @@ describe('GET /api/images/[file]', () => {
     fetchMock
       .mockResolvedValueOnce(new Response(null, { status: 500 }))
       .mockResolvedValueOnce(new Response(new Uint8Array([1])));
-    normalizeMock.mockResolvedValue(Buffer.from([5]));
+    frameMock.mockResolvedValue(Buffer.from([5]));
 
     expect((await requestImage('XMI-14-black.webp')).status).toBe(502);
     expect((await requestImage('XMI-14-black.webp')).status).toBe(200);

@@ -1,4 +1,7 @@
-import { normalizeProductImage } from '@/services/images/normalize-product-image';
+import {
+  cutOutPhone,
+  frameProductImage,
+} from '@/services/images/normalize-product-image';
 import {
   isProductImageFile,
   originalImageUrl,
@@ -12,12 +15,16 @@ const CACHE_SECONDS = 86_400;
 // Image URLs carry a version (`?v=`), so a given URL never changes: browsers may keep it for good.
 const BROWSER_CACHE_CONTROL = 'public, max-age=31536000, immutable';
 
-// sharp is the expensive part. Without a CDN in front, this map is the only cache; with one, the
-// CDN can keep these immutable responses and leave the map its misses. Only images the API
-// actually has get stored, at the few widths the app serves, so the catalogue bounds the map
-// (about 60 images × 5 widths, under 8 MB). It lives in the process and empties on restart;
-// a much larger catalogue would need disk. It holds the promise, not the bytes, so the burst of
-// requests a list sends right after a restart shares one normalization per file and width.
+// Two in-process caches, emptied on restart; with a CDN in front, it keeps these immutable
+// responses and leaves the caches its misses. Both hold promises, not results, so the burst of
+// requests a list sends right after a restart shares the work, and both forget failures, so a
+// failure reaches the requests already waiting but never the next ones.
+// The cut-out phone is the expensive part (decoding and the background flood fill, which runs on
+// the thread that renders pages), so it is done once per photo and every width is drawn from it.
+// Kept as PNG, the 62 photos of the catalogue take about 32 MB.
+const phoneCutouts = new Map<string, Promise<Buffer>>();
+// The responses, at the few widths the app serves: about 60 photos × 5 widths, under 8 MB.
+// A much larger catalogue would need disk for both.
 const normalizedImages = new Map<string, Promise<Uint8Array<ArrayBuffer>>>();
 
 class OriginalImageError extends Error {
@@ -26,42 +33,40 @@ class OriginalImageError extends Error {
   }
 }
 
-async function normalizeOriginal(
-  file: string,
-  width: number,
-): Promise<Uint8Array<ArrayBuffer>> {
+function sharedUntilFailure<T>(
+  cache: Map<string, Promise<T>>,
+  key: string,
+  create: () => Promise<T>,
+): Promise<T> {
+  const known = cache.get(key);
+  if (known) return known;
+
+  const created = create();
+  cache.set(key, created);
+  created.catch(() => cache.delete(key));
+  return created;
+}
+
+async function cutOutOriginal(file: string): Promise<Buffer> {
   const original = await fetch(originalImageUrl(file), {
     next: { revalidate: CACHE_SECONDS },
     signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   });
   if (!original.ok) throw new OriginalImageError(original.status);
 
-  return new Uint8Array(
-    await normalizeProductImage(
-      Buffer.from(await original.arrayBuffer()),
-      width,
-    ),
-  );
+  return cutOutPhone(Buffer.from(await original.arrayBuffer()));
 }
 
 function normalizedImage(
   file: string,
   width: number,
 ): Promise<Uint8Array<ArrayBuffer>> {
-  const cacheKey = `${file}@${width}`;
-  const known = normalizedImages.get(cacheKey);
-  if (known) return known;
-
-  const image = normalizeOriginal(file, width);
-  normalizedImages.set(cacheKey, image);
-  // A failure is shared by the requests already waiting, never by the next ones.
-  image.catch((error: unknown) => {
-    normalizedImages.delete(cacheKey);
-    if (!(error instanceof OriginalImageError)) {
-      console.error('Product image normalization failed', file, error);
-    }
+  return sharedUntilFailure(normalizedImages, `${file}@${width}`, async () => {
+    const phone = await sharedUntilFailure(phoneCutouts, file, () =>
+      cutOutOriginal(file),
+    );
+    return new Uint8Array(await frameProductImage(phone, width));
   });
-  return image;
 }
 
 function imageResponse(image: Uint8Array<ArrayBuffer>): Response {
@@ -87,6 +92,9 @@ export async function GET(request: Request, { params }: ImageRouteContext) {
   try {
     return imageResponse(await normalizedImage(file, width));
   } catch (error) {
+    if (!(error instanceof OriginalImageError)) {
+      console.error('Product image normalization failed', file, error);
+    }
     const missing = error instanceof OriginalImageError && error.status === 404;
     return new Response(null, { status: missing ? 404 : 502 });
   }
