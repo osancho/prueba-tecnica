@@ -26,6 +26,14 @@ export function ProductSearch(props: ProductSearchProps) {
     if (isStale) router.refresh();
   }, [isStale, router]);
 
+  // Searches typed here never got a render of their own, so Back/forward between two of them
+  // restores whichever render the page had: only the server can bring the right list.
+  useEffect(() => {
+    const refresh = () => router.refresh();
+    window.addEventListener('popstate', refresh);
+    return () => window.removeEventListener('popstate', refresh);
+  }, [router]);
+
   return isStale ? <LoadingBar /> : <ProductSearchView {...props} />;
 }
 

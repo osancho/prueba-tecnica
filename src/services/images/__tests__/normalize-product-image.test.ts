@@ -1,7 +1,7 @@
 // @vitest-environment node
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
-import { normalizeProductImage } from '../normalize-product-image';
+import { cutOutPhone, frameProductImage } from '../normalize-product-image';
 
 const PHONE = { width: 20, height: 40 };
 // Wider than any test picture, so only the framing applies.
@@ -26,6 +26,10 @@ async function phonePicture(
     .toBuffer();
 }
 
+async function normalizeProductImage(source: Buffer, maxWidth: number) {
+  return frameProductImage(await cutOutPhone(source), maxWidth);
+}
+
 async function framing(image: Buffer) {
   const { width, height } = await sharp(image).metadata();
   const { info } = await sharp(image)
@@ -38,7 +42,7 @@ async function framing(image: Buffer) {
   };
 }
 
-describe('normalizeProductImage', () => {
+describe('product image normalization', () => {
   it('shows every phone at the Figma scale: centred, filling 73% of a square picture', async () => {
     const result = await framing(
       await normalizeProductImage(
