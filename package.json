@@ -17,6 +17,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "test:e2e:contract": "playwright test -c playwright.contract.config.ts",
     "prepare": "husky"
   },
   "lint-staged": {

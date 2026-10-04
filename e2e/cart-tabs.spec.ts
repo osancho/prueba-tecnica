@@ -1,25 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
 import { chooseOption } from './choose-option';
+import { OTHER_PHONE, PHONE } from './fixtures/catalog';
 
-async function addGalaxy(page: Page) {
-  await page.goto('/product/SMG-S24U');
-  await chooseOption(page, '512 GB');
-  await chooseOption(page, 'Titanium Black');
-  await page.getByRole('button', { name: 'Añadir' }).click();
-  await expect(page).toHaveURL(/\/cart$/);
-}
-
-async function addPixel(page: Page) {
-  await page.goto('/product/GPX-8A');
-  // The first storage and the first color, whatever the catalog offers today. `all()` does not
-  // wait, so the two groups are awaited first: the detail streams in after its loading state.
-  const groups = page
-    .getByRole('group')
-    .filter({ has: page.getByRole('radio') });
-  await expect(groups).toHaveCount(2);
-  const [storage, color] = await groups.all();
-  await storage.locator('label').first().click();
-  await color.locator('label').first().click();
+async function addToCart(page: Page, phone: typeof PHONE | typeof OTHER_PHONE) {
+  await page.goto(phone.path);
+  await chooseOption(page, phone.storage);
+  await chooseOption(page, phone.color);
   await page.getByRole('button', { name: 'Añadir' }).click();
   await expect(page).toHaveURL(/\/cart$/);
 }
@@ -36,8 +22,8 @@ test('keeps the phones added in two tabs, in both tabs and after a reload', asyn
   await first.goto('/');
   await second.goto('/');
 
-  await addGalaxy(first);
-  await addPixel(second);
+  await addToCart(first, PHONE);
+  await addToCart(second, OTHER_PHONE);
 
   await expect(cartTitle(second, 2)).toBeVisible();
   await expect(cartTitle(first, 2)).toBeVisible();
@@ -51,18 +37,18 @@ test('shows in an open cart what another tab adds and removes', async ({
 }) => {
   const cart = await context.newPage();
   const other = await context.newPage();
-  await addGalaxy(cart);
+  await addToCart(cart, PHONE);
 
-  await addPixel(other);
+  await addToCart(other, OTHER_PHONE);
   await expect(cartTitle(cart, 2)).toBeVisible();
   await expect(cart.getByRole('listitem')).toContainText([
-    'Galaxy S24 Ultra',
-    'Pixel 8a',
+    PHONE.name,
+    OTHER_PHONE.name,
   ]);
 
   await other
-    .getByRole('button', { name: /Eliminar Galaxy S24 Ultra/ })
+    .getByRole('button', { name: new RegExp(`Eliminar ${PHONE.name}`) })
     .click();
   await expect(cartTitle(cart, 1)).toBeVisible();
-  await expect(cart.getByRole('listitem')).toHaveText(/Pixel 8a/);
+  await expect(cart.getByRole('listitem')).toContainText(OTHER_PHONE.name);
 });

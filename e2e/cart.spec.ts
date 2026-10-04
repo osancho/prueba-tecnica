@@ -1,10 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { chooseOption } from './choose-option';
+import { PHONE } from './fixtures/catalog';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/product/SMG-S24U');
-  await chooseOption(page, '512 GB');
-  await chooseOption(page, 'Titanium Black');
+  await page.goto(PHONE.path);
+  await chooseOption(page, PHONE.storage);
+  await chooseOption(page, PHONE.color);
   await page.getByRole('button', { name: 'Añadir' }).click();
   await expect(page).toHaveURL(/\/cart$/);
 });
@@ -14,12 +15,12 @@ test('shows the added phone with its options, price and the total', async ({
 }) => {
   const line = page.getByRole('listitem');
 
-  await expect(line.getByRole('heading')).toHaveText('Galaxy S24 Ultra');
-  await expect(line).toContainText('512 GB | Titanium Black');
-  await expect(line).toContainText('1329 EUR');
+  await expect(line.getByRole('heading')).toHaveText(PHONE.name);
+  await expect(line).toContainText(`${PHONE.storage} | ${PHONE.color}`);
+  await expect(line).toContainText(`${PHONE.price} EUR`);
   await expect(
     page.getByText('Total', { exact: true }).locator('xpath=..'),
-  ).toHaveText(/^Total\s*1329 EUR$/);
+  ).toHaveText(new RegExp(`^Total\\s*${PHONE.price} EUR$`));
 });
 
 test('keeps the cart after a reload', async ({ page }) => {
@@ -28,13 +29,15 @@ test('keeps the cart after a reload', async ({ page }) => {
   await expect(
     page.getByRole('heading', { level: 1, name: 'Cart (1)' }),
   ).toBeVisible();
-  await expect(page.getByRole('listitem')).toContainText('Galaxy S24 Ultra');
+  await expect(page.getByRole('listitem')).toContainText(PHONE.name);
 });
 
 test('empties the cart when the user removes its only phone', async ({
   page,
 }) => {
-  await page.getByRole('button', { name: /Eliminar Galaxy S24 Ultra/ }).click();
+  await page
+    .getByRole('button', { name: new RegExp(`Eliminar ${PHONE.name}`) })
+    .click();
 
   await expect(
     page.getByRole('heading', { level: 1, name: 'Cart (0)' }),

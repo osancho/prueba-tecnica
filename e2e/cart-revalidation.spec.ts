@@ -1,14 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { FAKE_API_APP_URL } from './servers';
-
-const savedLine = {
-  id: 'SMG-S24U',
-  brand: 'Samsung',
-  name: 'Galaxy S24 Ultra',
-  imageUrl: '/api/images/SMG-S24U-titanium-violet.webp?v=2',
-  colorName: 'Titanium Violet',
-  capacity: '256 GB',
-};
+import { PHONE, SAVED_LINE, UNKNOWN_ID } from './fixtures/catalog';
 
 test('brings a saved cart up to date with the catalog when it opens', async ({
   page,
@@ -18,8 +9,8 @@ test('brings a saved cart up to date with the catalog when it opens', async ({
       localStorage.setItem('mbst-cart', JSON.stringify(lines));
     },
     [
-      { ...savedLine, lineId: 'stale-price', price: 1 },
-      { ...savedLine, lineId: 'gone', id: 'NOPE-123', price: 999 },
+      { ...SAVED_LINE, lineId: 'stale-price', price: 1 },
+      { ...SAVED_LINE, lineId: 'gone', id: UNKNOWN_ID },
     ],
   );
 
@@ -37,22 +28,22 @@ test('brings a saved cart up to date with the catalog when it opens', async ({
     'A phone in your cart is no longer available and was removed. A phone in your cart has a new price.',
   );
   await expect(page.getByRole('listitem')).toHaveCount(1);
-  await expect(page.getByRole('listitem')).toContainText('1229 EUR');
+  await expect(page.getByRole('listitem')).toContainText(`${PHONE.price} EUR`);
   await expect(
     page.getByText('Total', { exact: true }).locator('xpath=..'),
-  ).toHaveText(/^Total\s*1229 EUR$/);
+  ).toHaveText(new RegExp(`^Total\\s*${PHONE.price} EUR$`));
   expect(consoleProblems).toEqual([]);
 });
 
 test('checks the saved cart against the catalog as it is now, not a cached copy', async ({
   page,
 }) => {
-  // A new id each run: Next keeps fetched data on disk across builds.
+  // A new id each run, so the price starts at one euro.
   const id = `PRICE-${Date.now()}`;
   const cartTotal = page
     .getByText('Total', { exact: true })
     .locator('xpath=..');
-  await page.goto(`${FAKE_API_APP_URL}/cart`);
+  await page.goto('/cart');
   await page.evaluate((id) => {
     localStorage.setItem(
       'mbst-cart',
