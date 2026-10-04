@@ -156,7 +156,7 @@ Only the server talks to the API:
 ### State
 
 - **Cart with Context and `useReducer`.** Four actions (add, remove, restore and apply the catalog check) need no library.
-- **One line per "Añadir"**, because Figma has no quantity control. A `crypto.randomUUID()` id lets "Eliminar" remove exactly that line.
+- **One line per "Añadir"**, because Figma has no quantity control. A random id from `crypto.getRandomValues()`, which also works over plain HTTP, lets "Eliminar" remove exactly that line.
 - **Stored cart read after mount and validated**, so server and first client render agree and edited or outdated data is ignored. The total is added in cents.
 - **The saved cart is checked against the catalog when it opens.** It can be days old in `localStorage`, while the catalog belongs to an external API that changes on its own; this way a phone that is no longer sold or a new price shows up before paying, not after. Each phone is asked once through `/api/products/[id]`: a line whose phone, storage or color is no longer sold is removed, a line whose storage changed price gets the current one, and a short message says so. A phone that cannot be checked (network error, API down) is left as it is, so a failed request never empties a cart. Changes apply by line, so a line removed meanwhile stays removed.
 - **A phone that left the catalog answers `null`, not 404**, from `/api/products/[id]`: it is an expected answer for the cart, and a 404 would print an error in the browser console.
@@ -239,7 +239,6 @@ Only the server talks to the API:
 ## Known limitations
 
 - A product that does not exist shows the "not found" page with HTTP 200 and `noindex`: the route has a loading state, so Next has already sent the 200 when `notFound()` runs. Unknown routes return 404.
-- `crypto.randomUUID()` only exists in secure contexts, so the app is served over HTTPS (or on `localhost`).
 - Some source photos have an opaque floor reflection under the phone (the Pixel 8a, for example) that cannot be told apart from the device safely. It is left as is; the fix belongs in the source image.
 - The E2E suite depends on the real API being reachable.
 - The normalized image cache lives in the server process and empties on restart.
