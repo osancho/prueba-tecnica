@@ -27,7 +27,7 @@ Five files, in this order, show the whole design:
 4. [`src/core/cart/domain/cart-reducer.ts`](src/core/cart/domain/cart-reducer.ts): the cart rules, plain functions with no React or browser.
 5. [`src/components/product-detail/product-detail.tsx`](src/components/product-detail/product-detail.tsx): a view built from tested pieces.
 
-Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 42 unit and component test files with an axe check on every page, 10 Playwright specs on the production build against a fixed catalog (WCAG 2.2 AA audit at three widths, keyboard journey, clean console), a contract spec against the real API, and CI on every pull request.
+Then [`e2e/keyboard.spec.ts`](e2e/keyboard.spec.ts) walks the full journey with the keyboard alone. Quality at a glance: 43 unit and component test files with an axe check on every page, 11 Playwright specs on the production build against a fixed catalog (WCAG 2.2 AA audit at three widths, keyboard journey, clean console), a contract spec against the real API, and CI on every pull request.
 
 ## Beyond the brief, and why
 
@@ -228,19 +228,20 @@ Only the server talks to the API:
 - **Unit and component tests** (Vitest, Testing Library), named after what the user experiences.
 - **Accessibility checks** with vitest-axe on every page. jsdom loads no CSS, so contrast is checked by the end-to-end axe audit.
 - **End-to-end tests** (Playwright, Chromium only) on the production build, against a fake API with a fixed catalog (`e2e/fake-api.mjs`), so a run never depends on the network and gives the same result every time. The catalog is a recording of the real one (`e2e/fixtures/catalog.json`): 24 entries with a repeated id, a search that finds more than 20 phones, a phone without one of its specs and storage prices below `basePrice`. The fake API draws the pictures, opaque white background included, so the image normalizer does its real work:
-  - catalog and search, detail and add-to-cart, and the cart;
+  - catalog and search, a search that fails within seconds when the API is down, detail and add-to-cart, and the cart;
   - the cart shared between two tabs, before and after a reload;
   - a header that never shows a cart count other than the saved one, and none without JavaScript;
   - an axe audit (WCAG 2.2 AA and best practices, contrast included) of eight screens at 393, 834 and 1920 px;
   - the whole journey with the keyboard alone, from the search to removing the phone from the cart;
   - the cart check against the catalog, with a clean console;
+  - the security headers on pages and on the search proxy;
   - a check that fails on any console warning or error, or any unused stylesheet preload, on the list, a product, the cart and a 404;
   - a phone for which the fake API is down, proving a product page asks the API once, and one whose price changes on every request, proving the cart check reads the catalog live.
   - First run: `pnpm exec playwright install chromium`. Ports 3151 and 3199 must be free; no `.env.local` is needed.
 - **Contract specs** (`pnpm test:e2e:contract`) on the production build against the real API, with no phone, price or count written in them: every phone of the catalog opens its detail with its photo (the 20 of the list and the ones only "Similar items" links to, so a product the app cannot render fails here), a search by brand finds phones of that brand, and an unknown id shows the not-found page. They need `.env.local` and port 3150, and wake the API up first.
 - **Pre-commit**: Husky runs lint-staged (ESLint and Prettier on staged files).
 - **CI** (GitHub Actions, each action pinned to a commit SHA): format check, lint, typecheck, tests with coverage, build and SonarCloud, then two independent jobs that upload the Playwright report if they fail: the end-to-end suite, with no secrets, and the contract specs, with the API secrets. A slow or changed API can only fail the second.
-- **Git flow**: one branch per change, Conventional Commits, and every change merged through a [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) once CI passes.
+- **Git flow**: one branch per change, Conventional Commits, and every change merged through a [pull request](https://github.com/osancho/prueba-tecnica/pulls?q=is%3Apr) once CI passes. The repository was recreated on 3 October 2026; merges #1 to #32 refer to pull requests of the earlier copy.
 
 ## Accessibility
 
@@ -273,10 +274,7 @@ Only the server talks to the API:
 - The end-to-end suite runs on a recording of the catalog (4 October 2026) with drawn pictures. A change in the real API or in its photos is only seen by the contract specs, which depend on the real API being reachable.
 - The normalized image cache lives in the server process and empties on restart; `pnpm warm-up` refills it for the list.
 - There is no design for the 404, error and failed-search states, nor for the message about cart changes: they use the existing tokens with minimal styling.
-- Accepted security advisories:
-  - 2 moderate in Vitest 3 (GHSA-82fw-gwwq-j7x9): development only; fixed in Vitest 4.1.11, which requires Node 20.
-  - 2 high in the libvips and libheif bundled with sharp (GHSA-f88m-g3jw-g9cj, GHSA-rgj7-g3m4-5g8c): the app only processes images from the API host, and sharp 0.35.4, which fixes both, requires Node 20.
-
-## How this was built
-
-I built this project with AI assistance (Claude Code), working under explicit rules versioned in [`AGENTS.md`](AGENTS.md): Node 18 end to end, Figma as the source of truth, accessibility, tests named after behaviour and a single source of truth for every value. I read every change before merging its pull request, and checked every design decision against the Figma file.
+- Accepted security advisories, every one `pnpm audit` reports (3 high, 2 moderate):
+  - High, `sharp` (GHSA-f88m-g3jw-g9cj, libvips; GHSA-rgj7-g3m4-5g8c, libheif): the app only processes images from the API host (users cannot upload any), and sharp 0.35.4, which fixes both, requires Node 20.
+  - High, `braces` (GHSA-vfj7-8cjw-p6xm, deeply nested patterns): development only, through `eslint-config-next` → `fast-glob` → `micromatch`; it only expands the lint globs of this repository, and no fixed version exists.
+  - Moderate, `vitest` and `@vitest/mocker` (one advisory, GHSA-82fw-gwwq-j7x9): development only, in the test runner; fixed in Vitest 4.1.11, which requires Node 20.
