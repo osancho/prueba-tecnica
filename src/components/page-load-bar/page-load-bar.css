@@ -1,24 +1,21 @@
 /* Drawn under the header without moving the page by its height. */
 .page-load-bar {
   height: 0;
+  transition:
+    opacity var(--duration-spring-reveal) var(--easing-spring-overshoot),
+    visibility var(--duration-spring-reveal);
 }
 
-/* Starts when the list arrives, together with its reveal (`.product-search--first-load`). */
-body:has(.product-search) .page-load-bar {
-  animation: page-load-bar-out var(--duration-spring-reveal)
-    var(--easing-spring-overshoot) var(--first-load-reveal-delay) both;
-}
-
-/* Hidden at the end, so screen readers stop announcing a finished progress bar. */
-@keyframes page-load-bar-out {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
+/* Figma "Loading" → list: the bar dissolves as the page comes in (the list, or the error page).
+   React streams the page inside a hidden element first, so only the revealed one counts. A bar
+   the first paint never showed has no style to transition from, so it is never seen. */
+body:has(main:not([hidden] *)) .page-load-bar {
+  visibility: hidden;
+  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .page-load-bar {
-    display: none;
+    transition: none;
   }
 }

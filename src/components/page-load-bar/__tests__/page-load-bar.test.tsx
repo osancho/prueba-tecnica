@@ -1,4 +1,4 @@
-import { createEvent, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { usePathname } from 'next/navigation';
 import { PageLoadBar } from '../page-load-bar';
@@ -7,14 +7,8 @@ vi.mock('next/navigation', () => ({ usePathname: vi.fn() }));
 
 const pathname = vi.mocked(usePathname);
 
-function fadeOut(element: Element) {
-  const event = createEvent.animationEnd(element);
-  Object.assign(event, { animationName: 'page-load-bar-out' });
-  fireEvent(element, event);
-}
-
 describe('PageLoadBar', () => {
-  it('shows the loading bar when the list page loads', () => {
+  it('shows the loading bar while the list page loads', () => {
     pathname.mockReturnValue('/');
     render(<PageLoadBar />);
 
@@ -34,8 +28,33 @@ describe('PageLoadBar', () => {
     pathname.mockReturnValue('/');
     render(<PageLoadBar />);
 
-    fadeOut(screen.getByRole('progressbar').parentElement!);
+    fireEvent.transitionEnd(screen.getByRole('progressbar').parentElement!);
 
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+  });
+
+  it('shows no bar when the list is already on screen', () => {
+    pathname.mockReturnValue('/');
+    render(
+      <>
+        <PageLoadBar />
+        <main />
+      </>,
+    );
+
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+  });
+
+  it('does not bring the bar back when the user returns to the list', () => {
+    pathname.mockReturnValue('/');
+    const { rerender } = render(<PageLoadBar />);
+
+    pathname.mockReturnValue('/product/SMG-S24U');
+    rerender(<PageLoadBar />);
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+
+    pathname.mockReturnValue('/');
+    rerender(<PageLoadBar />);
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
 });
