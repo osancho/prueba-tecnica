@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getProducts } from '@/core/product/application/get-products';
-import { apiProductRepository } from '@/core/product/infrastructure/api-product-repository';
+import { searchApiProductRepository } from '@/core/product/infrastructure/api-product-repository';
 import type { ApiError } from '@/services/api-errors';
 
 export async function GET(request: NextRequest) {
@@ -8,7 +8,9 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get('search')?.trim() || undefined;
 
   try {
-    return NextResponse.json(await getProducts(apiProductRepository, search));
+    return NextResponse.json(
+      await getProducts(searchApiProductRepository, search),
+    );
   } catch (error) {
     console.error('Products request failed', error);
     return NextResponse.json<ApiError>(

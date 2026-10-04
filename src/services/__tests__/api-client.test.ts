@@ -2,6 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiClient } from '../api-client';
 import { ApiRequestError, NotFoundError } from '../api-errors';
+import { UPSTREAM_TIMEOUT_MS } from '../server-config';
 
 const fetchMock = vi.fn();
 
@@ -74,5 +75,15 @@ describe('apiClient', () => {
     expect(fetchMock.mock.calls[1][1]).toMatchObject({
       next: { revalidate: 3600 },
     });
+  });
+
+  it('waits for the API to wake up unless the caller allows less', async () => {
+    fetchMock.mockImplementation(async () => jsonResponse([]));
+    const timeout = vi.spyOn(AbortSignal, 'timeout');
+
+    await apiClient('/products');
+    await apiClient('/products', {}, { timeoutMs: 4_000 });
+
+    expect(timeout.mock.calls).toEqual([[UPSTREAM_TIMEOUT_MS], [4_000]]);
   });
 });
