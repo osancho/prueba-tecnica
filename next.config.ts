@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 import { PRODUCT_IMAGE_WIDTHS } from './src/lib/product-image-loader';
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     // /api/images resizes product photos as it normalizes them, so the loader asks it for one
     // of these widths and Next's optimizer, which would only add a second lossy pass, stays off.
