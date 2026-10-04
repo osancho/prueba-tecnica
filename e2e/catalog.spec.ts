@@ -76,6 +76,20 @@ test('says so when a search finds no phone', async ({ page }) => {
   await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(0);
 });
 
+test('tells the user at once when the search is unavailable', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  await page
+    .getByRole('searchbox', { name: 'Search for a smartphone' })
+    .fill('down-galaxy');
+
+  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+    'Search is unavailable right now. Please try again.',
+  );
+});
+
 /** Records, on every frame, the width of the loading bar on screen and how opaque the list is. */
 function recordFrames() {
   const frames: Frame[] = [];
