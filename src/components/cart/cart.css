@@ -52,12 +52,10 @@
   text-transform: uppercase;
 }
 
-/* On desktop the items sit side by side; space-between spreads the columns over the width. */
 .cart__lines {
   display: grid;
-  grid-template-columns: var(--cart-lines-columns);
-  justify-content: space-between;
-  gap: var(--cart-content-gap) var(--space-md);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--cart-content-gap);
   position: relative;
   margin: 0;
   padding: 0;
