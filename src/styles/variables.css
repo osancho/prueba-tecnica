@@ -173,7 +173,6 @@
   --cart-content-padding-top: var(--space-md);
   --cart-content-gap: var(--space-md);
   --cart-top-rule-height: 0px;
-  --cart-lines-columns: minmax(0, 1fr);
   --cart-image-width: 160px;
   --cart-image-ratio: 160 / 197.86;
   --cart-item-gap: var(--space-md);
@@ -273,8 +272,6 @@
     --cart-content-gap: 60px;
     /* Only Figma's desktop cart with items keeps the loading bar under the header */
     --cart-top-rule-height: var(--loading-bar-height);
-    /* Figma's desktop cart item is a fixed 548px box (image 262 + gap 40 + info 246) */
-    --cart-lines-columns: repeat(auto-fill, 548px);
     --cart-footer-padding-bottom: var(--space-2xl);
     --cart-footer-column-gap: var(--space-4xl);
     --continue-shopping-width: 260px;
